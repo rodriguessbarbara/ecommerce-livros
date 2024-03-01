@@ -41,6 +41,27 @@ const products = [
   dimensoes: "altura, largura, peso, profundidade",
   precificacao: 39.90,
     },
+    {
+      id: 2,
+      imageSrc: 'https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280',
+      imageAlt: "Capa do livro XX",
+      autor: "Blake Crouch",
+      categoria: [
+          "Ficção científica",
+          "Romance",
+          "Suspense",
+          "Romance psicológico"
+      ],
+  ano: 2016,
+  titulo: "materia escura",
+  editora: "Intriseca",
+  edicao: "edicao teste",
+  ISBN: "22222",
+numeroPaginas: "391",
+sinopse: "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
+dimensoes: "altura, largura, peso, profundidade",
+precificacao: 39.90,
+  },
   ]
 
 function Livros() {  
