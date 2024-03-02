@@ -1,13 +1,10 @@
 function Search({ searchValue, setSearchValue }) {
-    const valorDaBusca = searchValue;
-    const setValorDaBusca = setSearchValue;
-    // console.log(valorDaBusca)
 
     return (
         <>
         <div className="flex gap-2">
-            <input type="text" className="rounded-md"/>
-            <button className="text-gray-100 bg-blue-800 p-2 rounded-lg" onClick={(event) => setValorDaBusca(event.target.value)} value={valorDaBusca}>
+            <input type="text" className="text-gray-800 w-80 rounded-md border-1 shadow-md shadow-slate-200 border-zinc-400" onChange={(event) => setSearchValue(event.target.value)} value={searchValue}/>
+            <button className="text-gray-100 bg-blue-800 p-2 pl-4 pr-4 rounded-lg">
                 Buscar
             </button>
         </div>

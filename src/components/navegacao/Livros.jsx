@@ -42,7 +42,7 @@ const products = [
   precificacao: 39.90,
     },
     {
-      id: 2,
+      id: 3,
       imageSrc: 'https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280',
       imageAlt: "Capa do livro XX",
       autor: "Blake Crouch",
@@ -62,6 +62,48 @@ sinopse: "Ficção científica eletrizante de Blake Crouch aborda realidades alt
 dimensoes: "altura, largura, peso, profundidade",
 precificacao: 39.90,
   },
+  {
+    id: 4,
+    imageSrc: 'https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280',
+    imageAlt: "Capa do livro XX",
+    autor: "Blake Crouch",
+    categoria: [
+        "Ficção científica",
+        "Romance",
+        "Suspense",
+        "Romance psicológico"
+    ],
+ano: 2016,
+titulo: "materia escura",
+editora: "Intriseca",
+edicao: "edicao teste",
+ISBN: "22222",
+numeroPaginas: "391",
+sinopse: "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
+dimensoes: "altura, largura, peso, profundidade",
+precificacao: 39.90,
+},
+{
+  id: 5,
+  imageSrc: 'https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280',
+  imageAlt: "Capa do livro XX",
+  autor: "Blake Crouch",
+  categoria: [
+      "Ficção científica",
+      "Romance",
+      "Suspense",
+      "Romance psicológico"
+  ],
+ano: 2016,
+titulo: "materia escura",
+editora: "Intriseca",
+edicao: "edicao teste",
+ISBN: "22222",
+numeroPaginas: "391",
+sinopse: "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
+dimensoes: "altura, largura, peso, profundidade",
+precificacao: 39.90,
+},
   ]
 
 function Livros() {  
@@ -73,7 +115,7 @@ function Livros() {
   
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {products.map((product) => (
-              <div key={product.id} className="group relative p-10 pb-2 pt-3 rounded-md border-2 shadow-lg shadow-slate-200">
+              <div key={product.id} className="group relative p-10 pb-2 pt-3 rounded-md border-2 shadow-md shadow-slate-200 cursor-pointer">
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none">
                   <img
                     src={product.imageSrc}
