@@ -1,0 +1,26 @@
+{
+	"books": [
+		{
+			"id": 5,
+			"imageSrc": "https://books.google.com.br/books/publisher/content?id=6KwXEAAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U2vRjFfgu4Ddl_RYHITlaZQQ0u3eg&w=1280",
+			"imageAlt": "Capa do livro XX",
+			"capaAlternativa": "https://img.craiyon.com/2024-03-04/8KlLIyECR3ezGhX8s52vdw.webp",
+			"autor": "Carla Madeira",
+			"categoria": [
+				"Ficção científica",
+				"Romance",
+				"Suspense",
+				"Romance psicológico"
+			],
+			"ano": "2016",
+			"titulo": "Tudo é rio",
+			"editora": "Intriseca",
+			"edicao": "edicao teste",
+			"ISBN": "22222",
+			"numeroPaginas": 391,
+			"sinopse": "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
+			"dimensoes": "altura, largura, peso, profundidade",
+			"precificacao": 39.9
+		}
+	]
+}

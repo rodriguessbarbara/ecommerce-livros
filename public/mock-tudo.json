@@ -68,7 +68,7 @@
 		},
 		{
 			"id": 4,
-			"imageSrc": "https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280",
+			"imageSrc": "https://books.google.com.br/books/publisher/content?id=jZfBDwAAQBAJ&hl=pt-BR&pg=PA2017&img=1&zoom=3&bul=1&sig=ACfU3U1LcHDkvv4O2a0VtBK08D5-6KXyHg&w=1280",
 			"imageAlt": "Capa do livro XX",
 			"capaAlternativa": "https://img.craiyon.com/2024-03-04/8KlLIyECR3ezGhX8s52vdw.webp",
 			"autor": "Blake Crouch",
@@ -79,7 +79,7 @@
 				"Romance psicológico"
 			],
 			"ano": "2016",
-			"titulo": "materia escura",
+			"titulo": "recursão",
 			"editora": "Intriseca",
 			"edicao": "edicao teste",
 			"ISBN": "22222",
@@ -89,11 +89,11 @@
 			"precificacao": 39.9
 		},
 		{
-			"id": 4,
-			"imageSrc": "https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280",
+			"id": 5,
+			"imageSrc": "https://books.google.com.br/books/publisher/content?id=6KwXEAAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U2vRjFfgu4Ddl_RYHITlaZQQ0u3eg&w=1280",
 			"imageAlt": "Capa do livro XX",
 			"capaAlternativa": "https://img.craiyon.com/2024-03-04/8KlLIyECR3ezGhX8s52vdw.webp",
-			"autor": "Blake Crouch",
+			"autor": "Carla Madeira",
 			"categoria": [
 				"Ficção científica",
 				"Romance",
@@ -101,7 +101,7 @@
 				"Romance psicológico"
 			],
 			"ano": "2016",
-			"titulo": "materia escura",
+			"titulo": "Tudo é rio",
 			"editora": "Intriseca",
 			"edicao": "edicao teste",
 			"ISBN": "22222",

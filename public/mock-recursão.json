@@ -1,0 +1,26 @@
+{
+	"books": [
+		{
+			"id": 4,
+			"imageSrc": "https://books.google.com.br/books/publisher/content?id=jZfBDwAAQBAJ&hl=pt-BR&pg=PA2017&img=1&zoom=3&bul=1&sig=ACfU3U1LcHDkvv4O2a0VtBK08D5-6KXyHg&w=1280",
+			"imageAlt": "Capa do livro XX",
+			"capaAlternativa": "https://img.craiyon.com/2024-03-04/8KlLIyECR3ezGhX8s52vdw.webp",
+			"autor": "Blake Crouch",
+			"categoria": [
+				"Ficção científica",
+				"Romance",
+				"Suspense",
+				"Romance psicológico"
+			],
+			"ano": "2016",
+			"titulo": "recursão",
+			"editora": "Intriseca",
+			"edicao": "edicao teste",
+			"ISBN": "22222",
+			"numeroPaginas": 391,
+			"sinopse": "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
+			"dimensoes": "altura, largura, peso, profundidade",
+			"precificacao": 39.9
+		}
+	]
+}

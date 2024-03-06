@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react"
+import { useEffect, useContext } from "react"
 import fetchBooks from "../../fetchBooks";
 import LivrosCard from "./LivrosCard";
+import AppContext from "../../context/AppContext";
 
 function Livros() {
-  const [books, setBooks] = useState([]);
-  
+  const { books, setBooks } = useContext(AppContext);
+
   useEffect(() => {
-    fetchBooks().then((response) => {
+    fetchBooks("tudo").then((response) => {
       setBooks(response);
     });
   }, []);

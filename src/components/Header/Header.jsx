@@ -1,14 +1,14 @@
 import { Disclosure } from '@headlessui/react'
 import Search from './Search'
 import { useNavigate } from "react-router-dom";
-import Carrinho from '../navegacao/Carrinho';
+import CarrinhoButton from './CarrinhoButton';
 
 const navigation = [
   { name: 'Login/Criar', href: './login', current: false },
 ]
 
 
-function Header({ searchValue, setSearchValue }) {
+function Header() {
   const navigate = useNavigate();
 
   async function handleClick(event) {
@@ -30,7 +30,7 @@ function Header({ searchValue, setSearchValue }) {
                 />
               </div>
 
-                <Search searchValue={searchValue} setSearchValue={setSearchValue}/>
+                <Search/>
 
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex around space-x-4">
@@ -45,7 +45,7 @@ function Header({ searchValue, setSearchValue }) {
                     </a>
                   ))}
 
-                  <Carrinho/>
+                  <CarrinhoButton/>
                 </div>
               </div>
 
