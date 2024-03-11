@@ -1,25 +1,48 @@
 import propTypes from 'prop-types';
-
-//const capaLivro = [
-//  { name: 'Original', href: './', current: true },
-//  { name: 'IA', href: './', current: false }
-//]
+import { useContext } from 'react';
+import AppContext from '../../context/AppContext';
 
 function LivrosCard({data}) {
-  const {id, imageSrc, imageAlt, titulo, autor, precificacao } = data
+  const {id, imageSrc, imageAlt, capaAlternativa, titulo, autor, precificacao } = data
+  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa, setIsCapaAlternativa} = useContext(AppContext);
+
+
+  const handleAddCarrinho = () => {
+    setCarrinhoItens([ ...carrinhoItens, data ]);
+  }
+
+  const handleCapaAlternativa = () => {
+    setIsCapaAlternativa([ ...isCapaAlternativa, id ]);
+  }
+
+  const handleCapaOriginal = () => {
+    if (isCapaAlternativa.includes(id)) {
+      setIsCapaAlternativa(isCapaAlternativa.filter(item => item !== id));
+    }
+  }
 
   return (
     <>
       <div key={id} className="group relative p-10 pb-2 pt-3 rounded-md border-2 shadow-md shadow-slate-200">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none">
           <img
-            src={imageSrc}
+            src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
             alt={imageAlt}
             className="h-full w-full object-cover object-center lg:h-full lg:w-full bg-gray-500 group-hover:opacity-75 cursor-pointer"
           />
           <div className="flex justify-around mt-2">
-            <a className="text-gray-600 text-sm cursor-pointer">original</a>
-            <a className="text-gray-600 text-sm cursor-pointer">alternativa</a>
+            <button
+            className="text-gray-600 font-medium text-sm cursor-pointer"
+            onClick={handleCapaOriginal}
+            >
+              original
+            </button>
+            <button
+            className="text-gray-600 font-medium text-sm cursor-pointer"
+            onClick={handleCapaAlternativa}
+            >
+              alternativa
+            </button>
           </div>
         </div>
 
@@ -32,7 +55,13 @@ function LivrosCard({data}) {
           </div>
           <p className="text-sm font-medium text-gray-900">R${precificacao}</p>
         </div>
-        <button type="submit" className="text-white bg-sky-600 rounded-md ml-4 mt-2 p-2">Adicionar ao carrinho</button>
+        <button
+          type="submit"
+          className="text-white bg-indigo-800 rounded-md ml-4 mt-2 p-2"
+          onClick={handleAddCarrinho}
+          >
+            Adicionar ao carrinho
+        </button>
       </div>
     </>
   )

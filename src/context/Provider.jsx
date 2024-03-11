@@ -4,10 +4,19 @@ import { useState } from 'react';
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
+  const [carrinhoItens, setCarrinhoItens] = useState([]);
+  const [isCarrinhoAtivo, setIsCarrinhoAtivo] = useState(false);
+  const [isCapaAlternativa, setIsCapaAlternativa] = useState([]);
 
   const value = {
     books,
-    setBooks
+    setBooks,
+    carrinhoItens,
+    setCarrinhoItens,
+    isCarrinhoAtivo,
+    setIsCarrinhoAtivo,
+    isCapaAlternativa,
+    setIsCapaAlternativa,
   };
 
   return (

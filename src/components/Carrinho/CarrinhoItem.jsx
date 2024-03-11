@@ -1,10 +1,23 @@
-function CarrinhoItem() {
+import { useContext, useState } from "react";
+import AppContext from "../../context/AppContext";
+
+/* eslint-disable react/prop-types */
+function CarrinhoItem({ data }) {
+
+  const { id, imageSrc, capaAlternativa, titulo, precificacao } = data;
+  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa } = useContext(AppContext);
+  const [numQtd, setNumQtd] = useState(1);
+
+  function handleRemoveItem() {
+    const updatedItens = carrinhoItens.filter((item) => item.id != id);
+    setCarrinhoItens(updatedItens);
+  }
 
   return (
     <>
       <section className="flex flex-start border-b-2 border-gray-300 pb-5 mb-2 relative">
         <div className="border-2 border-gray-200 rounded-lg">
-          <img src="https://books.google.com.br/books/publisher/content?id=WZ32DQAAQBAJ&hl=pt-BR&pg=PP1&img=1&zoom=3&bul=1&sig=ACfU3U1c_unNkrrNgX9OX_wZTvFzxeBsrg&w=1280"
+          <img src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
           alt="Imagem do livro"
           className="p-2 max-w-16 w-full h-full"/>
           
@@ -14,28 +27,37 @@ function CarrinhoItem() {
           <div>
             <div className="flex justify-between text-base font-medium text-gray-900">
               <h3>
-                <a href="">titulo livro</a>
+                <a href="">{titulo}</a>
               </h3>
-              <p className="ml-4">R$45.0</p>
+              <p className="ml-4">R${precificacao}</p>
             </div>
-            <p className="mt-1 text-sm text-gray-500">capa</p>
+            <p className="mt-1 text-sm text-gray-500">capa Original</p>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-500">Qty 1</p>
-
+            <p className="text-gray-600 font-medium">Qtd: {numQtd}</p>
+            
+            <button className="text-gray-500 cursor-pointer text-md" onClick={() => {
+              if(numQtd > 1) setNumQtd(numQtd - 1)}
+            }>
+              -
+            </button>
+            
+            <button className="text-gray-500 cursor-pointer text-md" onClick={() => setNumQtd(numQtd + 1)}>
+              +
+            </button>
             <div className="flex">
               <button
                 type="button"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
+                onClick={handleRemoveItem}
               >
-                Remove
+                Remover
               </button>
             </div>
           </div>
         </div>
         </section>
     </>
-
   )
 }
 

@@ -1,28 +1,39 @@
+import { useContext } from "react"
 import CarrinhoItem from "./CarrinhoItem"
+import AppContext from "../../context/AppContext"
+import '../../index.css'
 
 function Carrinho() {
-  //const [open, setOpen] = useState(true)
+  const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo } = useContext(AppContext);
+  //const [numQtd, setNumQtd] = useState(1);
+
+  const precoTotal = carrinhoItens.reduce((acc, item) => {
+    return item.precificacao + acc;
+  }, 0);
 
   return (
-    <div className="bg-white w-full max-w-80 h-screen fixed top-0 right-0 px-4">
+    <div className={`bg-white w-full max-w-80 h-screen fixed top-0 right-0 px-4 flex flex-col space-between overflow-auto carrinho ${isCarrinhoAtivo ? 'carrinho--ativo' : ''} `}>
       
       <div className="flex content-between justify-between">
         <h2 className="text-lg font-medium text-gray-800 pt-5 pb-8">
           Carrinho de compras
         </h2>
-        <button className="text-gray-400 font-medium">
+        <button
+        className="text-gray-400 font-medium"
+        onClick={ () => setIsCarrinhoAtivo(false)}
+        >
           X
         </button>
       </div>
 
-      <CarrinhoItem>
+      {carrinhoItens.map((item) =>
+          <CarrinhoItem key={item.id} data={item} />
+      )}
 
-      </CarrinhoItem>
-        
-      <div className="border-t-2 border-gray-200 py-6">
+      <div className="py-6 font-medium">
           <div className="flex justify-between text-base font-medium text-gray-900">
             <p>Subtotal</p>
-            <p>$62.00</p>
+            <p>R${precoTotal}</p>
           </div>
           <div className="mt-6">
             <a
@@ -36,7 +47,7 @@ function Carrinho() {
           </div>
       </div>
 
-      </div>
+    </div>
   )
 }
 
