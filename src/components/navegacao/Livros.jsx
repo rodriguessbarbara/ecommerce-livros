@@ -3,6 +3,7 @@ import fetchBooks from "../../fetchBooks";
 import LivrosCard from "./LivrosCard";
 import AppContext from "../../context/AppContext";
 import Filtros from "./Filtros";
+import AddLivroButton from "../Admin/AddLivroButton";
 
 function Livros() {
   const { books, setBooks } = useContext(AppContext);
@@ -28,6 +29,8 @@ function Livros() {
                 ))}
               </div>
             </div>
+
+            <AddLivroButton/>
           </div>
         </div>
       </>
