@@ -1,4 +1,3 @@
-import { Disclosure } from '@headlessui/react'
 import Search from './Search'
 import { useNavigate } from "react-router-dom";
 import CarrinhoButton from './CarrinhoButton';
@@ -6,7 +5,6 @@ import CarrinhoButton from './CarrinhoButton';
 const navigation = [
   { name: 'Login/Criar', href: './login', current: false },
 ]
-
 
 function Header() {
   const navigate = useNavigate();
@@ -17,7 +15,7 @@ function Header() {
   }
 
   return (
-    <Disclosure as="nav" className="bg-white">
+    <nav className="bg-white">
       <>
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
@@ -39,7 +37,6 @@ function Header() {
                       key={item.name}
                       href={item.href}
                       className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                      aria-current={item.current ? 'page' : undefined}
                     >
                       {item.name}
                     </a>
@@ -53,7 +50,7 @@ function Header() {
           </div>
         </div>
       </>
-    </Disclosure>
+    </nav>
   )
 }
 
