@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const navigate = useNavigate();
 
   async function handleLogin(event) {
     event.preventDefault();
-    navigate("/login/cadastro");
+    navigate("/");
   }
 
   return (
@@ -16,7 +16,8 @@ function LoginForm() {
           </h2>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" action="#" method="POST" onSubmit={handleLogin}
+>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-600">
                 Email
@@ -38,9 +39,9 @@ function LoginForm() {
                   Senha
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <Link to="/login/esqueceuSenha"className="font-semibold text-indigo-600 hover:text-indigo-500">
                     Esqueceu a senha?
-                  </a>
+                  </Link>
                 </div>
               </div>
                 <input
@@ -53,11 +54,7 @@ function LoginForm() {
             </div>
 
             <div>
-              <button
-                type="submit"
-                onClick={handleLogin}
-                className="flex w-full justify-center rounded-md bg-indigo-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
+              <button className="flex w-full justify-center rounded-md bg-indigo-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Entrar
               </button>
             </div>
@@ -65,9 +62,9 @@ function LoginForm() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             ou{' '}
-            <a href="./login/cadastro" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <Link to="/login/cadastro" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Cadastrar agora.
-            </a>
+            </Link>
           </p>
         </div>
       </div>

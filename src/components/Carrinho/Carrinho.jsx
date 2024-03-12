@@ -1,9 +1,13 @@
 import { useContext } from "react"
+import { useNavigate } from "react-router-dom";
+
 import CarrinhoItem from "./CarrinhoItem"
 import AppContext from "../../context/AppContext"
 import '../../index.css'
 
 function Carrinho() {
+  const navigate = useNavigate();
+
   const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo } = useContext(AppContext);
   //const [numQtd, setNumQtd] = useState(1);
 
@@ -36,12 +40,15 @@ function Carrinho() {
             <p>R${precoTotal}</p>
           </div>
           <div className="mt-6">
-            <a
+            <button onClick={() => {
+              setIsCarrinhoAtivo(false)
+              navigate("/compra")
+            }}
               href="#"
               className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
             >
               Finalizar compra
-            </a>
+            </button>
           </div>
           <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
           </div>
