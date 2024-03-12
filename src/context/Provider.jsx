@@ -7,6 +7,7 @@ function Provider({ children }) {
   const [carrinhoItens, setCarrinhoItens] = useState([]);
   const [isCarrinhoAtivo, setIsCarrinhoAtivo] = useState(false);
   const [isCapaAlternativa, setIsCapaAlternativa] = useState([]);
+  const [precoTotal, setPrecoTotal] = useState(0);
 
   const value = {
     books,
@@ -17,6 +18,8 @@ function Provider({ children }) {
     setIsCarrinhoAtivo,
     isCapaAlternativa,
     setIsCapaAlternativa,
+    precoTotal,
+    setPrecoTotal,
   };
 
   return (

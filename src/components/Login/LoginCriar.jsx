@@ -1,7 +1,4 @@
-//import { useNavigate } from "react-router-dom";
-
 function LoginCriar() {
-  //const navigate = useNavigate();
 
   return (
     <>
@@ -16,7 +13,7 @@ function LoginCriar() {
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label className="text-sm font-medium text-gray-900">
-                Nome
+                Nome Completo
               </label>
                 <input
                   type="text"
@@ -28,11 +25,11 @@ function LoginCriar() {
 
             <div className="sm:col-span-3">
               <label className="text-sm font-medium text-gray-900">
-                Sobrenome
+                Endereço de email
               </label>
                 <input
-                  type="text"
-                  id="sobrenome"
+                  id="email"
+                  type="email"
                   className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                   required
                 />
@@ -62,18 +59,6 @@ function LoginCriar() {
                 />
             </div>
 
-            <div className="sm:col-span-full">
-              <label className="text-sm font-medium text-gray-900">
-                Endereço de email
-              </label>
-                <input
-                  id="email"
-                  type="email"
-                  className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-                  required
-                />
-            </div>
-
             <div className="sm:col-span-3">
               <label className="text-sm font-medium text-gray-900">
                 Senha
@@ -92,7 +77,7 @@ function LoginCriar() {
               </label>
                 <input
                   type="password"
-                  id="senha"
+                  id="repetir-senha"
                   className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                   required
                 />

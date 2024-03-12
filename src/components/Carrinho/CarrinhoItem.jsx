@@ -31,21 +31,24 @@ function CarrinhoItem({ data }) {
               </h3>
               <p className="ml-4">R${precificacao}</p>
             </div>
-            <p className="mt-1 text-sm text-gray-500">capa Original</p>
+            <p className="mb-2 text-sm text-gray-500">capa Original</p>
           </div>
-          <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-600 font-medium">Qtd: {numQtd}</p>
+          
+          <div className="flex flex-1 gap-8 text-sm">
+            <p className="text-gray-600 font-medium self-center">Qtd: {numQtd}</p>
             
-            <button className="text-gray-500 cursor-pointer text-md" onClick={() => {
-              if(numQtd > 1) setNumQtd(numQtd - 1)}
-            }>
-              -
-            </button>
-            
-            <button className="text-gray-500 cursor-pointer text-md" onClick={() => setNumQtd(numQtd + 1)}>
-              +
-            </button>
-            <div className="flex">
+            <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => {
+                if(numQtd > 1) setNumQtd(numQtd - 1)}
+              }>
+                -
+              </button>
+              
+              <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => setNumQtd(numQtd + 1)}>
+                +
+              </button>
+          </div>
+          
+            <div className="flex justify-end text-sm">
               <button
                 type="button"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -54,7 +57,7 @@ function CarrinhoItem({ data }) {
                 Remover
               </button>
             </div>
-          </div>
+
         </div>
         </section>
     </>
