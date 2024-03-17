@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import AppContext from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const infos = [
   {
@@ -28,6 +29,7 @@ const infos = [
 ]
 
 function FinalizarCompra() {
+  const navigate = useNavigate();
 
   const { precoTotal } = useContext(AppContext);
 
@@ -50,6 +52,13 @@ function FinalizarCompra() {
       <p className="font-bold text-lg text-gray-800 text-end">
             Preço Total: R$ {precoTotal}
       </p>
+
+      <button onClick={() => {
+            navigate("/compra/compra-efetuada")
+          }}
+            className="rounded-md self-end bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 mt-2">
+            Confirmar compra
+          </button>
     </div>
   )
 }

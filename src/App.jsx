@@ -6,6 +6,7 @@ import Provider from './context/Provider';
 import Carrinho from "./components/Carrinho/Carrinho";
 import CompraOverview from "./components/User/CompraOverview";
 import FinalizarCompra from "./components/User/FinalizarCompra";
+import MsgCompraEfetuada from "./components/User/MsgCompraEfetuada";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
               <Route path="/login/*" element={<Login />} />
               <Route path="/compra" element={<CompraOverview />} />
               <Route path="/compra/finalizar" element={<FinalizarCompra />} />
+              <Route path="/compra/compra-efetuada" element={<MsgCompraEfetuada />} />
 
             </Routes>
 
