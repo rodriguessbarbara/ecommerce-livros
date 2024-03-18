@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
+import { useNavigate } from "react-router-dom";
 
 function LivrosCard({ data, filtros }) {
   const { id, imageSrc, imageAlt, capaAlternativa, titulo, autor, precificacao } = data;
-  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa, setIsCapaAlternativa } = useContext(AppContext);
+  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa, setIsCapaAlternativa, setIsCarrinhoAtivo } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const handleAddCarrinho = () => {
     setCarrinhoItens([ ...carrinhoItens, data ]);
@@ -20,7 +23,15 @@ function LivrosCard({ data, filtros }) {
     }
   };
 
-  // Verifica se o livro atende aos critérios dos filtros
+  const handleClickLivro = () => {
+    setIsCarrinhoAtivo(false);
+    navigate('/livro', {
+      state: {
+        data: data,
+      }
+    });
+  };
+
   const meetsFilterCriteria = () => {
     return filtros.every(filter => {
       // Se não houver filtro marcado, o livro passa no critério
@@ -40,6 +51,7 @@ function LivrosCard({ data, filtros }) {
             src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
             alt={imageAlt}
             className="h-full w-full object-cover object-center lg:h-full lg:w-full bg-gray-500 group-hover:opacity-75 cursor-pointer"
+            onClick={handleClickLivro}
           />
           <div className="flex justify-around mt-2">
             <button

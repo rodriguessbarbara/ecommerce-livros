@@ -7,6 +7,7 @@ import Carrinho from "./components/Carrinho/Carrinho";
 import CompraOverview from "./components/User/CompraOverview";
 import FinalizarCompra from "./components/User/FinalizarCompra";
 import MsgCompraEfetuada from "./components/User/MsgCompraEfetuada";
+import LivroDetalhe from "./components/navegacao/LivroDetalhe";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
 
             <Routes>
               <Route path="/" element={<Livros/>}/>
+              <Route path="/livro" element={<LivroDetalhe/>}/>
               <Route path="/login/*" element={<Login />} />
               <Route path="/compra" element={<CompraOverview />} />
               <Route path="/compra/finalizar" element={<FinalizarCompra />} />
