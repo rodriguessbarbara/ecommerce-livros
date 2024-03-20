@@ -25,7 +25,7 @@ function CompraOverview() {
 
           <button onClick={() => {
             setIsCarrinhoAtivo(false)
-            navigate("/compra/finalizar")
+            navigate("/conta/finalizar-compra")
           }}
             className="rounded-md self-end bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 mt-2">
             Finalizar compra

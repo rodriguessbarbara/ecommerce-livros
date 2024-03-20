@@ -5,17 +5,17 @@ import Login from './components/Login/Login';
 import Provider from './context/Provider';
 import Carrinho from "./components/Carrinho/Carrinho";
 import CompraOverview from "./components/User/CompraOverview";
-import FinalizarCompra from "./components/User/FinalizarCompra";
-import MsgCompraEfetuada from "./components/User/MsgCompraEfetuada";
 import LivroDetalhe from "./components/navegacao/LivroDetalhe";
+import Usuario from "./components/User/Usuario";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
 
   return (
     <>
       <div className="bg-white mx-auto">
-        <Provider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Provider>
             <Header/>
 
             <Routes>
@@ -23,14 +23,19 @@ function App() {
               <Route path="/livro" element={<LivroDetalhe/>}/>
               <Route path="/login/*" element={<Login />} />
               <Route path="/compra" element={<CompraOverview />} />
-              <Route path="/compra/finalizar" element={<FinalizarCompra />} />
-              <Route path="/compra/compra-efetuada" element={<MsgCompraEfetuada />} />
+              <Route
+                path="/conta/*"
+                element={
+                  <ProtectedRoute>
+                    <Usuario />
+                  </ProtectedRoute> }
+                />
 
             </Routes>
 
             <Carrinho/>
-          </BrowserRouter>
-        </Provider>
+          </Provider>
+        </BrowserRouter>
       </div>
     </>
   )

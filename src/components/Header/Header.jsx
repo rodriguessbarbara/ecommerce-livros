@@ -1,12 +1,16 @@
 import Search from './Search'
 import { Link } from "react-router-dom";
 import CarrinhoButton from './CarrinhoButton';
+import { useContext } from 'react';
+import AppContext from '../../context/AppContext';
 
-const navigation = [
-  { name: 'Login/Criar', href: '/login', current: false },
-]
+//const navigation = [
+//  { name: 'Login/Criar', href: '/login', current: false },
+//  { name: 'Perfil', href: '/conta', current: false },
+//]
 
 function Header() {
+  const { login } = useContext(AppContext);
 
   return (
     <nav className="bg-white">
@@ -28,13 +32,17 @@ function Header() {
 
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex around space-x-4">
-                  {navigation.map((item) => (
-                    <Link to={`${item.href}`} key={item.name}
+                  {login ?
+                    <Link to='/conta'
                     className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
-                        {item.name}
+                        Perfil
                     </Link>
-                  ))}
-
+                  : 
+                    <Link to='/login'
+                    className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+                      Login/Criar
+                    </Link>
+                  } 
                   <CarrinhoButton/>
                 </div>
               </div>

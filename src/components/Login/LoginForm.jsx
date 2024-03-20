@@ -1,12 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Input from "../Input";
+import useForm from "../../hooks/useForm";
+import { useContext } from "react";
+import AppContext from "../../context/AppContext";
 
 function LoginForm() {
-  const navigate = useNavigate();
+  const username = useForm();
+  const password = useForm();
+  const { userLogin } = useContext(AppContext);
 
   async function handleLogin(event) {
     event.preventDefault();
-    navigate("/");
+
+    if (username.validate() && password.validate()) {
+      userLogin();
+    }
   }
 
   return (
@@ -19,9 +27,9 @@ function LoginForm() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
           <form className="space-y-6" action="#" method="POST" onSubmit={handleLogin}>
             
-            <Input label="Email" type="email" name="email" placeholder="exemplo@email.com" required/>
+            <Input label="Email" type="email" name="email" placeholder="exemplo@email.com" {...username} required/>
             
-            <Input label="Senha" type="password" name="password" placeholder="*************" required/>
+            <Input label="Senha" type="password" name="password" placeholder="*************" {...password} required/>
             <div className="text-sm">
               <Link to="/login/esqueceuSenha"className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Esqueceu a senha?

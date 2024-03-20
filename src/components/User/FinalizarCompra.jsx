@@ -54,7 +54,7 @@ function FinalizarCompra() {
       </p>
 
       <button onClick={() => {
-            navigate("/compra/compra-efetuada")
+            navigate("/conta/compra-efetuada")
           }}
             className="rounded-md self-end bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 mt-2">
             Confirmar compra
