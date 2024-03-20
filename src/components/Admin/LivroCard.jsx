@@ -1,11 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useContext } from "react";
-import AppContext from "../../context/AppContext";
 import NovoLivroForm from "./NovoLivroForm";
-import UpdateLivroForm from "./UpdateLivroForm";
 
 function LivroCard({ isOpen, setModalOpen }) {
-  const { isAddBookCard, setIsAddBookCard } = useContext(AppContext);
 
   if (isOpen) {
     return (
@@ -18,19 +14,12 @@ function LivroCard({ isOpen, setModalOpen }) {
             </div>
 
             <div className="flex justify-around text-gray-800 ">
-              <button className="text-lg font-medium cursor-pointer bg-orange-400 rounded-lg p-4 hover:bg-orange-500" onClick={() => {
-                setIsAddBookCard(true);
-              }}>
+              <button className="text-lg font-medium cursor-pointer bg-orange-400 rounded-lg p-4 hover:bg-orange-500">
                 Cadastrar novo livro
-              </button>
-              <button className="text-lg font-medium cursor-pointer bg-orange-400 rounded-lg p-4 hover:bg-orange-500" onClick={() => {
-                setIsAddBookCard(false);
-              }}>
-                Alterar livro existente
               </button>
             </div>
 
-            {isAddBookCard ? <NovoLivroForm/> : <UpdateLivroForm />}
+            <NovoLivroForm/>
 
           </div>
         </div>

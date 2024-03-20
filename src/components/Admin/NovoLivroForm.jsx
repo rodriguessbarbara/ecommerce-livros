@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import AppContext from "../../context/AppContext";
+//import { useContext } from "react";
+//import AppContext from "../../context/AppContext";
 import Input from "../Input";
 
 function NovoLivroForm() {
-  const { books, setBooks } = useContext(AppContext);
+  //const { books, setBooks } = useContext(AppContext);
 
 //  const handleNovoLivro = () => {
 //    setBooks([ ...books, data ]);
@@ -11,7 +11,7 @@ function NovoLivroForm() {
 
   return (
     <form type="submit">
-      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-4 py-4">
+      <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-4 py-4">
         <Input label="Título do livro" type="text" name="titulo" span="2" required/>
         <Input label="Autor" type="text" name="autor" span="2" required/>
         <Input label="Categoria" type="text" name="categoria" span="2" required/>
@@ -35,7 +35,7 @@ function NovoLivroForm() {
     </div>
 
       <button
-      className="mt-10 flex w-full justify-center rounded-md bg-indigo-600 px-6 py-3 font-medium text-white shadow-sm hover:bg-indigo-700"
+      className="mt-6 flex w-full justify-center rounded-md bg-indigo-600 px-6 py-3 font-medium text-white shadow-sm hover:bg-indigo-700"
       >
         Salvar
       </button>
