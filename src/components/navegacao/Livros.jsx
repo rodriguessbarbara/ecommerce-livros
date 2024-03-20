@@ -13,7 +13,7 @@ function Livros() {
     fetchBooks("tudo").then((response) => {
       setBooks(response);
     });
-  }, []);
+  }, [setBooks]);
 
   const applyFilters = (filtros) => {
     setAppliedFilters(filtros);

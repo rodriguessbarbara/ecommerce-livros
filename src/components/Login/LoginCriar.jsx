@@ -24,7 +24,7 @@ function LoginCriar() {
                 </label>
               <select name="genero" required className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6">
 
-                <option value="feminino" className="text-gray-800" selected>Feminino</option>
+                <option value="feminino" className="text-gray-800" defaultValue={true}>Feminino</option>
                 <option value="masculino" className="text-gray-800">Masculino</option>
                 <option value="outro" className="text-gray-800">Outro</option>
               </select>
