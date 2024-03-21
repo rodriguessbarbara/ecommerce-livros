@@ -6,9 +6,7 @@ import Conta from "./Conta";
 
 function Usuario() {
   return (
-    <div>
-
-        aaaaaaaaaaaa
+    <div className="bg-white h-screen mx-auto px-4 py-12 lg:mx-8">
         <Routes>
           <Route path="/" element={<Conta />} />
           <Route path="/finalizar-compra" element={<FinalizarCompra />} />
