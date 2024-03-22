@@ -10,6 +10,7 @@ function Provider({ children }) {
   const [isCapaAlternativa, setIsCapaAlternativa] = useState([]);
   const [precoTotal, setPrecoTotal] = useState(0);
   const [selectedBook, setSelectedBook] = useState([]);
+  const [cartoes, setCartoes] = useState([]);
   const [login, setLogin] = useState(null);
 
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ function Provider({ children }) {
     login,
     setLogin,
     userLogin,
+    cartoes,
+    setCartoes,
   };
 
   async function userLogin() {
