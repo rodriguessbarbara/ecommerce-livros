@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import CarrinhoButton from './CarrinhoButton';
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
+import fetchBooks from '../../fetchBooks';
 
 //const navigation = [
 //  { name: 'Login/Criar', href: '/login', current: false },
@@ -10,7 +11,12 @@ import AppContext from '../../context/AppContext';
 //]
 
 function Header() {
-  const { login } = useContext(AppContext);
+  const { login, setBooks } = useContext(AppContext);
+
+  const handleHome = async () => {
+    const books = await fetchBooks("tudo");
+    setBooks(books);
+}
 
   return (
     <nav className="bg-white">
@@ -19,7 +25,7 @@ function Header() {
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex flex-1 items-center justify-between">
               <div className="flex flex-shrink-0 items-center">
-              <Link to="/">
+              <Link to="/" onClick={handleHome}> 
                   <img
                     className="h-8 w-auto cursor-pointer"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"

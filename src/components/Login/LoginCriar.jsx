@@ -15,8 +15,8 @@ function LoginCriar() {
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
             <Input label="Nome Completo" type="text" name="nome" span="2" required/>
             <Input label="Email" type="email" name="email" span="2" placeholder="exemplo@email.com" required/>
-            <Input label="CPF" type="text" name="cpf" required/>
-            <Input label="Telefone" type="tel" name="telefone" required/>
+            <Input label="CPF" type="text" name="cpf" maxLength="11" required/>
+            <Input label="Telefone" type="tel" name="telefone" maxLength="11" required/>
 
             <div>
               <label className="text-sm font-medium text-gray-900">
@@ -31,14 +31,14 @@ function LoginCriar() {
             </div>
 
             <Input label="Data Nascimento" type="date" name="data-nascimento" required/>
-            <Input label="Senha" type="password" name="senha" span="2" required/>
-            <Input label="Repetir senha" type="password" name="repetir-senha" span="2" required/>
+            <Input label="Senha" type="password" name="senha" span="2" minLength="8" required/>
+            <Input label="Repetir senha" type="password" name="repetir-senha" span="2" minLength="8" required/>
 
             <Input label="Lagradouro" type="text" name="lagradouro" placeholder="Rua, Av, etc" required/>
             <Input label="Endereço Residencial" type="text" name="endereco" span="2" required/>
             <Input label="Tipo residência" type="text" name="tipo-residencia" placeholder="Casa, Apt, etc" required/>              
             <Input label="Num." type="text" name="num-endereco" required/>              
-            <Input label="CEP" type="text" name="cep" required/>              
+            <Input label="CEP" type="text" name="cep" maxLength="9" required/>              
             <Input label="Bairro" type="text" name="bairro" required/>              
             <Input label="Cidade" type="text" name="cidade" required/>              
             <Input label="Estado" type="text" name="estado" span="2" required/>    

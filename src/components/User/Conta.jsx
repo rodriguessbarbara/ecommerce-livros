@@ -17,9 +17,9 @@ const componenteMapping = {
 function Conta() {
   const [ navigation, setNavigation ] = useState(null);
 
-  const renderComponent = () => {
-    const Component = componenteMapping[navigation]; // Obtém o componente correspondente ao valor de navigation
-    return Component ? <Component /> : null; // Renderiza o componente se existir, caso contrário, retorna null
+  const renderizaComponente = () => {
+    const Componente = componenteMapping[navigation];
+    return Componente ? <Componente /> : null;
   };
   
   return (
@@ -28,20 +28,17 @@ function Conta() {
         <h2 className="text-2xl font-medium tracking-tight text-gray-800">Seu Perfil</h2>
       </div>
 
-      <section className="p-6 pb flex gap-10 bg-gray-200 rounded-md">
-        <div className="flex flex-col border-r-2 border-gray-100 pr-8
-        ">
+      <section className="p-6 pb flex gap-10 bg-gray-100 rounded-md">
+        <div className="flex flex-col border-r-2 border-gray-300 pr-8 items-start">
           {navigationPerfil.map((item) => (
             <button key={item.name} onClick={() => setNavigation(`${item.href}`)}
-            className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+            className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md p-3 text-center text-sm font-medium pt-4">
                 {item.name}
             </button>
           ))}
         </div>
 
-        <div>
-          {renderComponent()}
-        </div>         
+        {renderizaComponente()}
       </section>
     </div>
   )
