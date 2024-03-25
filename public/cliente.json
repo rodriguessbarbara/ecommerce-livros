@@ -1,0 +1,54 @@
+{
+	"cliente": [
+		{
+			"id": 1,
+			"nomeCompleto": "Amenda Silva",
+			"email": "amenda@email.com",
+			"CPF": "12345678922",
+			"telefone": "11912345678",
+			"genero": "Feminino",
+			"dataNascimento": "20/02/1999",
+			"senha": "senha123",
+			"repetirSenha": "senha123",
+			"lagradouro": "Rua",
+			"enderecoResidencial": "Jose Ricardo",
+			"tipoResidencia": "Casa",
+			"num": 40,
+			"CEP": "01230400",
+			"bairro": "Centro",
+			"cidade": "Mogi das Cruzes",
+			"estado": "São Paulo",
+			"pais": "Brasil"
+		}
+	],
+	"cartoes": [
+		{
+			"id": 1,
+			"bandeira": "Visa",
+			"numeroCartao": 123456789012345,
+			"final": 2345,
+			"nome": "Julio R Almeida",
+			"preferencial": true
+		}
+	],
+	"pedidos": [
+		{
+			"id": 1,
+			"livro": "O impulso",
+			"formaPagamento": "cartao",
+			"numeroCartao": 123456789012345,
+			"valor": 37.25,
+			"dataCompra": "20/03/2024",
+			"status": "em processamento"
+		},
+		{
+			"id": 2,
+			"livro": "Tudo é rio",
+			"formaPagamento": "cartao",
+			"numeroCartao": 123444889012230,
+			"valor": 25.5,
+			"dataCompra": "25/03/2024",
+			"status": "entregue"
+		}
+	]
+}

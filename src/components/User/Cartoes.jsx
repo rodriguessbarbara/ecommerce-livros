@@ -1,24 +1,26 @@
 import { useContext, useEffect, useState } from "react";
-import AlterarCartao from "./AlterarCartao";
 import AppContext from "../../context/AppContext";
+import AlterarCartao from "./AlterarCartao";
 import AdicionarCartao from "./AdicionarCartao";
-
-const prevCartoes = [
-  { id: 1, bandeira: 'Visa', final: 3210, nome: 'Jose R Almeida', preferencial: true },
-  { id: 2, bandeira: 'Mastercard', final: 9902, nome: 'Robso Silva', preferencial: false },
-  //{ id: 3, bandeira: 'Mastercard', final: 2157, nome: 'Amanda Santos', preferencial: false },
-]
 
 function Cartoes() {
   const [openAlterarCartao, setOpenAlterarCartao] = useState(false);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
+  const [cartoes, setCartoes] = useState([]);
 
-  const [ cartao, setCartao ] = useState({});
-  const { cartoes, setCartoes } = useContext(AppContext);
+  const [cartao, setCartao] = useState([]);
+  const { dadosCliente } = useContext(AppContext);
 
   useEffect(() => {
-    setCartoes(prevCartoes);
-  }, [setCartoes]);
+    if (dadosCliente && dadosCliente.cartoes) {
+      setCartoes(dadosCliente.cartoes);
+    }
+  }, [dadosCliente]);
+
+  const handleOpenAlterarCartao = (item) => {
+    setCartao(item);
+    setOpenAlterarCartao(true);
+  };
 
   return (
     <div>
@@ -29,15 +31,11 @@ function Cartoes() {
 
       <div className="flex flex-col gap-2">
         {cartoes.map((item) => (
-          <div key={item.id} className="py-4 cursor-pointer bg-gray-300 hover:bg-gray-400 rounded-md px-4 border-2 border-gray-400 text-gray-600" onClick={() => {
-            setCartao(item)
-            setOpenAlterarCartao(true)
-          }
-          }>
+          <div key={item.id} className="py-4 cursor-pointer bg-gray-300 hover:bg-gray-400 rounded-md px-4 border-2 border-gray-400 text-gray-600" onClick={() => handleOpenAlterarCartao(item)}>
             <h4 className="font-semibold text-lg">{item.bandeira}</h4>
             <p>Cartão com final <span className="font-bold">{item.final}</span></p>
-                <p>{item.nome}</p>
-              {item.preferencial && <p className="text-green-700 text-sm">*Preferencial</p>}
+            <p>{item.nome}</p>
+            {item.preferencial && <p className="text-green-700 text-sm">*Preferencial</p>}
           </div>
         ))}
 
@@ -50,7 +48,7 @@ function Cartoes() {
         <AdicionarCartao openAdicionarCartao={openAdicionarCartao} setOpenAdicionarCartao={() => setOpenAdicionarCartao(!openAdicionarCartao)}/>
       </div>
     </div>
-  )
+  );
 }
 
-export default Cartoes
+export default Cartoes;

@@ -1,7 +1,8 @@
-import propTypes from 'prop-types'
-import AppContext from "./AppContext"
-import { useState } from 'react';
+import propTypes from 'prop-types';
+import AppContext from "./AppContext";
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { fetchClients } from '../fetchData';
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -10,10 +11,32 @@ function Provider({ children }) {
   const [isCapaAlternativa, setIsCapaAlternativa] = useState([]);
   const [precoTotal, setPrecoTotal] = useState(0);
   const [selectedBook, setSelectedBook] = useState([]);
-  const [cartoes, setCartoes] = useState([]);
+  const [dadosCliente, setDadosCliente] = useState([]);
   const [login, setLogin] = useState(null);
 
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    fetchClients().then((response) => {
+      setDadosCliente(response);
+    });
+  }, []);
+
+  const atualizarDadosCliente = (novosDadosCliente) => {
+    setDadosCliente((dadosAntigos) => {
+      return { ...dadosAntigos, ...novosDadosCliente };
+    });
+  };
+
+  const userLogin = () => {
+    setLogin(true);
+    navigate('/conta');
+  };
+
+  const userLogout = () => {
+    setLogin(false);
+    navigate('/login');
+  };
 
   const value = {
     books,
@@ -31,24 +54,20 @@ function Provider({ children }) {
     login,
     setLogin,
     userLogin,
-    cartoes,
-    setCartoes,
+    userLogout,
+    dadosCliente,
+    atualizarDadosCliente,
   };
 
-  async function userLogin() {
-    setLogin(true);
-    navigate('/conta');
-  }
-
   return (
-    <AppContext.Provider value={ value }>
+    <AppContext.Provider value={value}>
       {children}
     </AppContext.Provider>
-  )
+  );
 }
 
-export default Provider;
-
 Provider.propTypes = {
-  children: propTypes.any,
-}.isRequired;
+  children: propTypes.any.isRequired,
+};
+
+export default Provider;

@@ -1,28 +1,28 @@
+/* eslint-disable react/prop-types */
 import { useContext } from 'react';
 import Input from '../Input';
 import AppContext from '../../context/AppContext';
 import useForm from '../../hooks/useForm';
 
-/* eslint-disable react/prop-types */
 function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
   const nome = useForm();
   const bandeira = useForm();
   const numeroCartao = useForm();
   const codSeguranca = useForm();
 
-  const { setCartoes } = useContext(AppContext);
+  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
 
   async function handleAdicionarCartao(event) {
     event.preventDefault();
 
-    if (numeroCartao.validate() && nome.validate() && bandeira.validate() && codSeguranca.validate()) {
+    if (numeroCartao.validate() && nome.validate() && codSeguranca.validate()) {
       const novoCartao = {
         numero: numeroCartao.value,
         nome: nome.value,
         bandeira: bandeira.value,
         codigoSeguranca: codSeguranca.value
       };
-      setCartoes(prevCartoes => [...prevCartoes, novoCartao]);
+      atualizarDadosCliente({ cartoes: [...dadosCliente.cartoes, novoCartao] });
       setOpenAdicionarCartao(false);
     }
   }
@@ -67,4 +67,4 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
   }
 }
 
-export default AdicionarCartao
+export default AdicionarCartao;
