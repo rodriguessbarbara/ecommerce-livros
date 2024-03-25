@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import CarrinhoButton from './CarrinhoButton';
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
-import fetchBooks from '../../fetchBooks';
+import { fetchBooks } from '../../fetchData';
 
 //const navigation = [
 //  { name: 'Login/Criar', href: '/login', current: false },

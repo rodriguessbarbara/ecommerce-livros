@@ -1,5 +1,5 @@
 import AppContext from '../../context/AppContext';
-import fetchBooks from '../../fetchBooks';
+import { fetchBooks } from '../../fetchData';
 import { useContext, useState } from 'react';
 
 function Search() {

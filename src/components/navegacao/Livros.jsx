@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import fetchBooks from "../../fetchBooks";
+import { fetchBooks } from "../../fetchData";
 import LivrosCard from "./LivrosCard";
 import AppContext from "../../context/AppContext";
 import Filtros from "./Filtros";
