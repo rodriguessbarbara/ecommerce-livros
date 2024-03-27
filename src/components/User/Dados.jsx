@@ -8,8 +8,10 @@ function Dados() {
  const [formData, setFormData] = useState([]);
 
  useEffect(() => {
+  if (dadosCliente && dadosCliente.cliente) {
     setFormData(dadosCliente.cliente[0]);
- }, []);
+  }
+ }, [dadosCliente]);
 
  const handleInputChange = (event) => {
     const { name, value } = event.target;
