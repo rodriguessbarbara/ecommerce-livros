@@ -5,15 +5,17 @@ import { useContext } from "react";
 import AppContext from "../../context/AppContext";
 
 function LoginForm() {
-  const username = useForm();
+  const email = useForm("email");
   const password = useForm();
   const { userLogin } = useContext(AppContext);
-
+  
   async function handleLogin(event) {
     event.preventDefault();
 
-    if (username.validate() && password.validate()) {
-      userLogin();
+    if (email.validate() && password.validate()) {
+      if (password.value.toLocaleLowerCase() === 'admin') {
+        userLogin('admin');
+      } else userLogin('user');
     }
   }
 
@@ -27,7 +29,7 @@ function LoginForm() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg">
           <form className="space-y-6" action="#" method="POST" onSubmit={handleLogin}>
             
-            <Input label="Email" type="email" name="email" placeholder="exemplo@email.com" {...username} required/>
+            <Input label="Email" type="email" name="email" placeholder="exemplo@email.com" {...email} required/>
             
             <Input label="Senha" type="password" name="password" placeholder="*************" {...password} required/>
             <div className="text-sm">
