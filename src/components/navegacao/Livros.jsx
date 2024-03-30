@@ -6,7 +6,7 @@ import Filtros from "./Filtros";
 import AddLivroButton from "../Admin/AddLivroButton";
 
 function Livros() {
-  const { books, setBooks } = useContext(AppContext);
+  const { books, setBooks, login } = useContext(AppContext);
   const [appliedFilters, setAppliedFilters] = useState([]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function Livros() {
             </div>
           </div>
 
-          <AddLivroButton />
+          {(login && login === 'admin') && <AddLivroButton />}
         </div>
       </div>
     </>

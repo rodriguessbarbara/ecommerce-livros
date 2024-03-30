@@ -1,8 +1,13 @@
 import { useContext, useState } from "react";
+import { useLocation } from 'react-router-dom';
+
 import Pedidos from "./Pedidos";
 import Cartoes from "./Cartoes";
 import Dados from "./Dados";
 import AppContext from "../../context/AppContext";
+import Vendas from "../Admin/Vendas";
+import Clientes from "../Admin/Clientes";
+import Estoque from "../Admin/Estoque";
 
 const navigationPerfil = [
   { name: 'Seus pedidos', href: 'Pedidos', current: false },
@@ -11,15 +16,28 @@ const navigationPerfil = [
   { name: 'Sair', href: 'Sair', current: false },
 ]
 
+const navigationAdmin = [
+  { name: 'Vendas realizadas', href: 'Vendas', current: false },
+  { name: 'Clientes cadastrados', href: 'Clientes', current: false },
+  { name: 'Livros - Estoque', href: 'Estoque', current: false },
+  { name: 'Sair', href: 'Sair', current: false },
+]
+
 const componenteMapping = {
   'Pedidos': Pedidos,
   'Dados': Dados,
   'Cartoes': Cartoes,
+  'Vendas': Vendas,
+  'Clientes': Clientes,
+  'Estoque': Estoque,
 };
 
 function Conta() {
   const [ navigation, setNavigation ] = useState(null);
   const { userLogout } = useContext(AppContext);
+  const localizacao = useLocation();
+
+  const navigationArray = localizacao.pathname === '/admin' ? navigationAdmin : navigationPerfil;
 
   const renderizaComponente = () => {
     const Componente = componenteMapping[navigation];
@@ -32,13 +50,16 @@ function Conta() {
 
       <section className="p-6 pb-14 flex gap-12 bg-gray-100 rounded-md my-6">
         <div className="flex flex-col border-r-2 border-gray-300 pr-8 items-start">
-          {navigationPerfil.map((item) => (
-            <button key={item.name} onClick={() => {
-              if (item.href === 'Sair') userLogout();
-              setNavigation(`${item.href}`)
-            }}
-            className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md p-3 text-center text-sm font-medium pt-4">
-                {item.name}
+          {navigationArray.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => {
+                if (item.href === 'Sair') userLogout();
+                setNavigation(`${item.href}`);
+              }}
+              className="text-gray-600 hover:bg-gray-700 hover:text-white rounded-md p-3 text-center text-sm font-medium pt-4"
+            >
+              {item.name}
             </button>
           ))}
         </div>

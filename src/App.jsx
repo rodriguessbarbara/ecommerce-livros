@@ -8,6 +8,7 @@ import CompraOverview from "./components/User/CompraOverview";
 import LivroDetalhe from "./components/navegacao/LivroDetalhe";
 import Usuario from "./components/User/Usuario";
 import ProtectedRoute from "./ProtectedRoute";
+import Admin from "./components/Admin/Admin";
 
 function App() {
 
@@ -28,6 +29,13 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Usuario />
+                  </ProtectedRoute> }
+                />
+                <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute>
+                    <Admin />
                   </ProtectedRoute> }
                 />
 
