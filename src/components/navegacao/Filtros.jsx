@@ -32,6 +32,14 @@ const filtros = [
       { value: 'Carla Madeira', label: 'Carla Madeira', checked: false },
     ],
   },
+  {
+    id: 'edicao',
+    name: 'Edicao',
+    options: [
+      { value: 'Português', label: 'Português', checked: false },
+      { value: 'Inglês', label: 'Inglês', checked: false },
+    ],
+  },
 ]
 
 function Filtros({ applyFilters }) {

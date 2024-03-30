@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-//import CompraOverview from "./CompraOverview";
 import FinalizarCompra from "./FinalizarCompra";
 import MsgCompraEfetuada from "./MsgCompraEfetuada";
 import Conta from "./Conta";
