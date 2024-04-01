@@ -25,12 +25,25 @@ function Pedidos() {
           <div className="border-b-2 border-gray-400 bg-gray-300 p-4 font-light flex gap-8">
             <p>Pedido realizado em <span className="font-normal">{pedido.dataCompra}</span></p>
             <p>Total: <span className="font-normal">R${pedido.valor}</span> </p>
-            <p>pedido n.: <span className="font-normal">XXXX</span></p>
+            <p>pedido n.: <span className="font-normal">{pedido.id}</span></p>
           </div>
 
-          <div className="p-4">
-            <p>{pedido.livro} </p>
-            <span className="text-sm">Capa Original </span>
+          <div className="px-4 py-4">
+              {typeof pedido.livro != "string" ? (
+                pedido.livro.map((item) => (
+                  <div key={item} className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300">
+                    <p >{item} </p>
+                    <span className="text-sm">Capa Original </span>
+                  </div>
+                ))
+                ) : (
+                  <div className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300 ">
+                    <p className="flex gap-8">{pedido.livro} </p>
+                    <span className="text-sm">Capa Original </span>
+                  </div>
+                  )
+              }
+
             <p>{pedido.formaPagamento}<span> número: {pedido.numeroCartao}</span></p>
             <p className="text-blue-600 font-medium uppercase">{pedido.status}</p>
           </div>
