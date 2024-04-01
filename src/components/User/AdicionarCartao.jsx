@@ -17,9 +17,10 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
 
     if (numeroCartao.validate() && nome.validate() && codSeguranca.validate()) {
       const novoCartao = {
+        bandeira: bandeira.value,
         numero: numeroCartao.value,
         nome: nome.value,
-        bandeira: bandeira.value,
+        final: (numeroCartao.value).slice(-4),
         codigoSeguranca: codSeguranca.value
       };
       atualizarDadosCliente({ cartoes: [...dadosCliente.cartoes, novoCartao] });

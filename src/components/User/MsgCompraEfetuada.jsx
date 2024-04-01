@@ -1,16 +1,32 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
 
-function MsgCompraEfetuada() {
-  return (
-    <div className="min-h-screen sm:max-w-6xl mx-auto pb-24 flex flex-col text-gray-800 sm:mt-24">
-        <h2 className="text-2xl font-medium text-lime-600 pt-5 pb-4">
+function MsgCompraEfetuada({ isOpen, setModalOpen }) {
+
+  if (isOpen) {
+    return (
+      <div className="text-gray-800 bg-opacity-85 bg-gray-600 fixed inset-0 z-50 flex">
+        <div className="h-1/3 max-w-xl w-full mx-auto my-auto bg-white rounded-lg">
+        
+        <div className="mx-10 flex flex-col items-center">
+          <h2 className="text-2xl font-medium text-lime-600 text-center pt-16">
             Compra efetuada com sucesso!
-        </h2>
-        <Link to="/">
-          <p className="hover:text-blue-800">Voltar ao menu principal.</p>
-        </Link>
-    </div>
-  )
+          </h2>
+
+          <div className="flex gap-4 mt-2">
+            <Link to="/conta" onClick={setModalOpen}>
+              <p className="text-blue-700 hover:text-blue-800">Ver pedido </p>
+            </Link> |
+            <Link to="/" onClick={setModalOpen}>
+              <p className="text-blue-700 hover:text-blue-800">Ir ao menu inicial</p>
+            </Link>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    )
+  }
 }
 
 export default MsgCompraEfetuada
