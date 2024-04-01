@@ -21,6 +21,32 @@
 			"pais": "Brasil"
 		}
 	],
+	"endereco": [
+		{
+			"id": 1,
+			"lagradouro": "Rua",
+			"enderecoResidencial": "Jose Ricardo",
+			"tipoResidencia": "Casa",
+			"num": 40,
+			"CEP": "01230400",
+			"bairro": "Centro",
+			"cidade": "Mogi das Cruzes",
+			"estado": "São Paulo",
+			"pais": "Brasil"
+		},
+		{
+			"id": 2,
+			"lagradouro": "Rua",
+			"enderecoResidencial": "Thuller",
+			"tipoResidencia": "Apartamento",
+			"num": 120,
+			"CEP": "98765432",
+			"bairro": "Bras Cubas",
+			"cidade": "Mogi das Cruzes",
+			"estado": "São Paulo",
+			"pais": "Brasil"
+		}
+	],
 	"cartoes": [
 		{
 			"id": 1,
