@@ -24,8 +24,8 @@ function PagamentoCompra() {
     const novoPedido = {
       id: 3,
       livro: carrinhoItens.map((item) => (item.titulo)),
-      formaPagamento: cartaoSelecionado.formaPagamento,
-      numeroCartao: cartaoSelecionado.numeroCartao,
+      formaPagamento: "cartao",
+      numeroCartao: cartaoSelecionado.numero,
       valor: precoTotal,
       dataCompra: dataCompra,
       status: "em processamento"
