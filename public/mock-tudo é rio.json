@@ -20,7 +20,9 @@
 			"numeroPaginas": 391,
 			"sinopse": "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
 			"dimensoes": "altura, largura, peso, profundidade",
-			"precificacao": 39.9
+			"precificacao": 39.9,
+			"quantidade": 3,
+			"statusAtivo": true
 		}
 	]
 }
