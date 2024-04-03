@@ -57,7 +57,7 @@ function Clientes() {
             )) 
           ))}
 
-        <button className={`my-2 rounded font-medium statusCliente ${cliente.statusAtivo ? `text-red-600` : `text-green-600`} `} onClick={() => handleMudaStatus(cliente.id, !cliente.statusAtivo)}>
+        <button className={`my-2 rounded font-medium statusCliente ${cliente.statusAtivo ? `text-red-600 hover:text-red-700` : `text-green-600 hover:text-green-700`} `} onClick={() => handleMudaStatus(cliente.id, !cliente.statusAtivo)}>
           {cliente.statusAtivo ? "Inativar cliente" : "Ativar cliente"}
         </button>
       </div>

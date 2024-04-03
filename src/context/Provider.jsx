@@ -11,7 +11,6 @@ function Provider({ children }) {
   const [isCarrinhoAtivo, setIsCarrinhoAtivo] = useState(false);
   const [isCapaAlternativa, setIsCapaAlternativa] = useState([]);
   const [precoTotal, setPrecoTotal] = useState(0);
-  const [selectedBook, setSelectedBook] = useState([]);
   const [dadosCliente, setDadosCliente] = useState([]);
   const [login, setLogin] = useState(null);
 //  const [userData, setUserData] = useState(null);
@@ -112,8 +111,6 @@ function Provider({ children }) {
     setIsCapaAlternativa,
     precoTotal,
     setPrecoTotal,
-    selectedBook,
-    setSelectedBook,
     login,
     setLogin,
     userLogin,
