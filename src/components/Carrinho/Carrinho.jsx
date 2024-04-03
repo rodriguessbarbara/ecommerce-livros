@@ -8,14 +8,8 @@ import '../../index.css'
 function Carrinho() {
   const navigate = useNavigate();
 
-  const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo, precoTotal, setPrecoTotal } = useContext(AppContext);
+  const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo, precoTotal } = useContext(AppContext);
   //const [numQtd, setNumQtd] = useState(1);
-
-  useEffect(() => {
-    setPrecoTotal(carrinhoItens.reduce((acc, item) => {
-      return item.precificacao + acc;
-    }, 0));
-  }, [carrinhoItens, setPrecoTotal]);
 
   return (
     <div className={`bg-white w-full max-w-80 h-screen fixed top-0 right-0 px-4 flex flex-col space-between overflow-auto carrinho ${isCarrinhoAtivo ? 'carrinho--ativo' : ''} `}>

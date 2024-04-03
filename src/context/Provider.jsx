@@ -18,6 +18,12 @@ function Provider({ children }) {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setPrecoTotal(carrinhoItens.reduce((acc, item) => {
+      return item.precificacao + acc;
+    }, 0));
+  }, [carrinhoItens, setPrecoTotal]);
+  
 //  useEffect(() => {
 //    listarClientes();
 //  }, []);

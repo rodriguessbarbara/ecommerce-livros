@@ -2,10 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import AdicionarEndereco from "./AdicionarEndereco";
+import { useLocation } from 'react-router-dom';
 
 function SelecionarEnderecoCompra() {
-  const { precoTotal, dadosCliente, setIsCarrinhoAtivo } = useContext(AppContext);
+  const { dadosCliente, setIsCarrinhoAtivo } = useContext(AppContext);
 
+  const location = useLocation();
+  const { precoEFrete } = location.state || {};
   const navigate = useNavigate();
   const [endSelecionado, setEndSelecionado] = useState(null);
   const [enderecoData, setEnderecoData] = useState([]);
@@ -53,12 +56,16 @@ function SelecionarEnderecoCompra() {
 
       <div className="self-end text-end">
         <p className="font-bold text-lg text-gray-800">
-              Preço Total: R$ {precoTotal}
+              Preço Total: R$ {precoEFrete}
         </p>
 
         <button onClick={() => {
             setIsCarrinhoAtivo(false)
-            navigate("/conta/pagamento-compra")
+            navigate("/conta/pagamento-compra", {
+              state: {
+                precoEFrete: precoEFrete,
+              }
+            });
           }}
             className="rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
             Continuar

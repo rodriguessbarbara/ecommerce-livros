@@ -1,15 +1,30 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 import CarrinhoItem from "../Carrinho/CarrinhoItem";
 import Input from "../Input";
 
-function CompraOverview() {
+function CompraOverview() { 
   const navigate = useNavigate();
   const [isCupom, setIsCupom] = useState(false);
   const [cupomValue, setCupomValue] = useState("");
+  const [frete, setFrete] = useState(0);
 
   const { carrinhoItens, precoTotal, setIsCarrinhoAtivo } = useContext(AppContext);
+
+  function calculaFrete(precoTotal) {
+    let valorFrete = 5.50;
+    if (precoTotal > 49 && precoTotal < 100) {
+      valorFrete = 2.50;
+    } else if (precoTotal > 100) {
+      valorFrete = 0;
+    }
+    setFrete(valorFrete);
+  }
+
+  useEffect(() => {
+    calculaFrete(precoTotal);
+  }, [precoTotal]);
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto pb-24 text-gray-800 mt-16 px-4 grid grid-cols-3 gap-8">
@@ -33,11 +48,14 @@ function CompraOverview() {
       
         <div className="mb-6 flex flex-col px-6 py-12 bg-gray-100 rounded-md">
           <p>
-            Produtos: R$50.25
+            Produtos: R$ {precoTotal.toFixed(2)}
           </p>
           <p>
-            Frete: R$ 5.50
+            Frete: R${frete.toFixed(2)}
           </p>
+          <span className="font-medium text-sm text-red-600">
+            {precoTotal < 100 && `adicione mais R$${(100 - precoTotal).toFixed(2)} para ganhar frete gratis`} 
+          </span>
 
           {!isCupom ? (
             <button className="self-start text-blue-800 font-medium" onClick={() => setIsCupom(true)}>
@@ -51,12 +69,16 @@ function CompraOverview() {
           )}
 
           <p className="mt-6 font-medium text-lg text-gray-800 text-end mb-4">
-            Preço Total: R$ {precoTotal}
+            Preço Total: R$ {(precoTotal + frete).toFixed(2)}
           </p>
 
           <button onClick={() => {
             setIsCarrinhoAtivo(false)
-            navigate("/conta/endereco-compra")
+            navigate("/conta/endereco-compra", {
+              state: {
+                precoEFrete: (precoTotal + frete),
+              }
+            });
           }}
             className="rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
             Continuar

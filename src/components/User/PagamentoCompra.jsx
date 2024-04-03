@@ -2,10 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import MsgCompraEfetuada from "./MsgCompraEfetuada";
 import AdicionarCartao from "./AdicionarCartao";
+import { useLocation } from 'react-router-dom';
 
 function PagamentoCompra() {
-  const { carrinhoItens, setCarrinhoItens, precoTotal, dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { carrinhoItens, setCarrinhoItens, dadosCliente, atualizarDadosCliente } = useContext(AppContext);
 
+  const location = useLocation();
+  const { precoEFrete } = location.state || {};
   const [openModal, setOpenModal] = useState(false);
   const [cartaoData, setCartaoData] = useState([]);
   const [cartaoSelecionado, setCartaoSelecionado] = useState([]);
@@ -26,7 +29,7 @@ function PagamentoCompra() {
       livro: carrinhoItens.map((item) => (item.titulo)),
       formaPagamento: "cartao",
       numeroCartao: cartaoSelecionado.numero,
-      valor: precoTotal,
+      valor: precoEFrete,
       dataCompra: dataCompra,
       status: "em processamento"
     };
@@ -72,7 +75,7 @@ function PagamentoCompra() {
 
       <div className="self-end text-end">
         <p className="font-bold text-lg text-gray-800">
-              Preço Total: R$ {precoTotal}
+              Preço Total: R$ {precoEFrete}
         </p>
 
         <button onClick={handleConfirm}
