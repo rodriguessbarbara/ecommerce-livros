@@ -19,7 +19,10 @@
 			"ISBN": "22222",
 			"numeroPaginas": 391,
 			"sinopse": "Ficção científica eletrizante de Blake Crouch aborda realidades alternativas, caminhos não percorridos e questiona: você é feliz com a vida que tem?",
-			"dimensoes": "altura, largura, peso, profundidade",
+			"altura": "20.2",
+			"largura": "13.6",
+			"peso": "49",
+			"profundidade": "1.8",
 			"precificacao": 39.9,
 			"quantidade": 11,
 			"statusAtivo": true

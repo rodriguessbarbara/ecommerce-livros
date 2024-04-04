@@ -35,7 +35,7 @@ function LivroDetalhe() {
           </p>
 
           <p className="border-b-2 pb-4 text-sm text-gray-500">
-            Gênero(s): {data.categoria.join(", ")}
+            Gênero(s): {typeof data.categoria != "string" ? data.categoria.join(", "): data.categoria}
           </p>
           <p className="pt-8">
             {data.sinopse}
@@ -59,7 +59,7 @@ function LivroDetalhe() {
               </p>
               <p>
                 Dimensões
-                {data.dimensoes}
+                {data.altura}x{data.largura}x{data.peso}x{data.profundidade}
               </p>
             </div>
         </div>

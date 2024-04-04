@@ -7,7 +7,7 @@ function Pedidos() {
   function handleSolicitarTroca(pedidoId) {
     const novosDadosPedidos = dadosCliente.pedidos.map(pedido => {
       if (pedido.id === pedidoId) {
-        return { ...pedido, status: 'aguardando confirmação' };
+        return { ...pedido, status: 'em troca' };
       }
       return pedido;
     });
