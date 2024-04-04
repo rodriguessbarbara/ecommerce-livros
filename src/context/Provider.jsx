@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import AppContext from "./AppContext";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchClients } from '../fetchData';
+import { fetchBooks, fetchClients } from '../fetchData';
 //import { POST_USER , GET_USERS, GET_USER, UPDATE_USER, DELETE_USER } from '../api'
 
 function Provider({ children }) {
@@ -84,6 +84,12 @@ function Provider({ children }) {
       return { ...dadosAntigos, ...novosDadosCliente };
     });
   };
+
+  useEffect(() => {
+    fetchBooks("tudo").then((response) => {
+      setBooks(response);
+    });
+  }, [setBooks]);
 
   const userLogin = (userType) => {
     if (userType === 'admin') {

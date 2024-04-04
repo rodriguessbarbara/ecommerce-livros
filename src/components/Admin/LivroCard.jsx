@@ -16,7 +16,7 @@ function LivroCard({ isOpen, setModalOpen }) {
               </button>
             </div>
 
-            <NovoLivroForm/>
+            <NovoLivroForm setModalOpen={() => setModalOpen(!isOpen)}/>
           </div>
 
         </div>

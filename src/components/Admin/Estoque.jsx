@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { fetchBooks } from "../../fetchData";
 import AppContext from "../../context/AppContext";
 import Search from "../Header/Search";
 import EntradaEstoque from "./EntradaEstoque";
@@ -7,12 +6,6 @@ import EntradaEstoque from "./EntradaEstoque";
 function Estoque() {
   const { books, setBooks } = useContext(AppContext);
   const [isEntradaEstoque, setIsEntradaEstoque] = useState(false);
-
-  useEffect(() => {
-    fetchBooks("tudo").then((response) => {
-      setBooks(response);
-    });
-  }, [setBooks]);
 
   useEffect(() => {
     const hasBookInativo = books.some(book => book.quantidade === 0 && book.statusAtivo);
