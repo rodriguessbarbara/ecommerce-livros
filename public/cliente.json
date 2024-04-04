@@ -70,7 +70,16 @@
 			"numeroCartao": 123444889012230,
 			"valor": 25.5,
 			"dataCompra": "25/03/2024",
-			"status": "entregue"
+			"status": "EM TROCA"
+		},
+		{
+			"id": 2,
+			"livro": ["Tudo é rio, recursão"],
+			"formaPagamento": "cartao",
+			"numeroCartao": 38111189012341,
+			"valor": 55.2,
+			"dataCompra": "30/03/2024",
+			"status": "EM PROCESSAMENTO"
 		}
 	]
 }
