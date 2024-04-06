@@ -4,6 +4,8 @@ import CarrinhoButton from './CarrinhoButton';
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { fetchBooks } from '../../fetchData';
+import { useLocation } from 'react-router-dom';
+
 
 //const navigation = [
 //  { name: 'Login/Criar', href: '/login', current: false },
@@ -12,6 +14,7 @@ import { fetchBooks } from '../../fetchData';
 
 function Header() {
   const { login, setBooks } = useContext(AppContext);
+  const localizacao = useLocation();
 
   const handleHome = async () => {
     const books = await fetchBooks("tudo");
@@ -32,8 +35,8 @@ return (
               />
             </Link>
           </div>
-
-          <Search/>
+        
+        {localizacao.pathname === "/" && <Search/>}
 
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex around space-x-4">
