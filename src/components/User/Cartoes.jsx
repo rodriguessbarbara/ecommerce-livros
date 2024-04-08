@@ -9,13 +9,13 @@ function Cartoes() {
   const [cartoes, setCartoes] = useState([]);
 
   const [cartao, setCartao] = useState([]);
-  const { dadosCliente } = useContext(AppContext);
+  const { dadosMock } = useContext(AppContext);
 
   useEffect(() => {
-    if (dadosCliente && dadosCliente.cartoes) {
-      setCartoes(dadosCliente.cartoes);
+    if (dadosMock && dadosMock.cartoes) {
+      setCartoes(dadosMock.cartoes);
     }
-  }, [dadosCliente]);
+  }, [dadosMock]);
 
   const handleOpenAlterarCartao = (item) => {
     setCartao(item);

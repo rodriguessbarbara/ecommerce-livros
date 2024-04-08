@@ -5,7 +5,7 @@ import AppContext from '../../context/AppContext';
 
 function AdicionarEndereco({ openAdicionarEndereco, setOpenAdicionarEndereco }) {
   const [formData, setFormData] = useState([]);
-  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
 
   async function handleAdicionarEndereco(event) {
     event.preventDefault();
@@ -22,7 +22,7 @@ function AdicionarEndereco({ openAdicionarEndereco, setOpenAdicionarEndereco }) 
         pais: formData.pais,
       };
   
-      atualizarDadosCliente({ endereco: [...dadosCliente.endereco, novoEndereco] });
+      atualizarDadosMock({ endereco: [...dadosMock.endereco, novoEndereco] });
       setFormData([]);
       setOpenAdicionarEndereco(false);
     }

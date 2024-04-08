@@ -6,7 +6,7 @@ import AppContext from '../../context/AppContext';
 function AlterarCartao({ isOpenAlterarCartao, setIsOpenAlterarCartao, cartao }) {
   const [nomeValue, setNomeValue] = useState('');
   const [isPreferencial, setIsPreferencial] = useState(null);
-  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
 
   useEffect(() => {
     if (cartao) {
@@ -18,16 +18,16 @@ function AlterarCartao({ isOpenAlterarCartao, setIsOpenAlterarCartao, cartao }) 
   const handleSaveCartao = (event) => {
     event.preventDefault();
     const updatedCartao = { ...cartao, nome: nomeValue, preferencial: isPreferencial };
-    const updatedCartoes = dadosCliente.cartoes.map(item => (item.id === updatedCartao.id ? updatedCartao : item));
-    atualizarDadosCliente({ cartoes: updatedCartoes });
+    const updatedCartoes = dadosMock.cartoes.map(item => (item.id === updatedCartao.id ? updatedCartao : item));
+    atualizarDadosMock({ cartoes: updatedCartoes });
 
     setIsOpenAlterarCartao(false);
   };
 
   const handleRemoveCartao = (event) => {
     event.preventDefault();
-    const removedCartoes = dadosCliente.cartoes.filter(item => item.id !== cartao.id);
-    atualizarDadosCliente({ cartoes: removedCartoes });
+    const removedCartoes = dadosMock.cartoes.filter(item => item.id !== cartao.id);
+    atualizarDadosMock({ cartoes: removedCartoes });
 
     setIsOpenAlterarCartao(false);
   };

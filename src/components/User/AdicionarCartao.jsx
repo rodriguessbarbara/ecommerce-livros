@@ -10,7 +10,7 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
   const numeroCartao = useForm();
   const codSeguranca = useForm();
 
-  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
 
   async function handleAdicionarCartao(event) {
     event.preventDefault();
@@ -23,7 +23,7 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
         final: (numeroCartao.value).slice(-4),
         codigoSeguranca: codSeguranca.value
       };
-      atualizarDadosCliente({ cartoes: [...dadosCliente.cartoes, novoCartao] });
+      atualizarDadosMock({ cartoes: [...dadosMock.cartoes, novoCartao] });
       setOpenAdicionarCartao(false);
     }
   }

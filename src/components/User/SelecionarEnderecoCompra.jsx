@@ -5,7 +5,7 @@ import AdicionarEndereco from "./AdicionarEndereco";
 import { useLocation } from 'react-router-dom';
 
 function SelecionarEnderecoCompra() {
-  const { dadosCliente, setIsCarrinhoAtivo } = useContext(AppContext);
+  const { dadosMock, setIsCarrinhoAtivo } = useContext(AppContext);
 
   const location = useLocation();
   const { precoEFrete } = location.state || {};
@@ -15,10 +15,10 @@ function SelecionarEnderecoCompra() {
   const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
 
   useEffect(() => {
-    if (dadosCliente) {
-      setEnderecoData(dadosCliente.endereco);
+    if (dadosMock) {
+      setEnderecoData(dadosMock.endereco);
     }
-  }, [dadosCliente]);
+  }, [dadosMock]);
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto text-gray-800 mt-16 px-4">

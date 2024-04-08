@@ -2,21 +2,21 @@ import { useContext, useEffect, useState } from "react"
 import AppContext from "../../context/AppContext";
 
 function Clientes() {
-  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
   const [dadosCadastrais, setDadosCadastrais] = useState([]);
   const [dadosEnderecos, setDadosEnderecos] = useState([]);
 
   useEffect(() => {
-    if (dadosCliente && dadosCliente.cliente) {
-      setDadosCadastrais(dadosCliente.cliente);
+    if (dadosMock && dadosMock.cliente) {
+      setDadosCadastrais(dadosMock.cliente);
     }
-   }, [dadosCliente]); 
+   }, [dadosMock]); 
 
    useEffect(() => {
-    if (dadosCliente && dadosCliente.endereco) {
-      setDadosEnderecos(dadosCliente.endereco);
+    if (dadosMock && dadosMock.endereco) {
+      setDadosEnderecos(dadosMock.endereco);
     }
-   }, [dadosCliente]);
+   }, [dadosMock]);
 
   function handleMudaStatus(id, status) {
     const novoStatus = dadosCadastrais.map(c => {
@@ -26,7 +26,7 @@ function Clientes() {
       return c;
     });
 
-    atualizarDadosCliente({ ...dadosCliente, cliente: novoStatus });
+    atualizarDadosMock({ ...dadosMock, cliente: novoStatus });
   }
   
   return (

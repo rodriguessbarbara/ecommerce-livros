@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 
 function Vendas() {
-  const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
   const [filtroStatus, setFiltroStatus] = useState("all");
   const [filteredPedidos, setFilteredPedidos] = useState([]);
 
@@ -11,47 +11,47 @@ function Vendas() {
   };
 
   useEffect(() => {
-    const pedidosFiltrados = dadosCliente.pedidos.filter((pedido) => {
+    const pedidosFiltrados = dadosMock.pedidos.filter((pedido) => {
       if (filtroStatus === "all") {
         return true;
       }
       return pedido.status === filtroStatus;
     });
     setFilteredPedidos(pedidosFiltrados);
-  }, [dadosCliente.pedidos, filtroStatus]);
+  }, [dadosMock.pedidos, filtroStatus]);
 
 
   function despacharProdutos(vendaId) {
-    const novosDadosPedidos = dadosCliente.pedidos.map(pedido => {
+    const novosDadosPedidos = dadosMock.pedidos.map(pedido => {
       if (pedido.id === vendaId) {
         return { ...pedido, status: 'EM TRÂNSITO' };
       }
       return pedido;
     });
 
-    atualizarDadosCliente({ ...dadosCliente, pedidos: novosDadosPedidos });
+    atualizarDadosMock({ ...dadosMock, pedidos: novosDadosPedidos });
   }
 
   function confirmarEntrega(vendaId) {
-    const novosDadosPedidos = dadosCliente.pedidos.map(pedido => {
+    const novosDadosPedidos = dadosMock.pedidos.map(pedido => {
       if (pedido.id === vendaId) {
         return { ...pedido, status: 'ENTREGUE' };
       }
       return pedido;
     });
 
-    atualizarDadosCliente({ ...dadosCliente, pedidos: novosDadosPedidos });
+    atualizarDadosMock({ ...dadosMock, pedidos: novosDadosPedidos });
   }
 
   function autorizarTroca(vendaId) {
-    const novosDadosPedidos = dadosCliente.pedidos.map(pedido => {
+    const novosDadosPedidos = dadosMock.pedidos.map(pedido => {
       if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'EM TROCA') {
         return { ...pedido, status: 'TROCA AUTORIZADA' };
       }
       return pedido;
     });
 
-    atualizarDadosCliente({ ...dadosCliente, pedidos: novosDadosPedidos });
+    atualizarDadosMock({ ...dadosMock, pedidos: novosDadosPedidos });
   }
 
   return (

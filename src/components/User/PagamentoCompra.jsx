@@ -5,7 +5,7 @@ import AdicionarCartao from "./AdicionarCartao";
 import { useLocation } from 'react-router-dom';
 
 function PagamentoCompra() {
-  const { carrinhoItens, setCarrinhoItens, dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+  const { carrinhoItens, setCarrinhoItens, dadosMock, atualizarDadosMock } = useContext(AppContext);
 
   const location = useLocation();
   const { precoEFrete } = location.state || {};
@@ -15,10 +15,10 @@ function PagamentoCompra() {
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
 
   useEffect(() => {
-    if (dadosCliente) {
-      setCartaoData(dadosCliente.cartoes);
+    if (dadosMock) {
+      setCartaoData(dadosMock.cartoes);
     }
-  }, [dadosCliente]);
+  }, [dadosMock]);
 
   const handleConfirm = (event) => {
     event.preventDefault();
@@ -34,7 +34,7 @@ function PagamentoCompra() {
       status: "em processamento"
     };
 
-    atualizarDadosCliente({ pedidos: [...dadosCliente.pedidos, novoPedido] });
+    atualizarDadosMock({ pedidos: [...dadosMock.pedidos, novoPedido] });
     setCarrinhoItens([]);
     setOpenModal(true);
   };
