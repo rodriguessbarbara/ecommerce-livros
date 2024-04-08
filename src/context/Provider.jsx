@@ -1,9 +1,10 @@
 import propTypes from 'prop-types';
 import AppContext from "./AppContext";
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { fetchBooks, fetchClients } from '../fetchData';
-//import { POST_USER , GET_USERS, GET_USER, UPDATE_USER, DELETE_USER } from '../api'
+import { POST_USER , GET_USER, GET_USERS, UPDATE_USER, DELETE_USER, CHECK_USER } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -13,8 +14,10 @@ function Provider({ children }) {
   const [precoTotal, setPrecoTotal] = useState(0);
   const [dadosCliente, setDadosCliente] = useState([]);
   const [login, setLogin] = useState(null);
-//  const [userData, setUserData] = useState(null);
+  const [erro, setErro] = useState(null);
+  const [userId, setUserId] = useState(null);
 
+  const [dadosMock, setDadosMock] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,68 +25,82 @@ function Provider({ children }) {
       return item.precificacao + acc;
     }, 0));
   }, [carrinhoItens, setPrecoTotal]);
-  
-//  useEffect(() => {
-//    listarClientes();
-//  }, []);
 
-//  const listarClientes = async () => {
-//    try {
-//      const response = await GET_USERS();
-//      setDadosCliente(response.data);
-//      console.log("Clientes listados com sucesso:", response.data);
-//    } catch (error) {
-//      console.error("Erro ao listar clientes:", error);
-//      throw error;
-//    }
-//  };
+  const listarClientes = async () => {
+    try {
+      setErro(null);
+
+      const response = await GET_USERS();
+      //setDadosCliente(response.data);
+      console.log("Clientes listados com sucesso:", response.data);
+      return response.data
+    } catch (error) {
+      setErro(error.response.data);
+      throw error;
+    }
+  };
+
+  const listarCliente = async (userId) => {
+    try {
+      setErro(null);
+
+      const response = await GET_USER(userId);
+      setDadosCliente(response.data[0]);
+    } catch (error) {
+      setErro(error.response.data);
+      throw error;
+    }
+  };
 
   const criarUsuario = async (novoUsuario) => {
     try {
-      //const response = await POST_USER(novoUsuario);
-      //console.log("Usuário criado com sucesso:", response.data);
-      //return response.data;
-      console.log("Usuário criado com sucesso:");
+      setErro(null);
 
+      const response = await POST_USER(novoUsuario);
+      userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
+      return response.data;
     } catch (error) {
-      console.error("Erro ao criar usuário:", error);
+      setErro(error.response.data);
       throw error; 
     }
   };
 
-//  const atualizarDadosCliente = async (userId, novosDadosCliente) => {
-//    try {
-//      const response = await UPDATE_USER(userId, novosDadosCliente);
-//      setDadosCliente(response.data);
-//      console.log("Dados do usuário atualizados com sucesso:", response);
-//    } catch (error) {
-//      console.error("Erro ao atualizar dados do usuário:", error);
-//    }
-//  };
+ const atualizarDadosCliente = async (userId, novosDadosCliente) => {
+   try {
+     const response = await UPDATE_USER(userId, novosDadosCliente);
+     if(response.status === 204) console.log("cliente atualizado com sucesso")
+   } catch (error) {
+     console.error("Erro ao atualizar dados do usuário:", error);
+   }
+ };
 
-//  const deletarCliente = async (userId) => {
-//    try {
-//      const response = await DELETE_USER(userId);
-//      console.log("Cliente deletado com sucesso:", userId);
-//      return response; 
-//    } catch (error) {
-//      console.error("Erro ao deletar cliente:", error);
-//      throw error;
-//    }
-//  };
- 
-  
-  useEffect(() => {
-    fetchClients().then((response) => {
-      setDadosCliente(response);
-    });
-  }, []);
+   
+ useEffect(() => {
+  fetchClients().then((response) => {
+    setDadosMock(response);
+  });
+}, []);
 
-  const atualizarDadosCliente = (novosDadosCliente) => {
-    setDadosCliente((dadosAntigos) => {
-      return { ...dadosAntigos, ...novosDadosCliente };
-    });
-  };
+const atualizarDadosMock = (novosDadosMock) => {
+  setDadosMock((dadosAntigos) => {
+    return { ...dadosAntigos, ...novosDadosMock };
+  });
+};
+
+
+ const deletarCliente = async (userId) => {
+   try {
+     const response = await DELETE_USER(userId);
+     window.alert("Sua conta foi excluida com sucesso!");
+
+     setLogin(null);
+     navigate("/");
+     return response; 
+   } catch (error) {
+     console.error("Erro ao deletar cliente:", error);
+     throw error;
+   }
+ };
 
   useEffect(() => {
     fetchBooks("tudo").then((response) => {
@@ -91,15 +108,25 @@ function Provider({ children }) {
     });
   }, [setBooks]);
 
-  const userLogin = (userType) => {
-    if (userType === 'admin') {
-      setLogin('admin');
-      navigate('/admin');
-    } else {
-      setLogin('user');
-      navigate('/conta');
-      }
-    };
+  const userLogin = async (usuario, userType) => {
+    try {
+      setErro(null);
+
+      const response = await CHECK_USER(usuario);
+      setUserId(response.data)
+        if (userType === 'admin') {
+          setLogin('admin');
+          navigate('/admin');
+        } else {
+          setLogin('user');
+          navigate('/conta');
+        } 
+      return response.data;
+    } catch (error) {
+      setErro(error.response.data);
+      throw error; 
+    }
+  };
 
   const userLogout = () => {
     setLogin(null);
@@ -122,8 +149,16 @@ function Provider({ children }) {
     userLogin,
     userLogout,
     dadosCliente,
+    setDadosCliente,
     atualizarDadosCliente,
     criarUsuario,
+    listarClientes,
+    listarCliente,
+    deletarCliente,
+    erro,
+    userId,
+    dadosMock,
+    atualizarDadosMock,
   };
 
   return (

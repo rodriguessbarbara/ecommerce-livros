@@ -2,34 +2,35 @@ import { useContext, useState } from "react";
 import useForm from "../../hooks/useForm";
 import Input from "../Input";
 import AppContext from "../../context/AppContext";
+import Erro from "../Erro.jsx";
 //import { cepMask, cpfMask, telefoneMask } from "../../masks";
 
 function LoginCriar() {
   const email = useForm("email");
-  const password = useForm();
+  const senha = useForm();
   const nome = useForm();
   const cpf = useForm();
   const telefone = useForm();
   const [genero, setGenero] = useState(null);
   const dataNascimento = useForm();
 
-  const { userLogin, criarUsuario } = useContext(AppContext);
+  const { criarUsuario, erro } = useContext(AppContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
+    const dataCadastro = new Date().toLocaleDateString("pt-BR");
+
     criarUsuario({
-      nome: nome,
-      email: email,
-      password: password,
-      cpf: cpf,
-      telefone: telefone,
+      nome: nome.value,
+      cpf: cpf.value,
+      email: email.value,
+      senha: senha.value,
       genero: genero,
-      dataNascimento: dataNascimento,
+      telefone: telefone.value,
+      dataCadastro: dataCadastro,
+      dataNascimento: dataNascimento.value
     });
 
-    if (email.validate() && password.validate()) {
-      userLogin();
-    }
   }
 
   return (
@@ -61,7 +62,7 @@ function LoginCriar() {
             </div>
 
             <Input label="Data Nascimento" type="date" name="data-nascimento" required {...dataNascimento}/>
-            <Input label="Senha" type="password" name="senha" span="2" minLength="8" required {...password}/>
+            <Input label="Senha" type="password" name="senha" span="2" minLength="8" required {...senha}/>
             <Input label="Repetir senha" type="password" name="repetir-senha" span="2" minLength="8" required/>
 
             <Input label="Lagradouro" type="text" name="lagradouro" placeholder="Rua, Av, etc" required/>
@@ -83,6 +84,9 @@ function LoginCriar() {
             Salvar
           </button>
         </div>
+
+        <Erro erro={erro} />
+
       </form>
 
       </div>

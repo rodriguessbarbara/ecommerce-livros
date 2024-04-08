@@ -3,37 +3,41 @@ import AppContext from "../../context/AppContext";
 import Input from "../Input";
 
 function Dados() {
- const { dadosCliente, atualizarDadosCliente } = useContext(AppContext);
+ const { dadosCliente, atualizarDadosCliente, listarCliente, userId, setDadosCliente, deletarCliente } = useContext(AppContext);
  const [editar, setEditar] = useState("");
- const [dadosCadastrais, setDadosCadastrais] = useState([]);
+//  const [dadosCadastrais, setDadosCadastrais] = useState([]);
  const [dadosEnderecos, setDadosEnderecos] = useState([]);
 
  useEffect(() => {
-  if (dadosCliente && dadosCliente.cliente) {
-    setDadosCadastrais(dadosCliente.cliente[0]);
-  }
- }, [dadosCliente]);
+  listarCliente(userId);
+ }, [setDadosCliente])
 
- useEffect(() => {
-  if (dadosCliente && dadosCliente.endereco) {
-    setDadosEnderecos(dadosCliente.endereco);
-  }
- }, [dadosCliente]);
-
+//  useEffect(() => {
+//   listarEndereco(userId);
+//  }, [userId])
 
  const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setDadosCadastrais({ ...dadosCadastrais, [name]: value });
+    setDadosCliente({ ...dadosCliente, [name]: value });
  };
-
+ 
  const handleInputChangeEnd = (event) => {
   const { name, value } = event.target;
-  setDadosCadastrais({ ...dadosEnderecos, [name]: value });
+  setDadosCliente({ ...dadosEnderecos, [name]: value });
 };
 
  const handleSalvar = (event) => {
     event.preventDefault();
-    atualizarDadosCliente(dadosCadastrais);
+    atualizarDadosCliente(userId, {
+        nome: dadosCliente.nome,
+        cpf: dadosCliente.cpf,
+        email: dadosCliente.email,
+        senha: dadosCliente.senha,
+        genero: dadosCliente.genero,
+        telefone: dadosCliente.telefone,
+        dataCadastro: dadosCliente.datacadastro,
+        dataNascimento: dadosCliente.datanascimento
+      });
     setEditar(""); 
  };
 
@@ -42,6 +46,16 @@ function Dados() {
   atualizarDadosCliente(dadosEnderecos);
   setEditar(""); 
 };
+
+ function handleExcluirConta(event) {
+  event.preventDefault();
+  const confirmacao = window.confirm("Você realmente deseja excluir sua conta?");
+  if (confirmacao) {
+    deletarCliente(userId);
+  } else {
+    event.preventDefault();
+  }
+ }
  
  return (
     <div className="border-b border-gray-200 py-4">
@@ -51,12 +65,14 @@ function Dados() {
         {!editar && (
           <>
             <h4 className="text-lg font-medium text-gray-600 mt-4 mb-2">Dados cadastrais</h4>
-            <p>Nome Completo:<span> {dadosCadastrais.nomeCompleto}</span></p>
-            <p>Email: {dadosCadastrais.email}</p>
-            <p>CPF: {dadosCadastrais.CPF}</p>
-            <p>Telefone: {dadosCadastrais.telefone}</p>
-            <p>Gênero: {dadosCadastrais.genero}</p>
-            <p>Data Nascimento: {dadosCadastrais.dataNascimento}</p>
+            <p>Nome Completo:<span> {dadosCliente.nome}</span></p>
+            <p>Email: {dadosCliente.email}</p>
+            <p>CPF: {dadosCliente.cpf}</p>
+            <p>Telefone: {dadosCliente.telefone}</p>
+            <p>Gênero: {dadosCliente.genero}</p>
+            {dadosCliente.datanascimento && typeof dadosCliente.datanascimento === 'string' && (
+              <p>Data Nascimento: {new Date(dadosCliente.datanascimento).toISOString().split('T')[0]}</p>
+            )}
           
             <button onClick={() => setEditar("dados")} className="bg-blue-500 text-white px-4 py-2 rounded mt-2">Alterar dados cadastrais</button>
           </>
@@ -81,24 +97,26 @@ function Dados() {
             ))}
 
             <h4 className="font-medium text-blue-800 mt-4 cursor-pointer" onClick={() => setEditar("senha")}>Alterar apenas a senha</h4>
+            <button className="font-medium text-blue-800 mt-4 cursor-pointer text-start" onClick={handleExcluirConta}>Excluir conta</button>
+
         </div>          
 
       <div >
         {editar == "dados" && (
-          <form onSubmit={handleSalvarEnd}>
-            <Input label="Nome Completo" type="text" name="nomeCompleto" value={dadosCadastrais.nomeCompleto || ''} onChange={handleInputChange} required/>
-            <Input label="Email" type="email" name="email" value={dadosCadastrais.email || ''} onChange={handleInputChange} required/>
-            <Input label="CPF" type="text" name="CPF" value={dadosCadastrais.CPF || ''} onChange={handleInputChange} required/>
-            <Input label="Telefone" type="text" name="telefone" value={dadosCadastrais.telefone || ''} onChange={handleInputChange} required/>
-            <Input label="Gênero" type="text" name="genero" value={dadosCadastrais.genero || ''} onChange={handleInputChange} required/>
-            <Input label="Data Nascimento" type="date" name="dataNascimento" value={dadosCadastrais.dataNascimento || ''} onChange={handleInputChange} required/>
+          <form onSubmit={handleSalvar}>
+            <Input label="Nome Completo" type="text" name="nome" value={dadosCliente.nome || ''} onChange={handleInputChange} required/>
+            <Input label="Email" type="email" name="email" value={dadosCliente.email || ''} onChange={handleInputChange} required/>
+            <Input label="CPF" type="text" name="cpf" value={dadosCliente.cpf || ''} onChange={handleInputChange} required/>
+            <Input label="Telefone" type="text" name="telefone" value={dadosCliente.telefone || ''} onChange={handleInputChange} required/>
+            <Input label="Gênero" type="text" name="genero" value={dadosCliente.genero || ''} onChange={handleInputChange} required/>
+            <Input label="Data Nascimento" type="date" name="datanascimento" value={new Date(dadosCliente.datanascimento).toISOString().split('T')[0] || ''} onChange={handleInputChange} required/>
 
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
           </form>
         )}
 
         {editar == "enderecos" && (
-          <form onSubmit={handleSalvar} className="flex flex-col gap-2">
+          <form onSubmit={handleSalvarEnd} className="flex flex-col gap-2">
             {dadosEnderecos.map((end) => (
             <>
               <Input label="lagradouro" type="text" name="lagradouro" value={end.lagradouro || ''} onChange={handleInputChangeEnd} required/>
@@ -119,8 +137,8 @@ function Dados() {
 
         {editar == "senha" && (
           <form onSubmit={handleSalvar} className="flex flex-col gap-2">
-            <Input label="Nova senha" type="password" name="senha" value={dadosCadastrais.senha || ''} onChange={handleInputChange} required/>
-            <Input label="Repetir nova senha" type="password" name="repetirSenha" value={dadosCadastrais.repetirSenha || ''} onChange={handleInputChange} required/>
+            <Input label="Nova senha" type="password" name="senha" value={dadosCliente.senha || ''} onChange={handleInputChange} required/>
+            <Input label="Repetir nova senha" type="password" name="repetirSenha" value={dadosCliente.repetirSenha || ''} onChange={handleInputChange} required/>
 
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
           </form>

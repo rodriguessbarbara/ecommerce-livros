@@ -3,22 +3,29 @@ import Input from "../Input";
 import useForm from "../../hooks/useForm";
 import { useContext } from "react";
 import AppContext from "../../context/AppContext";
+import Erro from "../Erro";
 
 function LoginForm() {
   const email = useForm("email");
-  const password = useForm();
-  const { userLogin } = useContext(AppContext);
+  const senha = useForm();
+  const { userLogin, erro } = useContext(AppContext);
   
   async function handleLogin(event) {
     event.preventDefault();
 
-    if (email.validate() && password.validate()) {
-      if (password.value.toLocaleLowerCase() === 'admin') {
-        userLogin('admin');
-      } else userLogin('user');
+    if (email.validate() && senha.validate()) {
+      if (email.value.toLocaleLowerCase() === 'admin@admin.com') {
+        userLogin({
+          email: email.value,
+          senha: senha.value
+        }, 'admin');
+        } else userLogin({
+        email: email.value,
+        senha: senha.value
+      }, '');
     }
   }
-
+  
   return (
     <>
       <div className="justify-center py-12 mt-20 mx-10">
@@ -31,7 +38,7 @@ function LoginForm() {
             
             <Input label="Email" type="email" name="email" placeholder="exemplo@email.com" {...email} required/>
             
-            <Input label="Senha" type="password" name="password" placeholder="*************" {...password} required/>
+            <Input label="Senha" type="password" name="password" placeholder="*************" {...senha} required/>
             <div className="text-sm">
               <Link to="/login/esqueceuSenha"className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Esqueceu a senha?
@@ -51,6 +58,8 @@ function LoginForm() {
               Cadastrar agora.
             </Link>
           </p>
+
+          <Erro erro={erro} />
         </div>
       </div>
     </>

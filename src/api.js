@@ -1,8 +1,9 @@
 import axios from "axios";
-export const API_URL = "/clientes";
 
-export function POST_USER(body) {
-	const response = axios.post(`${API_URL}`, body, {
+const clientesAPI = axios.create({ baseURL: "http://localhost:8000/clientes" });
+
+async function POST_USER(body) {
+	const response = await clientesAPI.post("/", body, {
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -10,26 +11,37 @@ export function POST_USER(body) {
 	return response;
 }
 
-export function GET_USERS() {
-	return axios.get(`${API_URL}`);
+async function CHECK_USER(body) {
+	const response = await clientesAPI.post("/login", body, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return response;
 }
 
-export function GET_USER(userId) {
-	return axios.get(`${API_URL}/${userId}`);
+async function GET_USERS() {
+	const response = await clientesAPI.get("/");
+	return response;
 }
 
-export function UPDATE_USER(userId, newData) {
-	return axios.patch(
-		`${API_URL}/${userId}`,
-		{ data: newData },
-		{
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}
-	);
+async function GET_USER(userId) {
+	const response = await clientesAPI.get(`/${userId}`);
+	return response;
 }
 
-export function DELETE_USER(userId) {
-	return axios.delete(`${API_URL}/${userId}`);
+async function UPDATE_USER(userId, newData) {
+	const response = await clientesAPI.patch(`/${userId}`, newData, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return response;
 }
+
+async function DELETE_USER(userId) {
+	const response = await clientesAPI.delete(`/${userId}`);
+	return response;
+}
+
+export { GET_USERS, GET_USER, POST_USER, UPDATE_USER, DELETE_USER, CHECK_USER };
