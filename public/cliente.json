@@ -74,12 +74,12 @@
 		},
 		{
 			"id": 2,
-			"livro": ["Tudo é rio, recursão"],
+			"livro": "recursão",
 			"formaPagamento": "cartao",
 			"numeroCartao": 38111189012341,
 			"valor": 55.2,
 			"dataCompra": "30/03/2024",
-			"status": "EM PROCESSAMENTO"
+			"status": "ENTREGUE"
 		}
 	]
 }
