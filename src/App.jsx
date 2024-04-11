@@ -3,7 +3,6 @@ import Livros from './components/navegacao/Livros'
 import Header from './components/Header/Header'
 import Login from './components/Login/Login';
 import Provider from './context/Provider';
-import Carrinho from "./components/Carrinho/Carrinho";
 import CompraOverview from "./components/User/CompraOverview";
 import LivroDetalhe from "./components/navegacao/LivroDetalhe";
 import Usuario from "./components/User/Usuario";
@@ -41,7 +40,6 @@ function App() {
 
             </Routes>
 
-            <Carrinho/>
           </Provider>
         </BrowserRouter>
       </div>

@@ -3,6 +3,7 @@ import LivrosCard from "./LivrosCard";
 import AppContext from "../../context/AppContext";
 import Filtros from "./Filtros";
 import AddLivroButton from "../Admin/AddLivroButton";
+import Carrinho from "../Carrinho/Carrinho";
 
 function Livros() {
   const { books, login } = useContext(AppContext);
@@ -38,6 +39,8 @@ function Livros() {
           {(login && login === 'admin') && <AddLivroButton />}
         </div>
       </div>
+
+      <Carrinho/>
     </>
   );
 }

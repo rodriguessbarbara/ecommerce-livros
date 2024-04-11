@@ -7,9 +7,7 @@ import '../../index.css'
 
 function Carrinho() {
   const navigate = useNavigate();
-
   const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo, precoTotal } = useContext(AppContext);
-  //const [numQtd, setNumQtd] = useState(1);
 
   return (
     <div className={`bg-white w-full max-w-80 h-screen fixed top-0 right-0 px-4 flex flex-col space-between overflow-auto carrinho ${isCarrinhoAtivo ? 'carrinho--ativo' : ''} `}>
@@ -32,7 +30,7 @@ function Carrinho() {
       <div className="py-6 font-medium">
           <div className="flex justify-between text-base font-medium text-gray-900">
             <p>Subtotal</p>
-            <p>R${precoTotal}</p>
+            <p>R${precoTotal.toFixed(2)}</p>
           </div>
           <div className="mt-6">
             <button onClick={() => {

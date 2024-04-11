@@ -1,8 +1,9 @@
 import { useContext } from "react"
 import AppContext from "../../context/AppContext"
 
-function Carrinho() {
+function CarrinhoButton() {
   const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo } = useContext(AppContext);
+
   return (
     <>
       <button
@@ -21,4 +22,4 @@ function Carrinho() {
   )
 }
 
-export default Carrinho
+export default CarrinhoButton
