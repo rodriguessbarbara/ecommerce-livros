@@ -22,7 +22,7 @@ function Provider({ children }) {
 
   useEffect(() => {
     setPrecoTotal(carrinhoItens.reduce((acc, item) => {
-      return item.precificacao + acc;
+      return (item.precificacao * item.quantidadeCarrinho) + acc;
     }, 0));
   }, [carrinhoItens, setPrecoTotal]);
 

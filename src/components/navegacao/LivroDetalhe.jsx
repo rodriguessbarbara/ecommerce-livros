@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
+import Carrinho from '../Carrinho/Carrinho';
 
 function LivroDetalhe() {
   const location = useLocation();
@@ -8,8 +9,18 @@ function LivroDetalhe() {
   const { carrinhoItens, setCarrinhoItens } = useContext(AppContext);
 
   const handleAddCarrinho = () => {
-    setCarrinhoItens([ ...carrinhoItens, data ]);
-  }
+    const itemExistente = carrinhoItens.find(item => item.id === data.id);
+
+    if (itemExistente) {
+      if (itemExistente.quantidadeCarrinho < data.quantidade) {
+        setCarrinhoItens(carrinhoItens.map(item =>
+          item.id === data.id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1 } : item
+        ));
+      }
+    } else {
+       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1 }]);
+    }
+   }
 
   return (
     <div className="text-gray-600 p-6 mt-24 mx-16 pb-12">
@@ -77,6 +88,9 @@ function LivroDetalhe() {
           </button>
         </div>
       </div>
+
+      <Carrinho/>
+
     </div>
   )
 }

@@ -10,8 +10,18 @@ function LivrosCard({ data, filtros }) {
   const navigate = useNavigate();
 
   const handleAddCarrinho = () => {
-    setCarrinhoItens([ ...carrinhoItens, data ]);
-  }
+    const itemExistente = carrinhoItens.find(item => item.id === id);
+    
+    if (itemExistente) {
+      if (itemExistente.quantidadeCarrinho < data.quantidade) {
+        setCarrinhoItens(carrinhoItens.map(item =>
+          item.id === id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1 } : item
+        ));
+      }
+    } else {
+       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1 }]);
+    }
+   }
 
   const handleCapaAlternativa = () => {
     setIsCapaAlternativa([ ...isCapaAlternativa, id ]);
@@ -46,7 +56,7 @@ function LivrosCard({ data, filtros }) {
   return (
     <>
       <div key={id} className="group relative p-10 pb-2 pt-3 rounded-md border-2 shadow-md shadow-slate-200">
-        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none">
+        <div className="w-full overflow-hidden rounded-md lg:aspect-none">
           <img
             src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
             alt={imageAlt}

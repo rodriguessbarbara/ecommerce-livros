@@ -1,17 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import AppContext from "../../context/AppContext";
 
 /* eslint-disable react/prop-types */
 function CarrinhoItem({ data }) {
-
   const { id, imageSrc, capaAlternativa, titulo, precificacao } = data;
   const { carrinhoItens, setCarrinhoItens, isCapaAlternativa } = useContext(AppContext);
-  const [numQtd, setNumQtd] = useState(1);
+
+  const itemCarrinho = carrinhoItens.find(item => item.id === id);
+  const quantidadeAtual = itemCarrinho ? itemCarrinho.quantidadeCarrinho : 0;
 
   function handleRemoveItem() {
     const updatedItens = carrinhoItens.filter((item) => item.id != id);
     setCarrinhoItens(updatedItens);
   }
+
+  function handleAlteraQuantidade(novaQuantidade) {
+    if (novaQuantidade > 0 && novaQuantidade <= data.quantidade) {
+      setCarrinhoItens(carrinhoItens.map(item =>
+        item.id === id ? { ...item, quantidadeCarrinho: novaQuantidade } : item
+      ));
+    }
+ }
 
   return (
     <>
@@ -29,21 +38,19 @@ function CarrinhoItem({ data }) {
               <h3>
                 <a href="">{titulo}</a>
               </h3>
-              <p className="ml-4">R${precificacao}</p>
+              <p className="ml-4">R${(precificacao * data.quantidadeCarrinho).toFixed(2)}</p>
             </div>
             <p className="mb-2 text-sm text-gray-500">capa Original</p>
           </div>
           
           <div className="flex flex-1 gap-8 text-sm">
-            <p className="text-gray-600 font-medium self-center">Qtd: {numQtd}</p>
+            <p className="text-gray-600 font-medium self-center">Qtd: {quantidadeAtual}</p>
             
-            <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => {
-                if(numQtd > 1) setNumQtd(numQtd - 1)}
-              }>
+            <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => handleAlteraQuantidade(quantidadeAtual - 1) }>
                 -
               </button>
               
-              <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => setNumQtd(numQtd + 1)}>
+              <button className="text-gray-600 font-bold cursor-pointer text-base" onClick={() => handleAlteraQuantidade(quantidadeAtual + 1) }>
                 +
               </button>
           </div>
