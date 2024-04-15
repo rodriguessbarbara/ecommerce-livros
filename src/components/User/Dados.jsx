@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Input from "../Input";
+import Erro from "../Erro";
+import Loading from "../Loading";
 
 function Dados() {
- const { dadosCliente, atualizarDadosCliente, listarCliente, userId, setDadosCliente, deletarCliente } = useContext(AppContext);
+ const { dadosCliente, atualizarDadosCliente, listarCliente, userId, setDadosCliente, deletarCliente, erro, loading } = useContext(AppContext);
  const [editar, setEditar] = useState("");
 //  const [dadosCadastrais, setDadosCadastrais] = useState([]);
  const [dadosEnderecos, setDadosEnderecos] = useState([]);
@@ -28,6 +30,7 @@ function Dados() {
 
  const handleSalvar = (event) => {
     event.preventDefault();
+
     atualizarDadosCliente(userId, {
         nome: dadosCliente.nome,
         cpf: dadosCliente.cpf,
@@ -35,7 +38,6 @@ function Dados() {
         senha: dadosCliente.senha,
         genero: dadosCliente.genero,
         telefone: dadosCliente.telefone,
-        dataCadastro: dadosCliente.datacadastro,
         dataNascimento: dadosCliente.datanascimento
       });
     setEditar(""); 
@@ -57,6 +59,7 @@ function Dados() {
   }
  }
  
+ if (loading) return <Loading/>
  return (
     <div className="border-b border-gray-200 py-4">
       <h3 className="text-2xl font-medium tracking-tight text-gray-800">Seus Dados</h3>
@@ -71,7 +74,7 @@ function Dados() {
             <p>Telefone: {dadosCliente.telefone}</p>
             <p>Gênero: {dadosCliente.genero}</p>
             {dadosCliente.datanascimento && typeof dadosCliente.datanascimento === 'string' && (
-              <p>Data Nascimento: {new Date(dadosCliente.datanascimento).toISOString().split('T')[0]}</p>
+              <p>Data Nascimento: {dadosCliente.datanascimento}</p>
             )}
           
             <button onClick={() => setEditar("dados")} className="bg-blue-500 text-white px-4 py-2 rounded mt-2">Alterar dados cadastrais</button>
@@ -109,7 +112,7 @@ function Dados() {
             <Input label="CPF" type="text" name="cpf" value={dadosCliente.cpf || ''} onChange={handleInputChange} required/>
             <Input label="Telefone" type="text" name="telefone" value={dadosCliente.telefone || ''} onChange={handleInputChange} required/>
             <Input label="Gênero" type="text" name="genero" value={dadosCliente.genero || ''} onChange={handleInputChange} required/>
-            <Input label="Data Nascimento" type="date" name="datanascimento" value={new Date(dadosCliente.datanascimento).toISOString().split('T')[0] || ''} onChange={handleInputChange} required/>
+            <Input label="Data Nascimento" type="date" name="datanascimento" value={dadosCliente.datanascimento || ''} onChange={handleInputChange} required/>
 
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
           </form>
@@ -145,6 +148,7 @@ function Dados() {
         )}
       </div>
 
+      {/* <Erro erro={erro}/> */}
     </div>
  );
 }

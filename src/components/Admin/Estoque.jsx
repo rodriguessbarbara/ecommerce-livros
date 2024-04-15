@@ -32,7 +32,7 @@ function Estoque() {
   }
 
   return (
-    <div className="border-b border-gray-200 py-4 text-gray-600 flex flex-col flex-grow">
+    <div className="py-4 text-gray-600 flex flex-col flex-grow">
       <div className="justify-between items-center mb-4 flex gap-2">
         <div>
           <h3 className="text-2xl font-medium tracking-tight">Livros e Estoque</h3>
@@ -48,26 +48,45 @@ function Estoque() {
 
       {isEntradaEstoque && <EntradaEstoque setIsEntradaEstoque={() => setIsEntradaEstoque(!isEntradaEstoque)} />}
 
-      {books.map((book) => (
-        <div key={book.id} className="border-2 rounded-md p-4 m-2">
-          <p>Livro {book.titulo} - {book.autor}</p>
-          <p>Itens em estoque: {book.quantidade}</p>
-          <p>Status: {book.statusAtivo ? <span className="text-green-600 font-medium">ativo</span> : <span className="text-red-600 font-medium">inativo</span>}</p>
+      <table className="w-full table-auto mb-6 text-center">
+        <thead>
+          <tr>
+            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Livro</th>
+            <th className="px-4 py-2">Autor</th>
+            <th className="px-4 py-2">Quantidade</th>
+            <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {books.map((book) => (
+            <tr key={book.id} className="border-2 rounded-md p-4 m-2">
+              <td className="border p-4">{book.id}</td>
+              <td className="border p-4">{book.titulo}</td>
+              <td className="border p-4">{book.autor}</td>
 
-          <button 
-            className={`my-2 rounded font-medium statusCliente ${book.quantidade === 0 ? 'text-gray-400' : book.statusAtivo ? `text-red-600 hover:text-red-700` : `text-green-600 hover:text-green-700`}`}
-            onClick={() => handleMudaStatus(book.id, !book.statusAtivo)}
-            disabled={book.quantidade === 0}
-          >
-            {book.quantidade === 0 ? (
-              "Sem estoque"
-            ) : (
-              book.statusAtivo ? "Inativar cadastro" : "Ativar cadastro"
-            )}
-
-          </button>
-        </div>
-      ))}
+              <td className="border p-4">{book.quantidade}</td>
+              <td className="border p-4">
+                {book.statusAtivo ? <span className="text-green-600 font-medium">ativo</span> : <span className="text-red-600 font-medium">inativo</span>}
+              </td>
+              <td className="border p-4">
+                <button 
+                  className={`rounded font-medium statusCliente ${book.quantidade === 0 ? 'text-gray-400' : book.statusAtivo ? `text-red-600 hover:text-red-700` : `text-green-600 hover:text-green-700`}`}
+                  onClick={() => handleMudaStatus(book.id, !book.statusAtivo)}
+                  disabled={book.quantidade === 0}
+                >
+                  {book.quantidade === 0 ? (
+                    "Sem estoque"
+                  ) : (
+                    book.statusAtivo ? "Inativar cadastro" : "Ativar cadastro"
+                  )}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
     </div>
   )

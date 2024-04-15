@@ -80,56 +80,66 @@ function Vendas() {
       </div>
       </div>
 
-      {filteredPedidos.map((venda) => (
-         <div key={venda.id} className="rounded-md border-2 border-gray-300 mb-6">
-         <div className="border-b-2 border-gray-400 bg-gray-300 p-4 font-light flex gap-8">
-           <p>venda realizado em <span className="font-normal">{venda.dataCompra}</span></p>
-           <p>Total: <span className="font-normal">R${venda.valor}</span> </p>
-           <p>venda n.: <span className="font-normal">{venda.id}</span></p>
-         </div>
+      <table className="w-full table-auto mb-6 text-center">
+        <thead>
+          <tr>
+            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Data da compra</th>
+            <th className="px-4 py-2">Total</th>
+            <th className="px-4 py-2">Produtos</th>
+            <th className="px-4 py-2">Forma de pagamento</th>
+            <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredPedidos.map((venda) => (
+            <tr key={venda.id} className="border-2 rounded-md p-4 m-2">
+              <td className="border px-4 py-2">{venda.id}</td>
+              <td className="border px-4 py-2">{venda.dataCompra}</td>
+              <td className="border px-4 py-2">R${venda.valor}</td>
+              <td className="border px-4 py-2">
+                {typeof venda.livro != "string" ? (
+                  venda.livro.map((item, index) => (
+                    <div key={index} className="border rounded-md px-4 py-2 bg-gray-100 border-gray-300">
+                      <p >{item}</p>
+                      <span className="text-sm">Capa Original</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="border rounded-md px-4 py-2 bg-gray-100 border-gray-300 ">
+                    <p className="flex gap-8">{venda.livro}</p>
+                    <span className="text-sm">Capa Original</span>
+                  </div>
+                )}
+              </td>
+              <td className="border px-4 py-2">{venda.formaPagamento} <span>Número: {venda.numeroCartao}</span></td>
+              <td className="border px-4 py-2 text-blue-600 font-medium uppercase">
+                {venda.status.toLocaleUpperCase() === 'EM PROCESSAMENTO' ? 'Em processamento' : venda.status}
+              </td>
+              <td className="border px-4 py-2">
+                {venda.status.toLocaleUpperCase() === 'EM PROCESSAMENTO' && (
+                  <button className="text-blue-500 rounded" onClick={() => despacharProdutos(venda.id)}>
+                    Despachar produtos para entrega
+                  </button>
+                )}
+                {venda.status.toLocaleUpperCase() === 'EM TRÂNSITO' && (
+                  <button className="text-blue-500 rounded" onClick={() => confirmarEntrega(venda.id)}>
+                    Confirmar entrega
+                  </button>
+                )}
+                {venda.status.toLocaleUpperCase() === 'EM TROCA' && (
+                  <button className="text-blue-500 rounded" onClick={() => autorizarTroca(venda.id)}>
+                    Autorizar troca
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-         <div className="px-4 py-4">
-             {typeof venda.livro != "string" ? (
-               venda.livro.map((item) => (
-                 <div key={item} className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300">
-                   <p >{item} </p>
-                   <span className="text-sm">Capa Original </span>
-                 </div>
-               ))
-               ) : (
-                 <div className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300 ">
-                   <p className="flex gap-8">{venda.livro} </p>
-                   <span className="text-sm">Capa Original </span>
-                 </div>
-                 )
-             }
-
-           <p>{venda.formaPagamento}<span> número: {venda.numeroCartao}</span></p>
-           <p className="text-blue-600 font-medium uppercase">{venda.status}</p>
-         </div>
-
-         {venda.status.toLocaleUpperCase() === 'EM PROCESSAMENTO' && (
-            <button className="mx-4 mb-4 text-blue-500 rounded" onClick={() => despacharProdutos(venda.id)}>
-              Despachar produtos para entrega
-            </button>
-          )}
-
-         {venda.status.toLocaleUpperCase() === 'EM TRÂNSITO' && (
-            <button className="mx-4 mb-4 text-blue-500 rounded" onClick={() => confirmarEntrega(venda.id)}>
-              Confirmar entrega
-            </button>
-          )}
-
-         {venda.status.toLocaleUpperCase() === 'EM TROCA' && (
-            <button className="mx-4 mb-4 text-blue-500 rounded" onClick={() => autorizarTroca(venda.id)}>
-              Autorizar troca
-            </button>
-          )}
-       </div>
-
-      ))}
     </div>
-
   )
 }
 
