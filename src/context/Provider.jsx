@@ -16,7 +16,7 @@ function Provider({ children }) {
   const [login, setLogin] = useState(null);
   const [erro, setErro] = useState(null);
   const [userId, setUserId] = useState(null);
-
+  const [loading, setLoading] = useState(false)
   const [dadosMock, setDadosMock] = useState([]);
   const navigate = useNavigate();
 
@@ -29,32 +29,38 @@ function Provider({ children }) {
   const listarClientes = async () => {
     try {
       setErro(null);
+      setLoading(true);
 
       const response = await GET_USERS();
-      //setDadosCliente(response.data);
-      console.log("Clientes listados com sucesso:", response.data);
-      return response.data
+      return setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
       throw error;
+
+    } finally {
+      setLoading(false);
     }
   };
 
   const listarCliente = async (userId) => {
     try {
       setErro(null);
+      setLoading(true);
 
       const response = await GET_USER(userId);
-      setDadosCliente(response.data[0]);
+      setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   const criarUsuario = async (novoUsuario) => {
     try {
       setErro(null);
+      setLoading(true);
 
       const response = await POST_USER(novoUsuario);
       userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
@@ -62,16 +68,23 @@ function Provider({ children }) {
     } catch (error) {
       setErro(error.response.data);
       throw error; 
+    } finally {
+      setLoading(false);
     }
   };
 
  const atualizarDadosCliente = async (userId, novosDadosCliente) => {
    try {
+     setLoading(true);
+
      const response = await UPDATE_USER(userId, novosDadosCliente);
      if(response.status === 204) console.log("cliente atualizado com sucesso")
    } catch (error) {
-     console.error("Erro ao atualizar dados do usuário:", error);
-   }
+      setErro("Erro ao atualizar dados do usuário:", error);
+      throw error;
+   } finally {
+    setLoading(false);
+  }
  };
 
    
@@ -111,6 +124,7 @@ const atualizarDadosMock = (novosDadosMock) => {
   const userLogin = async (usuario, userType) => {
     try {
       setErro(null);
+      setLoading(true);
 
       const response = await CHECK_USER(usuario);
       setUserId(response.data)
@@ -125,6 +139,8 @@ const atualizarDadosMock = (novosDadosMock) => {
     } catch (error) {
       setErro(error.response.data);
       throw error; 
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,6 +175,7 @@ const atualizarDadosMock = (novosDadosMock) => {
     userId,
     dadosMock,
     atualizarDadosMock,
+    loading
   };
 
   return (
