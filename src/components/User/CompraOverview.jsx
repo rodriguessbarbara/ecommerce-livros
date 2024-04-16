@@ -10,7 +10,7 @@ function CompraOverview() {
   const [cupomValue, setCupomValue] = useState("");
   const [frete, setFrete] = useState(0);
 
-  const { carrinhoItens, precoTotal, setIsCarrinhoAtivo } = useContext(AppContext);
+  const { carrinhoItens, precoTotal } = useContext(AppContext);
 
   function calculaFrete(precoTotal) {
     let valorFrete = 5.50;
@@ -25,6 +25,14 @@ function CompraOverview() {
   useEffect(() => {
     calculaFrete(precoTotal);
   }, [precoTotal]);
+
+  const handleProxTela = () => {
+    navigate("/conta/endereco-compra", {
+      state: {
+        precoEFrete: (precoTotal + frete),
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto pb-24 text-gray-800 mt-16 px-4 grid grid-cols-3 gap-8">
@@ -72,17 +80,14 @@ function CompraOverview() {
             Preço Total: R$ {(precoTotal + frete).toFixed(2)}
           </p>
 
-          <button onClick={() => {
-            setIsCarrinhoAtivo(false)
-            navigate("/conta/endereco-compra", {
-              state: {
-                precoEFrete: (precoTotal + frete),
-              }
-            });
-          }}
+          {!carrinhoItens.length ? (
+              <p className="text-red-600">Seu carrinho de compras está vazio</p>
+            ) : (
+          <button onClick={handleProxTela}
             className="rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
             Continuar
           </button>
+            )}
         </div>
 
       </div>

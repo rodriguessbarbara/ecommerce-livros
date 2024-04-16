@@ -5,7 +5,7 @@ import AdicionarEndereco from "./AdicionarEndereco";
 import { useLocation } from 'react-router-dom';
 
 function SelecionarEnderecoCompra() {
-  const { dadosMock, setIsCarrinhoAtivo } = useContext(AppContext);
+  const { dadosMock } = useContext(AppContext);
 
   const location = useLocation();
   const { precoEFrete } = location.state || {};
@@ -19,6 +19,13 @@ function SelecionarEnderecoCompra() {
       setEnderecoData(dadosMock.endereco);
     }
   }, [dadosMock]);
+
+  const handleProxTela = () => {
+    if (!endSelecionado) {
+      return alert("Por favor, selecione um endereço para continuar."); 
+    }
+    navigate("/conta/pagamento-compra", { state: {precoEFrete: precoEFrete} });
+  };
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto text-gray-800 mt-16 px-4">
@@ -59,14 +66,7 @@ function SelecionarEnderecoCompra() {
               Preço Total: R$ {precoEFrete}
         </p>
 
-        <button onClick={() => {
-            setIsCarrinhoAtivo(false)
-            navigate("/conta/pagamento-compra", {
-              state: {
-                precoEFrete: precoEFrete,
-              }
-            });
-          }}
+        <button onClick={handleProxTela}
             className="rounded-md bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
             Continuar
         </button>

@@ -11,7 +11,7 @@ function PagamentoCompra() {
   const { precoEFrete } = location.state || {};
   const [openModal, setOpenModal] = useState(false);
   const [cartaoData, setCartaoData] = useState([]);
-  const [cartaoSelecionado, setCartaoSelecionado] = useState([]);
+  const [cartaoSelecionado, setCartaoSelecionado] = useState(null);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
 
   useEffect(() => {
@@ -22,6 +22,10 @@ function PagamentoCompra() {
 
   const handleConfirm = (event) => {
     event.preventDefault();
+
+    if (!cartaoSelecionado) {
+      return alert("Por favor, selecione ao menos um cartão para continuar."); 
+    }
 
     const dataCompra = new Date().toLocaleDateString("pt-BR");
     const novoPedido = {

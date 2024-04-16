@@ -9,6 +9,11 @@ function Carrinho() {
   const navigate = useNavigate();
   const { carrinhoItens, isCarrinhoAtivo, setIsCarrinhoAtivo, precoTotal } = useContext(AppContext);
 
+  const handleProxTela = () => {
+    setIsCarrinhoAtivo(false)
+    navigate("/compra")
+  };
+
   return (
     <div className={`bg-white w-full max-w-80 h-screen fixed top-0 right-0 px-4 flex flex-col space-between overflow-auto carrinho ${isCarrinhoAtivo ? 'carrinho--ativo' : ''} `}>
       
@@ -32,16 +37,18 @@ function Carrinho() {
             <p>Subtotal</p>
             <p>R${precoTotal.toFixed(2)}</p>
           </div>
+
           <div className="mt-6">
-            <button onClick={() => {
-              setIsCarrinhoAtivo(false)
-              navigate("/compra")
-            }}
-              className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-            >
+            {!carrinhoItens.length ? (
+              <p className="text-red-600">seu carrinho de compras está vazio</p>
+            ) : (
+            <button onClick={handleProxTela}
+              className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
               Continuar compra
             </button>
+            )}
           </div>
+
           <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
           </div>
       </div>
