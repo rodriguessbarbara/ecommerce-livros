@@ -1,18 +1,20 @@
 import AppContext from '../../context/AppContext';
-import { fetchBooks } from '../../fetchData';
 import { useContext, useState } from 'react';
+import Erro from '../Erro';
 
 function Search() {
 
     const [searchValue, setSearchValue] = useState("");
-    const { setBooks } = useContext(AppContext);
+    const { listarLivros, listarLivrosByNome, erro } = useContext(AppContext);
 
     const handleSearch = async (event) => {
         event.preventDefault();
 
-        const books = await fetchBooks(searchValue);
-        
-        setBooks(books);
+        if (searchValue === '') {
+            listarLivros();
+        } else {
+            listarLivrosByNome(searchValue);
+        }
         setSearchValue("");
     }
 
@@ -23,6 +25,8 @@ function Search() {
             <button className="text-gray-100 bg-indigo-600 p-2 pl-4 pr-4 rounded-lg" onClick={handleSearch}>
                 Buscar
             </button>
+            
+            <Erro erro={erro}/>
         </div>
         </>
     )

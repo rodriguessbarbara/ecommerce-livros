@@ -87,6 +87,7 @@ function Vendas() {
             <th className="px-4 py-2">Data da compra</th>
             <th className="px-4 py-2">Total</th>
             <th className="px-4 py-2">Produtos</th>
+            <th className="px-4 py-2">Quantidade</th>
             <th className="px-4 py-2">Forma de pagamento</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Ações</th>
@@ -101,18 +102,19 @@ function Vendas() {
               <td className="border px-4 py-2">
                 {typeof venda.livro != "string" ? (
                   venda.livro.map((item, index) => (
-                    <div key={index} className="border rounded-md px-4 py-2 bg-gray-100 border-gray-300">
+                    <div key={index} className="border-b-2 px-4 py-2 border-gray-400">
                       <p >{item}</p>
                       <span className="text-sm">Capa Original</span>
                     </div>
                   ))
                 ) : (
-                  <div className="border rounded-md px-4 py-2 bg-gray-100 border-gray-300 ">
+                  <div className="px-4 py-2">
                     <p className="flex gap-8">{venda.livro}</p>
                     <span className="text-sm">Capa Original</span>
                   </div>
                 )}
               </td>
+              <td className="border px-4 py-2">{venda.quantidade}</td>
               <td className="border px-4 py-2">{venda.formaPagamento} <span>Número: {venda.numeroCartao}</span></td>
               <td className="border px-4 py-2 text-blue-600 font-medium uppercase">
                 {venda.status.toLocaleUpperCase() === 'EM PROCESSAMENTO' ? 'Em processamento' : venda.status}

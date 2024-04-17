@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import LivrosCard from "./LivrosCard";
 import AppContext from "../../context/AppContext";
 import Filtros from "./Filtros";
@@ -6,13 +6,17 @@ import AddLivroButton from "../Admin/AddLivroButton";
 import Carrinho from "../Carrinho/Carrinho";
 
 function Livros() {
-  const { books, login } = useContext(AppContext);
+  const { books, setBooks, login, listarLivros } = useContext(AppContext);
   const [appliedFilters, setAppliedFilters] = useState([]);
+
+  useEffect(() => {
+    listarLivros()
+  }, [setBooks]);
 
   const applyFilters = (filtros) => {
     setAppliedFilters(filtros);
   };
-
+    
   return (
     <>
       <div className="bg-white">

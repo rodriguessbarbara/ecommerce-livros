@@ -3,23 +3,11 @@ import { Link } from "react-router-dom";
 import CarrinhoButton from './CarrinhoButton';
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
-import { fetchBooks } from '../../fetchData';
 import { useLocation } from 'react-router-dom';
 
-
-//const navigation = [
-//  { name: 'Login/Criar', href: '/login', current: false },
-//  { name: 'Perfil', href: '/conta', current: false },
-//]
-
 function Header() {
-  const { login, setBooks } = useContext(AppContext);
+  const { login, listarLivros } = useContext(AppContext);
   const localizacao = useLocation();
-
-  const handleHome = async () => {
-    const books = await fetchBooks("tudo");
-    setBooks(books);
-}
 
 return (
   <nav className="bg-white">
@@ -27,7 +15,7 @@ return (
       <div className="relative flex h-16 items-center justify-between">
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-shrink-0 items-center">
-            <Link to="/" onClick={handleHome}> 
+            <Link to="/" onClick={() => {listarLivros()}}> 
               <img
                 className="h-8 w-auto cursor-pointer"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"

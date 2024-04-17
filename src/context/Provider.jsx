@@ -3,8 +3,8 @@ import AppContext from "./AppContext";
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchBooks, fetchClients } from '../fetchData';
-import { POST_USER , GET_USER, GET_USERS, UPDATE_USER, DELETE_USER, CHECK_USER } from '../api'
+import { fetchClients } from '../fetchData';
+import { POST_USER , GET_USER, GETALL_ENTIDADE, UPDATE_USER, DELETE_USER, CHECK_USER, GETBYNOME_LIVRO } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -31,7 +31,7 @@ function Provider({ children }) {
       setErro(null);
       setLoading(true);
 
-      const response = await GET_USERS();
+      const response = await GETALL_ENTIDADE("clientes");
       return setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
@@ -47,7 +47,7 @@ function Provider({ children }) {
       setErro(null);
       setLoading(true);
 
-      const response = await GET_USER(userId);
+      const response = await GET_USER(userId, "clientes");
       setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
@@ -115,11 +115,43 @@ const atualizarDadosMock = (novosDadosMock) => {
    }
  };
 
-  useEffect(() => {
-    fetchBooks("tudo").then((response) => {
-      setBooks(response);
-    });
-  }, [setBooks]);
+ const listarLivros = async () => {
+  try {
+    setErro(null);
+    setLoading(true);
+
+    const response = await GETALL_ENTIDADE("livros");
+    return setBooks(response.data || []);
+  } catch (error) {
+    setErro(error.response.data);
+    throw error;
+
+  } finally {
+    setLoading(false);
+  }
+};
+
+const listarLivrosByNome = async (searchValue) => {
+  try {
+    setErro(null);
+    setLoading(true);
+
+    const response = await GETBYNOME_LIVRO(searchValue);
+    return setBooks(response.data || []);
+  } catch (error) {
+    setErro(error.response.data);
+    throw error;
+
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // useEffect(() => {
+  //   fetchBooks("tudo").then((response) => {
+  //     setBooks(response);
+  //   });
+  // }, [setBooks]);
 
   const userLogin = async (usuario, userType) => {
     try {
@@ -171,6 +203,8 @@ const atualizarDadosMock = (novosDadosMock) => {
     listarClientes,
     listarCliente,
     deletarCliente,
+    listarLivros,
+    listarLivrosByNome,
     erro,
     userId,
     dadosMock,

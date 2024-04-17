@@ -34,6 +34,7 @@ function PagamentoCompra() {
       formaPagamento: "cartao",
       numeroCartao: cartaoSelecionado.numero,
       valor: precoEFrete,
+      quantidade: carrinhoItens.reduce((total, item) => total + item.quantidadeCarrinho, 0),
       dataCompra: dataCompra,
       status: "em processamento"
     };
