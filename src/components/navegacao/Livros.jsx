@@ -10,7 +10,10 @@ function Livros() {
   const [appliedFilters, setAppliedFilters] = useState([]);
 
   useEffect(() => {
-    listarLivros()
+    const fetchData = async () => {
+        await listarLivros();
+      }
+    fetchData();
   }, [setBooks]);
 
   const applyFilters = (filtros) => {

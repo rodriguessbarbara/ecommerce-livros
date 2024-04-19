@@ -4,8 +4,10 @@ import AppContext from "../../context/AppContext";
 import Input from "../Input";
 
 function NovoLivroForm({ setModalOpen }) {
-  const { books, setBooks } = useContext(AppContext);
+  const { novoLivro } = useContext(AppContext);
   const [data, setData] = useState({
+    imageSrc: "",
+    capaAlternativa: "",
     titulo: "",
     autor: "",
     categoria: "",
@@ -15,12 +17,10 @@ function NovoLivroForm({ setModalOpen }) {
     ISBN: "",
     numeroPaginas: 0,
     sinopse: "",
-    altura: "",
-    largura: "",
-    peso: "",
-    profundidade: "",
+    dimensoes: "",
     precificacao: 0,
     quantidade: 0,
+    ativo: true,
   });
 
   const handleInput = (event) => {
@@ -28,7 +28,7 @@ function NovoLivroForm({ setModalOpen }) {
     setData({ ...data, [name]: value });
   };
 
-  const handleNovoLivro = (event) => {
+  const handleNovoLivro = async (event) => {
     event.preventDefault();
     const isFormValid = Object.values(data).every(val => {
       if (typeof val !== 'number') {
@@ -37,8 +37,11 @@ function NovoLivroForm({ setModalOpen }) {
     });
 
     if (isFormValid) {
-      setBooks([...books, data]);
+      await novoLivro(data)
+
       setData({
+        imageSrc: "",
+        capaAlternativa: "",
         titulo: "",
         autor: "",
         categoria: "",
@@ -48,10 +51,7 @@ function NovoLivroForm({ setModalOpen }) {
         ISBN: "",
         numeroPaginas: 0,
         sinopse: "",
-        altura: "",
-        largura: "",
-        peso: "",
-        profundidade: "",
+        dimensoes: "",
         precificacao: 0,
         quantidade: 0
       });
@@ -63,7 +63,9 @@ function NovoLivroForm({ setModalOpen }) {
   return (
     <form onSubmit={handleNovoLivro}>
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-4 py-4">
-        <Input label="Título do livro" type="text" name="titulo" span="2" required value={data.titulo} onChange={handleInput}/>
+        <Input label="Capa Original" type="text" name="imageSrc" span="2" required value={data.imageSrc} onChange={handleInput}/>
+        <Input label="Capa alternativa" type="text" name="capaAlternativa" span="2" required value={data.capaAlternativa} onChange={handleInput}/>
+        <Input label="Título do livro" type="text" name="titulo" span="2" required value={data.titulo.toLowerCase()} onChange={handleInput}/>
         <Input label="Autor" type="text" name="autor" span="2" required value={data.autor} onChange={handleInput}/>
         <Input label="Categoria" type="text" name="categoria" span="2" required value={data.categoria} onChange={handleInput}/>
         <Input label="Editora" type="text" name="editora" span="2" required value={data.editora} onChange={handleInput}/>
@@ -79,12 +81,33 @@ function NovoLivroForm({ setModalOpen }) {
           required
           className="sm:col-span-4 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"/>
         </div>
-        <Input label="Altura" type="text" name="altura" required value={data.altura} onChange={handleInput}/>
+        
+        <Input label="Dimensões" type="text" name="dimensoes" required value={data.dimensoes} onChange={handleInput}/>
+
+        {/* <Input label="Altura" type="text" name="altura" required value={data.altura} onChange={handleInput}/>
         <Input label="Largura" type="text" name="largura" required value={data.largura} onChange={handleInput}/>
         <Input label="Peso" type="text" name="peso" required value={data.peso} onChange={handleInput}/>
-        <Input label="Profundidade" type="text" name="profundidade" required value={data.profundidade} onChange={handleInput}/>
+        <Input label="Profundidade" type="text" name="profundidade" required value={data.profundidade} onChange={handleInput}/> */}
         <Input label="Precificação" type="number" name="precificacao" span="2" required value={data.precificacao} onChange={handleInput} min="0"/>
         <Input label="Quantidade" type="number" name="quantidade"  span="2"required value={data.quantidade} onChange={handleInput} min="0"/>
+        
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-900">
+              Status
+            </label>
+          <select defaultValue={data.ativo}
+            name="ativo"
+            required
+            onChange={handleInput}
+            className="rounded-md max-h-10 border-0 shadow-sm ring-1 px-2 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+                <option key="ativo" value={true}>
+                  Ativo
+                </option>
+                <option key="inativo" value={false}>
+                  Inativo
+                </option>
+            </select>
+          </div>
     </div>
 
       <button

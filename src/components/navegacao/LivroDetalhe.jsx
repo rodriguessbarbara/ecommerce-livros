@@ -46,7 +46,8 @@ function LivroDetalhe() {
           </p>
 
           <p className="border-b-2 pb-4 text-sm text-gray-500">
-            Gênero(s): {typeof data.categoria != "string" ? data.categoria.join(", "): data.categoria}
+            Gênero(s):
+            {/* Gênero(s): {typeof data.categoria != "string" ? data.categoria.join(", "): data.categoria} */}
           </p>
           <p className="pt-8">
             {data.sinopse}
@@ -55,37 +56,44 @@ function LivroDetalhe() {
           <h3 className="mt-12 text-gray-400 font-medium text-lg">
             Detalhes do livro:
           </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-5">
-               <p className="flex flex-col">
-                Edição
-                {data.edicao}
-              </p>
-              <p>
-                ISBN
-                {data.ISBN}
-              </p>
-              <p>
-                Páginas
-                {data.numeroPaginas}
-              </p>
-              <p>
-                Dimensões
-                {data.altura}x{data.largura}x{data.peso}x{data.profundidade}
-              </p>
-            </div>
+          <table className="mt-4 border border-gray-300">
+            <tbody>
+              <tr className="border-b">
+                <td className="font-medium p-2">Edição:</td>
+                <td>{data.edicao}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="font-medium p-2">ISBN:</td>
+                <td>{data.ISBN}</td>
+              </tr>
+              <tr className="border-b">
+                <td className="font-medium p-2">Páginas:</td>
+                <td>{data.numeroPaginas}</td>
+              </tr>
+              <tr>
+                <td className="font-medium p-2">Dimensões:</td>
+                <td>{data.dimensoes}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         
         <div className="text-end self-center">
           <p className="font-bold text-lg text-gray-800">
             Comprar por R${data.precificacao}
           </p>
+          
           <button
             type="submit"
-            className="text-white bg-indigo-800 rounded-md ml-4 mt-2 p-4"
+            className={`text-white rounded-md ml-4 mt-2 p-4 ${data.ativo ? 'bg-indigo-800' : 'bg-gray-500'}`}
             onClick={handleAddCarrinho}
+            disabled={!data.ativo}
+
           >
             Adicionar ao carrinho
           </button>
+          {(!data.ativo) && <p className="text-red-500 font-medium">Indisponível</p>}
+
         </div>
       </div>
 

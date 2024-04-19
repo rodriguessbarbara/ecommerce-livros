@@ -4,7 +4,7 @@ import AppContext from "./AppContext";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { fetchClients } from '../fetchData';
-import { POST_USER , GET_USER, GETALL_ENTIDADE, UPDATE_USER, DELETE_USER, CHECK_USER, GETBYNOME_LIVRO } from '../api'
+import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_USER, CHECK_USER, GETBYNOME_LIVRO } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -62,7 +62,7 @@ function Provider({ children }) {
       setErro(null);
       setLoading(true);
 
-      const response = await POST_USER(novoUsuario);
+      const response = await POST_ENTIDADE(novoUsuario, "clientes");
       userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
       return response.data;
     } catch (error) {
@@ -77,7 +77,7 @@ function Provider({ children }) {
    try {
      setLoading(true);
 
-     const response = await UPDATE_USER(userId, novosDadosCliente);
+     const response = await UPDATE_ENTIDADE(userId, novosDadosCliente, "clientes");
      if(response.status === 204) console.log("cliente atualizado com sucesso")
    } catch (error) {
       setErro("Erro ao atualizar dados do usuário:", error);
@@ -125,27 +125,58 @@ const atualizarDadosMock = (novosDadosMock) => {
   } catch (error) {
     setErro(error.response.data);
     throw error;
-
   } finally {
     setLoading(false);
   }
 };
 
-const listarLivrosByNome = async (searchValue) => {
-  try {
-    setErro(null);
-    setLoading(true);
+  const listarLivrosByNome = async (searchValue) => {
+    try {
+      setErro(null);
+      setLoading(true);
 
-    const response = await GETBYNOME_LIVRO(searchValue);
-    return setBooks(response.data || []);
-  } catch (error) {
-    setErro(error.response.data);
-    throw error;
+      const response = await GETBYNOME_LIVRO(searchValue);
+      return setBooks(response.data || []);
+    } catch (error) {
+      setErro(error.response.data);
+      throw error;
 
-  } finally {
-    setLoading(false);
-  }
-};
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const novoLivro = async (novoLivro) => {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      const response = await POST_ENTIDADE(novoLivro, "livros");
+      if (response.status === 201) {
+        return setBooks(prevBooks => [...prevBooks, response.data]);
+     }
+      return;
+    } catch (error) {
+      setErro(error.response.data);
+      throw error; 
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const atualizarLivro = async (id, novosDadosLivro) => {
+    try {
+      setLoading(true);
+ 
+      const response = await UPDATE_ENTIDADE(id, novosDadosLivro, "livros");
+      if(response.status === 204) console.log("livro atualizado com sucesso")
+    } catch (error) {
+       setErro("Erro ao atualizar livro:", error);
+       throw error;
+    } finally {
+     setLoading(false);
+   }
+  };
 
   // useEffect(() => {
   //   fetchBooks("tudo").then((response) => {
@@ -205,6 +236,8 @@ const listarLivrosByNome = async (searchValue) => {
     deletarCliente,
     listarLivros,
     listarLivrosByNome,
+    novoLivro,
+    atualizarLivro,
     erro,
     userId,
     dadosMock,

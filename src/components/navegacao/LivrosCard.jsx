@@ -4,7 +4,7 @@ import AppContext from '../../context/AppContext';
 import { useNavigate } from "react-router-dom";
 
 function LivrosCard({ data, filtros }) {
-  const { id, imageSrc, imageAlt, capaAlternativa, titulo, autor, precificacao } = data;
+  const { id, imageSrc, imageAlt, capaAlternativa, titulo, autor, precificacao, ativo } = data;
   const { carrinhoItens, setCarrinhoItens, isCapaAlternativa, setIsCapaAlternativa, setIsCarrinhoAtivo } = useContext(AppContext);
 
   const navigate = useNavigate();
@@ -82,19 +82,23 @@ function LivrosCard({ data, filtros }) {
         <div className="mt-4 flex justify-between">
           <div>
             <h3 className="text-sm text-gray-700">
-              {titulo}
+              {titulo.charAt(0).toUpperCase() + titulo.slice(1).toLowerCase()}
             </h3>
             <p className="mt-1 text-sm text-gray-500">{autor}</p>
           </div>
           <p className="text-sm font-medium text-gray-900">R${precificacao}</p>
         </div>
+
         <button
           type="submit"
-          className="text-white bg-indigo-800 rounded-md ml-4 mt-2 p-2"
+          className={`text-white rounded-md ml-4 mt-2 p-4 ${data.ativo ? 'bg-indigo-800' : 'bg-gray-500'}`}
           onClick={handleAddCarrinho}
+          disabled={!ativo}
         >
           Adicionar ao carrinho
         </button>
+        {(!ativo) && <p className="text-red-500 font-medium">Indisponível</p>}
+
       </div>
     </>
   );

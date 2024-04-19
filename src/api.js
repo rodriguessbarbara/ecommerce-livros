@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:8000" });
 
-async function POST_USER(body) {
-	const response = await API.post("/clientes", body, {
+async function POST_ENTIDADE(body, entidade) {
+	const response = await API.post(`/${entidade}`, body, {
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -30,8 +30,8 @@ async function GET_USER(userId) {
 	return response;
 }
 
-async function UPDATE_USER(userId, newData) {
-	const response = await API.patch(`/clientes/${userId}`, newData, {
+async function UPDATE_ENTIDADE(id, newData, entidade) {
+	const response = await API.patch(`/${entidade}/${id}`, newData, {
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -53,8 +53,8 @@ async function GETBYNOME_LIVRO(nome) {
 export {
 	GETALL_ENTIDADE,
 	GET_USER,
-	POST_USER,
-	UPDATE_USER,
+	POST_ENTIDADE,
+	UPDATE_ENTIDADE,
 	DELETE_USER,
 	CHECK_USER,
 	GETBYNOME_LIVRO,

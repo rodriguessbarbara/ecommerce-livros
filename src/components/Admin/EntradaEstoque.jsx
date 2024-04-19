@@ -5,17 +5,17 @@ import Input from "../Input";
 import useForm from "../../hooks/useForm";
 
 function EntradaEstoque({ setIsEntradaEstoque }) {
-  const { books, setBooks } = useContext(AppContext);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const { books, setBooks, atualizarLivro } = useContext(AppContext);
+  const [selectedBook, setSelectedBook] = useState(books[0].id);
   const quantidadeEstoque = useForm();
 
-  function handleAtualizaEstoque(event) {
-    event.preventDefault();
+  function handleAtualizaEstoque() {
     if (!selectedBook) return;
     const novaQuantidade = quantidadeEstoque;
-
+    
     const updatedBooks = books.map(book => {
       if (book.id === parseInt(selectedBook)) {
+        atualizarLivro(book.id, {quantidade: parseInt(novaQuantidade.value)})
         return { ...book, quantidade: parseInt(novaQuantidade.value) };
       }
       return book;
@@ -60,8 +60,8 @@ function EntradaEstoque({ setIsEntradaEstoque }) {
             Salvar
         </button>
         </form>
-      </div>
 
+      </div>
       </div>
     </div>
   )

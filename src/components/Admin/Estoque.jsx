@@ -4,30 +4,42 @@ import Search from "../Header/Search";
 import EntradaEstoque from "./EntradaEstoque";
 
 function Estoque() {
-  const { books, setBooks } = useContext(AppContext);
+  const { books, setBooks, listarLivros, atualizarLivro } = useContext(AppContext);
   const [isEntradaEstoque, setIsEntradaEstoque] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        await listarLivros();
+      }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const hasBookInativo = books.some(book => book.quantidade === 0 && book.ativo);
     if (hasBookInativo) {
       const updatedBooks = books.map(book => {
         if (book.quantidade === 0 && book.ativo) {
+          atualizarLivro(book.id, {ativo: false});
+
           return { ...book, ativo: false };
         }
         return book;
       });
+
       setBooks(updatedBooks);
     }
-  }, [books, setBooks]);
+  }, [setBooks]);
+
   
   function handleMudaStatus(id, status) {
     const novoStatus = books.map(b => {
       if (b.id === id) {
+        atualizarLivro(id, {ativo: status});
+
         return {...b, ativo: status}
       }
-      return b;
+      return b
     });
-
     setBooks(novoStatus);
   }
 
