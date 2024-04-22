@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 
 const filtros = [
@@ -6,9 +7,9 @@ const filtros = [
     name: 'Editora',
     options: [
       { value: 'Intriseca', label: 'Intriseca', checked: false },
-      { value: 'rocco', label: 'rocco', checked: false },
+      { value: 'Record', label: 'Record', checked: false },
       { value: 'arqueiro', label: 'arqueiro', checked: false },
-      { value: 'HarperCollins', label: 'HarperCollins', checked: false },
+      { value: 'Bertrand', label: 'Bertrand', checked: false },
       { value: 'Paralela', label: 'Paralela', checked: false },
     ],
   },
@@ -30,13 +31,15 @@ const filtros = [
       { value: 'Blake Crouch', label: 'Blake Crouch', checked: false },
       { value: 'Ashley Audrain', label: 'Ashley Audrain', checked: false },
       { value: 'Carla Madeira', label: 'Carla Madeira', checked: false },
+      { value: 'Stephen Chbosky', label: 'Stephen Chbosky', checked: false },
+      { value: 'Isabel Allende', label: 'Isabel Allende', checked: false },
     ],
   },
   {
     id: 'edicao',
     name: 'Edicao',
     options: [
-      { value: 'Português', label: 'Português', checked: false },
+      { value: 'Portugues', label: 'Portugues', checked: false },
       { value: 'Inglês', label: 'Inglês', checked: false },
     ],
   },

@@ -3,6 +3,7 @@ import useForm from "../../hooks/useForm";
 import Input from "../Input";
 import AppContext from "../../context/AppContext";
 import Erro from "../Erro.jsx";
+import Loading from "../Loading.jsx"
 //import { cepMask, cpfMask, telefoneMask } from "../../masks";
 
 function LoginCriar() {
@@ -11,14 +12,13 @@ function LoginCriar() {
   const nome = useForm();
   const cpf = useForm();
   const telefone = useForm();
-  const [genero, setGenero] = useState(null);
+  const [genero, setGenero] = useState("FEMININO");
   const dataNascimento = useForm();
 
-  const { criarUsuario, erro } = useContext(AppContext);
+  const { criarUsuario, erro, loading } = useContext(AppContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const dataCadastro = new Date().toLocaleDateString("pt-BR");
 
     criarUsuario({
       nome: nome.value,
@@ -27,12 +27,13 @@ function LoginCriar() {
       senha: senha.value,
       genero: genero,
       telefone: telefone.value,
-      dataCadastro: dataCadastro,
-      dataNascimento: dataNascimento.value
+      dataNascimento: dataNascimento.value,
+      ativo: true,
+      role: 'user'
     });
-
   }
 
+  if (loading) return <Loading/>
   return (
     <>
       <div className="justify-center py-6 mt-10 mx-10">
@@ -55,7 +56,7 @@ function LoginCriar() {
                 </label>
               <select name="genero" required onChange={(event) => setGenero(event.target.value)} className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6">
 
-                <option value="FEMININO" className="text-gray-800" defaultValue={true}>Feminino</option>
+                <option value="FEMININO" className="text-gray-800">Feminino</option>
                 <option value="MASCULINO" className="text-gray-800">Masculino</option>
                 <option value="OUTRO" className="text-gray-800">Outro</option>
               </select>
@@ -86,7 +87,6 @@ function LoginCriar() {
         </div>
 
         <Erro erro={erro} />
-
       </form>
 
       </div>

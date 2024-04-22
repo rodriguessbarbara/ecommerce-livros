@@ -60,6 +60,14 @@
 			"final": 2345,
 			"nome": "Julio R Almeida",
 			"preferencial": true
+		},
+		{
+			"id": 2,
+			"bandeira": "elo",
+			"numeroCartao": 987256520012256,
+			"final": 2256,
+			"nome": "barbara mendes",
+			"preferencial": false
 		}
 	],
 	"pedidos": [
