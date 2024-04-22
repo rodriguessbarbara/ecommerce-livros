@@ -14,7 +14,7 @@ function Pedidos() {
 
     atualizarDadosMock({ ...dadosMock, pedidos: novosDadosPedidos });
   }
-
+  
   return (
     <div className="flex flex-col gap-2 border-b border-gray-200 py-4 text-gray-600">
       <h3 className="text-2xl font-medium tracking-tight text-gray-800">Seus Pedidos</h3>
@@ -32,7 +32,7 @@ function Pedidos() {
               {typeof pedido.livro != "string" ? (
                 pedido.livro.map((item) => (
                   <div key={item} className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300">
-                    <p >{item} </p>
+                    <p >{item}</p>
                     <span className="text-sm">Capa Original </span>
                   </div>
                 ))
@@ -44,7 +44,15 @@ function Pedidos() {
                   )
               }
 
-            <p>{pedido.formaPagamento}<span> número: {pedido.numeroCartao}</span></p>
+            {pedido.numeroCartao.length ? (
+              pedido.numeroCartao.map((c, index) => (
+                <p key={c.numeroCartao}>{pedido.formaPagamento}<span> número: {c} - {pedido.bandeira[index]} </span></p>
+              ))
+
+            ) : (
+              <p>{pedido.formaPagamento}<span> número: {pedido.numeroCartao}</span></p>
+            )}
+
             <p className="text-blue-600 font-medium uppercase">{pedido.status}</p>
           </div>
 

@@ -2,13 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import AdicionarEndereco from "./AdicionarEndereco";
-import { useLocation } from 'react-router-dom';
 
 function SelecionarEnderecoCompra() {
-  const { dadosMock } = useContext(AppContext);
+  const { dadosMock, precoTotal } = useContext(AppContext);
 
-  const location = useLocation();
-  const { precoEFrete } = location.state || {};
   const navigate = useNavigate();
   const [endSelecionado, setEndSelecionado] = useState(null);
   const [enderecoData, setEnderecoData] = useState([]);
@@ -24,7 +21,7 @@ function SelecionarEnderecoCompra() {
     if (!endSelecionado) {
       return alert("Por favor, selecione um endereço para continuar."); 
     }
-    navigate("/conta/pagamento-compra", { state: {precoEFrete: precoEFrete} });
+    navigate("/conta/pagamento-compra", { state: {endSelecionado: endSelecionado} });
   };
 
   return (
@@ -63,7 +60,7 @@ function SelecionarEnderecoCompra() {
 
       <div className="self-end text-end">
         <p className="font-bold text-lg text-gray-800">
-              Preço Total: R$ {precoEFrete}
+              Subtotal: R$ {precoTotal}
         </p>
 
         <button onClick={handleProxTela}
