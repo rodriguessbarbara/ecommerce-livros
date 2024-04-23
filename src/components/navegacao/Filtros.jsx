@@ -14,14 +14,14 @@ const filtros = [
     ],
   },
   {
-    id: 'categoria',
+    id: 'LivroCategoria',
     name: 'Categoria',
     options: [
       { value: 'Romance', label: 'Romance', checked: false },
       { value: 'Suspense', label: 'Suspense', checked: false },
-      { value: 'Ficção científica', label: 'Ficção científica', checked: false },
-      { value: 'terror/thriller', label: 'terror/thriller', checked: false },
-      { value: 'educação', label: 'educação', checked: false },
+      { value: 'Ficcao', label: 'Ficcao', checked: false },
+      { value: 'Terror', label: 'Terror', checked: false },
+      { value: 'Aventura', label: 'Aventura', checked: false },
     ],
   },
   {

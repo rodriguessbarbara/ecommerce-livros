@@ -43,13 +43,24 @@ function LivrosCard({ data, filtros }) {
   };
 
   const meetsFilterCriteria = () => {
-    return filtros.every(filter => {
-      // Se não houver filtro marcado, o livro passa no critério
-      if (!filter.options.some(option => option.checked)) return true;
-      // Verifica se o valor do livro corresponde a alguma opção marcada para o filtro atual
-      return filter.options.some(option => option.checked && data[filter.id] === option.value);
+    return filtros.every((filter) => {
+      if (!filter.options.some((option) => option.checked)) {
+        return true;
+      } else if (filter.id === 'LivroCategoria') {
+        return filter.options.some(
+          (option) =>
+            option.checked &&
+            data.LivroCategoria.some(
+              (lc) => lc.Categorium.nome === option.value
+            )
+        );
+      }
+      return filter.options.some(
+        (option) => option.checked && data[filter.id] === option.value
+      );
     });
   };
+  
 
   if (!meetsFilterCriteria()) return null;
 

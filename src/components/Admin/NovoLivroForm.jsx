@@ -10,7 +10,7 @@ function NovoLivroForm({ setModalOpen }) {
     capaAlternativa: "",
     titulo: "",
     autor: "",
-    categoria: "",
+    categoria: [],
     editora: "",
     ano: "",
     edicao: "",
@@ -26,6 +26,15 @@ function NovoLivroForm({ setModalOpen }) {
   const handleInput = (event) => {
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
+  };
+
+  const handleInputSelect = (event) => {
+    const { name, options } = event.target;
+    const selectedOptions = Array.from(options)
+      .filter((option) => option.selected)
+      .map((option) => option.value);
+  
+    setData({ ...data, [name]: selectedOptions });
   };
 
   const handleNovoLivro = async (event) => {
@@ -44,7 +53,7 @@ function NovoLivroForm({ setModalOpen }) {
         capaAlternativa: "",
         titulo: "",
         autor: "",
-        categoria: "",
+        categoria: [],
         editora: "",
         ano: "",
         edicao: "",
@@ -67,7 +76,22 @@ function NovoLivroForm({ setModalOpen }) {
         <Input label="Capa alternativa" type="text" name="capaAlternativa" span="2" required value={data.capaAlternativa} onChange={handleInput}/>
         <Input label="Título do livro" type="text" name="titulo" span="2" required value={data.titulo.toLowerCase()} onChange={handleInput}/>
         <Input label="Autor" type="text" name="autor" span="2" required value={data.autor} onChange={handleInput}/>
-        <Input label="Categoria" type="text" name="categoria" span="2" required value={data.categoria} onChange={handleInput}/>
+        {/* <Input label="Categoria" type="text" name="categoria" span="2" required value={data.categoria} onChange={handleInput}/> */}
+        
+        <div>
+          <label className="text-sm font-medium text-gray-900">Categoria(s)</label>
+          <select className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+            name="categoria"
+            id="categoria"
+            value={data.categoria}
+            onChange={handleInputSelect}
+            >
+            <option value="Romance">Romance</option>
+            <option value="Suspense">Suspense</option>
+            <option value="Ficcao">Ficção</option>
+            <option value="Aventura">Aventura</option>
+          </select>
+        </div>
         <Input label="Editora" type="text" name="editora" span="2" required value={data.editora} onChange={handleInput}/>
         <Input label="Ano" type="text" name="ano" required value={data.ano} onChange={handleInput}/>
         <Input label="Edição" type="text" name="edicao" required value={data.edicao} onChange={handleInput}/>

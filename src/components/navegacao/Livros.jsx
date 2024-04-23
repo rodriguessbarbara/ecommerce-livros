@@ -19,7 +19,7 @@ function Livros() {
   const applyFilters = (filtros) => {
     setAppliedFilters(filtros);
   };
-    
+  
   return (
     <>
       <div className="bg-white">
@@ -30,11 +30,23 @@ function Livros() {
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">Descubra nossos livros disponíveis</h2>
 
             <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {books
-                .filter((book) => {
+                {books.filter((book) => {
                   return appliedFilters.every((filtro) => {
                     if (!filtro.options.some((option) => option.checked)) return true;
-                    return filtro.options.some((option) => option.checked && book[filtro.id] === option.value);
+
+                    if (filtro.id === 'LivroCategoria') {
+                      return filtro.options.some(
+                        (option) =>
+                          option.checked &&
+                          book.LivroCategoria.some(
+                            (lc) => lc.Categorium.nome === option.value
+                          )
+                      );
+                    } else {
+                      return filtro.options.some(
+                        (option) => option.checked && book[filtro.id] === option.value
+                      );
+                    }
                   });
                 })
                 .map((book) => (

@@ -45,9 +45,8 @@ function LivroDetalhe() {
             Autor(a) {data.autor} | Editora {data.editora}
           </p>
 
-          <p className="border-b-2 pb-4 text-sm text-gray-500">
-            Gênero(s):
-            {/* Gênero(s): {typeof data.categoria != "string" ? data.categoria.join(", "): data.categoria} */}
+          <p className="border-b-2 pb-4 text-sm text-gray-600">
+              Categoria(s): {data.LivroCategoria.map((categoria) => categoria.Categorium.nome).join(", ")}
           </p>
           <p className="pt-8">
             {data.sinopse}
