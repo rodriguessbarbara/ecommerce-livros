@@ -21,7 +21,7 @@ async function CHECK_USER(body) {
 }
 
 async function GETALL_ENTIDADE(entidade) {
-	const response = await API.get(`/${entidade}`);
+	const response = await API.get(`/${entidade}/`);
 	return response;
 }
 
@@ -50,6 +50,26 @@ async function GETBYNOME_LIVRO(nome) {
 	return response;
 }
 
+//Cupom
+async function CHECK_CUPOM(body) {
+	const response = await API.post("/cupom/validar", body, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return response;
+}
+
+//Pedidos
+// async function CREATE_PEDIDO(id, newData, entidade) {
+// 	const response = await API.patch(`/${entidade}/${id}/pedido`, newData, {
+// 		headers: {
+// 			"Content-Type": "application/json",
+// 		},
+// 	});
+// 	return response;
+// }
+
 export {
 	GETALL_ENTIDADE,
 	GET_USER,
@@ -58,4 +78,5 @@ export {
 	DELETE_USER,
 	CHECK_USER,
 	GETBYNOME_LIVRO,
+	CHECK_CUPOM,
 };

@@ -4,7 +4,7 @@ import AppContext from "../../context/AppContext";
 import Input from "../Input";
 
 function NovoLivroForm({ setModalOpen }) {
-  const { novoLivro } = useContext(AppContext);
+  const { criarEntidade } = useContext(AppContext);
   const [data, setData] = useState({
     imageSrc: "",
     capaAlternativa: "",
@@ -46,7 +46,7 @@ function NovoLivroForm({ setModalOpen }) {
     });
 
     if (isFormValid) {
-      await novoLivro(data)
+      await criarEntidade(data, "livros")
 
       setData({
         imageSrc: "",

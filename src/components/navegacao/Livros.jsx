@@ -6,12 +6,12 @@ import AddLivroButton from "../Admin/AddLivroButton";
 import Carrinho from "../Carrinho/Carrinho";
 
 function Livros() {
-  const { books, setBooks, login, listarLivros } = useContext(AppContext);
+  const { books, setBooks, login, listarEntidades } = useContext(AppContext);
   const [appliedFilters, setAppliedFilters] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-        await listarLivros();
+        await listarEntidades("livros");
       }
     fetchData();
   }, [setBooks]);

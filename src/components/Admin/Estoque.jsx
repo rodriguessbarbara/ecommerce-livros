@@ -2,23 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Search from "../Header/Search";
 import EntradaEstoque from "./EntradaEstoque";
+import Loading from "../Loading";
 
 function Estoque() {
-  const { books, setBooks, listarLivros, atualizarLivro } = useContext(AppContext);
+  const { books, setBooks, listarEntidades, atualizarLivro, loading } = useContext(AppContext);
   const [isEntradaEstoque, setIsEntradaEstoque] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-        await listarLivros();
+        await listarEntidades("livros");
       }
     fetchData();
   }, []);
 
   useEffect(() => {
-    const hasBookInativo = books.some(book => book.quantidade === 0 && book.ativo);
+    const hasBookInativo = books.some(book => book.quantidade === 0);
     if (hasBookInativo) {
       const updatedBooks = books.map(book => {
-        if (book.quantidade === 0 && book.ativo) {
+        if (book.quantidade === 0) {
           atualizarLivro(book.id, {ativo: false});
 
           return { ...book, ativo: false };
@@ -30,7 +31,6 @@ function Estoque() {
     }
   }, [setBooks]);
 
-  
   function handleMudaStatus(id, status) {
     const novoStatus = books.map(b => {
       if (b.id === id) {
@@ -43,6 +43,7 @@ function Estoque() {
     setBooks(novoStatus);
   }
 
+  if (loading || !books) return <Loading/>
   return (
     <div className="py-4 text-gray-600 flex flex-col flex-grow">
       <div className="justify-between items-center mb-4 flex gap-2">

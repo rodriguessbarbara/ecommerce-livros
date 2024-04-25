@@ -18,6 +18,8 @@ function Provider({ children }) {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false)
   const [dadosMock, setDadosMock] = useState([]);
+  // const [dadosVendas, setDadosVendas] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,22 +27,6 @@ function Provider({ children }) {
       return (item.precificacao * item.quantidadeCarrinho) + acc;
     }, 0));
   }, [carrinhoItens, setPrecoTotal]);
-
-  const listarClientes = async () => {
-    try {
-      setErro(null);
-      setLoading(true);
-
-      const response = await GETALL_ENTIDADE("clientes");
-      return setDadosCliente(response.data || []);
-    } catch (error) {
-      setErro(error.response.data);
-      throw error;
-
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const listarCliente = async (userId) => {
     try {
@@ -57,14 +43,19 @@ function Provider({ children }) {
     }
   };
 
-  const criarUsuario = async (novoUsuario) => {
+  const criarEntidade = async (novoUsuario, entidade) => {
     try {
       setErro(null);
       setLoading(true);
 
-      const response = await POST_ENTIDADE(novoUsuario, "clientes");
-      userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
-      return response.data;
+      const response = await POST_ENTIDADE(novoUsuario, entidade);
+      if (response.status === 201) {
+        if (entidade === 'clientes') {
+          userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
+        }
+        if (entidade === 'livros') return setBooks(prevBooks => [...prevBooks, response.data]);
+      }
+        return response.data;
     } catch (error) {
       setErro(error.response.data);
       throw error; 
@@ -86,6 +77,35 @@ function Provider({ children }) {
     setLoading(false);
   }
  };
+
+ const listarEntidades = async (entidade) => {
+  try {
+    setErro(null);
+    setLoading(true);
+
+    const response = await GETALL_ENTIDADE(entidade);
+    if (entidade === 'livros') return setBooks(response.data || []);
+    return setDadosCliente(response.data || []);
+  } catch (error) {
+    setErro(error.response.data);
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+};
+
+ const atualizarEndereco = async (id, novosDadosEndereco) => {
+  try {
+    setLoading(true);
+    const response = await UPDATE_ENTIDADE(id, novosDadosEndereco, "endereco");
+    if(response.status === 204) console.log("endereço atualizado com sucesso")
+  } catch (error) {
+     setErro("Erro ao atualizar dados do endereço:", error);
+     throw error;
+  } finally {
+   setLoading(false);
+ }
+};
 
    
  useEffect(() => {
@@ -115,21 +135,6 @@ const atualizarDadosMock = (novosDadosMock) => {
    }
  };
 
- const listarLivros = async () => {
-  try {
-    setErro(null);
-    setLoading(true);
-
-    const response = await GETALL_ENTIDADE("livros");
-    return setBooks(response.data || []);
-  } catch (error) {
-    setErro(error.response.data);
-    throw error;
-  } finally {
-    setLoading(false);
-  }
-};
-
   const listarLivrosByNome = async (searchValue) => {
     try {
       setErro(null);
@@ -146,23 +151,23 @@ const atualizarDadosMock = (novosDadosMock) => {
     }
   };
 
-  const novoLivro = async (novoLivro) => {
-    try {
-      setErro(null);
-      setLoading(true);
+  // const novoLivro = async (novoLivro) => {
+  //   try {
+  //     setErro(null);
+  //     setLoading(true);
 
-      const response = await POST_ENTIDADE(novoLivro, "livros");
-      if (response.status === 201) {
-        return setBooks(prevBooks => [...prevBooks, response.data]);
-     }
-      return;
-    } catch (error) {
-      setErro(error.response.data);
-      throw error; 
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const response = await POST_ENTIDADE(novoLivro, "livros");
+  //     if (response.status === 201) {
+  //       return setBooks(prevBooks => [...prevBooks, response.data]);
+  //    }
+  //     return;
+  //   } catch (error) {
+  //     setErro(error.response.data);
+  //     throw error; 
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const atualizarLivro = async (id, novosDadosLivro) => {
     try {
@@ -178,11 +183,23 @@ const atualizarDadosMock = (novosDadosMock) => {
    }
   };
 
-  // useEffect(() => {
-  //   fetchBooks("tudo").then((response) => {
-  //     setBooks(response);
-  //   });
-  // }, [setBooks]);
+  // const novoPedido = async (novoPedido) => {
+  //   try {
+  //     setErro(null);
+  //     setLoading(true);
+
+  //     const response = await POST_ENTIDADE(novoPedido, "pedidos");
+  //     if (response.status === 201) {
+  //       return setDadosVendas(prevPedidos => [...prevPedidos, response.data]);
+  //    }
+  //     return;
+  //   } catch (error) {
+  //     setErro(error.response.data);
+  //     throw error; 
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const userLogin = async (usuario, userType) => {
     try {
@@ -230,18 +247,17 @@ const atualizarDadosMock = (novosDadosMock) => {
     dadosCliente,
     setDadosCliente,
     atualizarDadosCliente,
-    criarUsuario,
-    listarClientes,
+    criarEntidade,
     listarCliente,
     deletarCliente,
-    listarLivros,
     listarLivrosByNome,
-    novoLivro,
     atualizarLivro,
     erro,
     userId,
     dadosMock,
+    listarEntidades,
     atualizarDadosMock,
+    atualizarEndereco,
     loading
   };
 

@@ -5,13 +5,13 @@ import Erro from '../Erro';
 function Search() {
 
     const [searchValue, setSearchValue] = useState("");
-    const { listarLivros, listarLivrosByNome, erro } = useContext(AppContext);
+    const { listarEntidades, listarLivrosByNome, erro } = useContext(AppContext);
 
     const handleSearch = async (event) => {
         event.preventDefault();
 
         if (searchValue === '') {
-            listarLivros();
+            listarEntidades("livros");
         } else {
             listarLivrosByNome(searchValue);
         }

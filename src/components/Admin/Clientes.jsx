@@ -3,11 +3,14 @@ import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
 
 function Clientes() {
-  const { dadosMock, listarClientes, dadosCliente, setDadosCliente, atualizarDadosCliente, loading } = useContext(AppContext);
+  const { dadosMock, dadosCliente, setDadosCliente, atualizarDadosCliente, loading, listarEntidades } = useContext(AppContext);
   const [dadosEnderecos, setDadosEnderecos] = useState([]);
 
-   useEffect(() => {
-    listarClientes();
+  useEffect(() => {
+    const fetchData = async () => {
+      await listarEntidades("clientes");
+    }
+    fetchData();
    }, [setDadosCliente])
   
    useEffect(() => {
@@ -32,7 +35,7 @@ function Clientes() {
     if (confirmacao) setDadosCliente(novoStatus)
   }
 
-  if (loading) return <Loading/>
+  if (loading || !dadosCliente.length) return <Loading/>
   return (
     <div className="py-4 text-gray-600">
       <h3 className="text-2xl font-medium tracking-tight">Consulta de Clientes</h3>

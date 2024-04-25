@@ -6,7 +6,7 @@ import AppContext from '../../context/AppContext';
 import { useLocation } from 'react-router-dom';
 
 function Header() {
-  const { login, listarLivros } = useContext(AppContext);
+  const { login, listarEntidades } = useContext(AppContext);
   const localizacao = useLocation();
 
 return (
@@ -15,7 +15,7 @@ return (
       <div className="relative flex h-16 items-center justify-between">
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-shrink-0 items-center">
-            <Link to="/" onClick={() => {listarLivros()}}> 
+            <Link to="/" onClick={() => {listarEntidades("livros")}}> 
               <img
                 className="h-8 w-auto cursor-pointer"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
