@@ -10,20 +10,22 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
   const numeroCartao = useForm();
   const codSeguranca = useForm();
 
-  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
+  const { userId, criarEntidade } = useContext(AppContext);
 
   async function handleAdicionarCartao(event) {
     event.preventDefault();
 
     if (numeroCartao.validate() && nome.validate() && codSeguranca.validate()) {
-      const novoCartao = {
+      criarEntidade({
         bandeira: bandeira.value,
-        numero: numeroCartao.value,
+        numeroCartao: numeroCartao.value,
         nome: nome.value,
         final: (numeroCartao.value).slice(-4),
-        codigoSeguranca: codSeguranca.value
-      };
-      atualizarDadosMock({ cartoes: [...dadosMock.cartoes, novoCartao] });
+        cvv: codSeguranca.value,
+        preferencial: false,
+        cliente_id: userId
+      }, "cartao");
+
       setOpenAdicionarCartao(false);
     }
   }

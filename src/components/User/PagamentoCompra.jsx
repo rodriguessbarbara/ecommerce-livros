@@ -5,14 +5,14 @@ import AdicionarCartao from "./AdicionarCartao";
 import { useLocation } from 'react-router-dom';
 import ResumoCompra from "./ResumoCompra";
 import Input from "../Input";
+import Loading from "../Loading";
 
 function PagamentoCompra() {
-  const { dadosMock } = useContext(AppContext);
+  const { listarCliente, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
 
   const location = useLocation();
   const { endSelecionado } = location.state || {};
   const [openModal, setOpenModal] = useState(false);
-  const [cartaoData, setCartaoData] = useState([]);
   const [cartaoSelecionado, setCartaoSelecionado] = useState([]);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
   const [precoFinal, setPrecoFinal] = useState(0);
@@ -20,10 +20,11 @@ function PagamentoCompra() {
   const [precoInput2, setPrecoInput2] = useState(10);
 
   useEffect(() => {
-    if (dadosMock) {
-      setCartaoData(dadosMock.cartoes);
+    const fetchData = async () => {
+      await listarCliente(userId);
     }
-  }, [dadosMock]);
+    fetchData();
+   }, [setDadosCliente])
 
   const handleCartaoSelecionado = (cartao) => {
     const cartaoIndex = cartaoSelecionado.findIndex(item => item.id === cartao.id);
@@ -50,6 +51,7 @@ function PagamentoCompra() {
     }
   };
 
+  if (loading) return <Loading/>
   return (
     <div className="min-h-screen max-w-7xl mx-auto text-gray-800 mt-16 px-4 grid grid-cols-3 gap-8">
       <div className="col-span-2">
@@ -58,7 +60,7 @@ function PagamentoCompra() {
         </h2>
 
         <div className="my-4 flex flex-col gap-6">
-          {cartaoData.map((cartao) => (
+          {dadosCliente && dadosCliente.Cartaos && dadosCliente.Cartaos.map((cartao) => (
             <div key={cartao.id} className="rounded-md bg-gray-100 px-6 py-10 border-gray-300">
 
             <label className="flex items-center">
@@ -103,7 +105,6 @@ function PagamentoCompra() {
       </div>
 
       <ResumoCompra cartaoSelecionado={cartaoSelecionado} endSelecionado={endSelecionado} setModalOpen={() => setOpenModal(!openModal)} precoFinal={precoFinal} setPrecoFinal={setPrecoFinal} valorInputs={precoInput1 + precoInput2}/>
-      
       <MsgCompraEfetuada isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)}/>
     </div>
   )

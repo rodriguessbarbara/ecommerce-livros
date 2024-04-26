@@ -2,20 +2,21 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import AdicionarEndereco from "./AdicionarEndereco";
+import Loading from "../Loading";
 
 function SelecionarEnderecoCompra() {
-  const { dadosMock, precoTotal } = useContext(AppContext);
+  const { precoTotal, listarCliente, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
 
   const navigate = useNavigate();
   const [endSelecionado, setEndSelecionado] = useState(null);
-  const [enderecoData, setEnderecoData] = useState([]);
   const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
 
   useEffect(() => {
-    if (dadosMock) {
-      setEnderecoData(dadosMock.endereco);
+    const fetchData = async () => {
+      await listarCliente(userId);
     }
-  }, [dadosMock]);
+    fetchData();
+   }, [setDadosCliente])
 
   const handleProxTela = () => {
     if (!endSelecionado) {
@@ -24,6 +25,7 @@ function SelecionarEnderecoCompra() {
     navigate("/conta/pagamento-compra", { state: {endSelecionado: endSelecionado} });
   };
 
+  if (loading) return <Loading/>
   return (
     <div className="min-h-screen max-w-7xl mx-auto text-gray-800 mt-16 px-4">
       <h2 className="text-2xl font-medium text-gray-800 pt-5">
@@ -31,7 +33,7 @@ function SelecionarEnderecoCompra() {
       </h2>
         
       <div className="my-4 flex flex-col gap-6">
-        {enderecoData.map((end) => (
+        {dadosCliente && dadosCliente.Enderecos && dadosCliente.Enderecos.map((end) => (
           <div key={end.id} className="rounded-md bg-gray-100 px-6 py-10 border-gray-300">
 
             <label className="flex items-center">

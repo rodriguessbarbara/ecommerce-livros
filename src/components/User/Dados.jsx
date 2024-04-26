@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Input from "../Input";
 import Loading from "../Loading";
+import AdicionarEndereco from "./AdicionarEndereco";
 
 function Dados() {
- const { dadosCliente, atualizarDadosCliente, listarCliente, userId, setDadosCliente, deletarCliente, loading, atualizarEndereco } = useContext(AppContext);
+ const { dadosCliente, listarCliente, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade } = useContext(AppContext);
  const [editar, setEditar] = useState("");
+ const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
 
  useEffect(() => {
   const fetchData = async () => {
@@ -28,7 +30,7 @@ function Dados() {
 
  const handleSalvar = (event) => {
     event.preventDefault();
-    atualizarDadosCliente(userId, {
+    atualizarEntidade(userId, {
         nome: dadosCliente.nome,
         cpf: dadosCliente.cpf,
         email: dadosCliente.email,
@@ -36,13 +38,13 @@ function Dados() {
         genero: dadosCliente.genero,
         telefone: dadosCliente.telefone,
         dataNascimento: dadosCliente.dataNascimento
-      });
+      }, "clientes");
     setEditar(""); 
  };
 
  const handleSalvarEnd = (event, endId, data) => {
   event.preventDefault();
-  atualizarEndereco(endId, {
+  atualizarEntidade(endId, {
     lagradouro: data.lagradouro,
     enderecoResidencial: data.enderecoResidencial,
     tipoResidencia: data.tipoResidencia,
@@ -52,7 +54,7 @@ function Dados() {
     cidade: data.cidade,
     estado: data.estado,
     pais: data.pais
-  });
+  }, "endereco");
   setEditar(""); 
 };
 
@@ -60,7 +62,22 @@ function Dados() {
   event.preventDefault();
   const confirmacao = window.confirm("Você realmente deseja excluir sua conta?");
   if (confirmacao) {
-    deletarCliente(userId);
+    deletarEntidade(userId, "clientes");
+  } else {
+    event.preventDefault();
+  }
+ }
+
+ function handleExcluirEndereco(event, id) {
+  event.preventDefault();
+  const confirmacao = window.confirm("Você realmente deseja excluir esse endereco?");
+  if (confirmacao) {
+    deletarEntidade(id, "endereco");
+
+    const novosEnderecos = dadosCliente.Enderecos.filter(endereco => endereco.id !== id);
+    setDadosCliente({ ...dadosCliente, Enderecos: novosEnderecos });
+
+    setEditar("");
   } else {
     event.preventDefault();
   }
@@ -105,8 +122,11 @@ function Dados() {
               </div>
             ))}
 
+            <button className="text-blue-800 font-medium text-start" onClick={() => setOpenAdicionarEndereco(true)}>
+              Adicione um novo endereço
+            </button>
             <h4 className="font-medium text-blue-800 mt-4 cursor-pointer" onClick={() => setEditar("senha")}>Alterar apenas a senha</h4>
-            <button className="font-medium text-blue-800 mt-4 cursor-pointer text-start" onClick={handleExcluirConta}>Excluir conta</button>
+            <button className="font-medium text-red-600 mt-4 cursor-pointer text-start" onClick={handleExcluirConta}>Excluir conta</button>
           </>
           )}
         </div>          
@@ -137,7 +157,8 @@ function Dados() {
             <Input label="estado" type="text" name="estado" value={end.estado || ''} onChange={(event) => (handleInputChangeEnd(event, index))} required/>
             <Input label="pais" type="text" name="pais" value={end.pais || ''} onChange={(event) => (handleInputChangeEnd(event, index))} required/>
 
-            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
+            <button className="font-medium text-red-600 cursor-pointer text-start" onClick={(event) => handleExcluirEndereco(event, end.id)}>Excluir Endereco</button>
+            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mb-4">Salvar</button>
           </form>
         ))}
 
@@ -153,6 +174,9 @@ function Dados() {
           <p className="font-medium text-red-600 mt-4 cursor-pointer" onClick={() => setEditar("")}>{`← Voltar`}</p>
         }
       </div>
+
+      <AdicionarEndereco openAdicionarEndereco={openAdicionarEndereco} setOpenAdicionarEndereco={() => setOpenAdicionarEndereco(!openAdicionarEndereco)}/>
+
     </div>
  );
 }

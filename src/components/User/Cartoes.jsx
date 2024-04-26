@@ -2,26 +2,29 @@ import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import AlterarCartao from "./AlterarCartao";
 import AdicionarCartao from "./AdicionarCartao";
+import Loading from "../Loading";
 
 function Cartoes() {
   const [openAlterarCartao, setOpenAlterarCartao] = useState(false);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
-  const [cartoes, setCartoes] = useState([]);
-
   const [cartao, setCartao] = useState([]);
-  const { dadosMock } = useContext(AppContext);
+  const { dadosCliente, listarCliente, userId, setDadosCliente, loading } = useContext(AppContext);
 
   useEffect(() => {
-    if (dadosMock && dadosMock.cartoes) {
-      setCartoes(dadosMock.cartoes);
+    const fetchData = async () => {
+      await listarCliente(userId);
     }
-  }, [dadosMock]);
+    fetchData();
+   }, [setDadosCliente])
 
   const handleOpenAlterarCartao = (item) => {
     setCartao(item);
     setOpenAlterarCartao(true);
   };
 
+  console.log()
+
+  if (loading) return <Loading/>
   return (
     <div>
       <div className="flex flex-col gap-2 border-b border-gray-300 pt-4 pb-2 mb-10">
@@ -30,12 +33,14 @@ function Cartoes() {
       </div>
 
       <div className="flex flex-col gap-2">
-        {cartoes.map((item) => (
-          <div key={item.id} className="py-4 cursor-pointer bg-gray-300 hover:bg-gray-400 rounded-md px-4 border-2 border-gray-400 text-gray-600" onClick={() => handleOpenAlterarCartao(item)}>
-            <h4 className="font-semibold text-lg">{item.bandeira}</h4>
-            <p>Cartão com final <span className="font-bold">{item.final}</span></p>
-            <p>{item.nome}</p>
-            {item.preferencial && <p className="text-green-700 text-sm">*Preferencial</p>}
+        {dadosCliente.Cartaos && dadosCliente.Cartaos.map((cartao) => (
+          <div key={cartao.id} className="py-4 cursor-pointer bg-gray-300 hover:bg-gray-400 rounded-md px-4 border-2 border-gray-400 text-gray-600" onClick={() => handleOpenAlterarCartao(cartao)}>
+            <h4 className="font-semibold text-lg">{cartao.bandeira}</h4>
+            <p>Cartão com final <span className="font-bold">{cartao.final}</span></p>
+            <p>{cartao.nome}</p>
+            <p className="text-gray-500 font-medium text-sm">
+              {cartao.preferencial ? 'preferencial' : 'normal'}
+            </p>               
           </div>
         ))}
 

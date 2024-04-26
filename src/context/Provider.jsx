@@ -4,7 +4,7 @@ import AppContext from "./AppContext";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { fetchClients } from '../fetchData';
-import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_USER, CHECK_USER, GETBYNOME_LIVRO } from '../api'
+import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -18,7 +18,7 @@ function Provider({ children }) {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false)
   const [dadosMock, setDadosMock] = useState([]);
-  // const [dadosVendas, setDadosVendas] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
 
   const navigate = useNavigate();
 
@@ -43,17 +43,17 @@ function Provider({ children }) {
     }
   };
 
-  const criarEntidade = async (novoUsuario, entidade) => {
+  const criarEntidade = async (novaEntidade, entidade) => {
     try {
       setErro(null);
       setLoading(true);
 
-      const response = await POST_ENTIDADE(novoUsuario, entidade);
+      const response = await POST_ENTIDADE(novaEntidade, entidade);
       if (response.status === 201) {
-        if (entidade === 'clientes') {
-          userLogin({email: novoUsuario.email,senha: novoUsuario.senha});
-        }
+        if (entidade === 'clientes') userLogin({email: novaEntidade.email,senha: novaEntidade.senha});
         if (entidade === 'livros') return setBooks(prevBooks => [...prevBooks, response.data]);
+        if (entidade === 'endereco') return setDadosCliente({ ...dadosCliente, Enderecos: [...dadosCliente.Enderecos, response.data] });
+        if (entidade === 'cartao') return setDadosCliente({ ...dadosCliente, Cartaos: [...dadosCliente.Cartaos, response.data] });
       }
         return response.data;
     } catch (error) {
@@ -64,14 +64,14 @@ function Provider({ children }) {
     }
   };
 
- const atualizarDadosCliente = async (userId, novosDadosCliente) => {
+ const atualizarEntidade = async (id, novosDados, entidade) => {
    try {
      setLoading(true);
 
-     const response = await UPDATE_ENTIDADE(userId, novosDadosCliente, "clientes");
-     if(response.status === 204) console.log("cliente atualizado com sucesso")
+     const response = await UPDATE_ENTIDADE(id, novosDados, entidade);
+     if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
    } catch (error) {
-      setErro("Erro ao atualizar dados do usuário:", error);
+      setErro(`Erro ao atualizar dados do ${entidade}:`, error);
       throw error;
    } finally {
     setLoading(false);
@@ -85,6 +85,7 @@ function Provider({ children }) {
 
     const response = await GETALL_ENTIDADE(entidade);
     if (entidade === 'livros') return setBooks(response.data || []);
+    if (entidade === 'pedidos') return setPedidos(response.data || []);
     return setDadosCliente(response.data || []);
   } catch (error) {
     setErro(error.response.data);
@@ -94,18 +95,18 @@ function Provider({ children }) {
   }
 };
 
- const atualizarEndereco = async (id, novosDadosEndereco) => {
-  try {
-    setLoading(true);
-    const response = await UPDATE_ENTIDADE(id, novosDadosEndereco, "endereco");
-    if(response.status === 204) console.log("endereço atualizado com sucesso")
-  } catch (error) {
-     setErro("Erro ao atualizar dados do endereço:", error);
-     throw error;
-  } finally {
-   setLoading(false);
- }
-};
+//  const atualizarEndereco = async (id, novosDadosEndereco, entidade) => {
+//   try {
+//     setLoading(true);
+//     const response = await UPDATE_ENTIDADE(id, novosDadosEndereco, "endereco");
+//     if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
+//   } catch (error) {
+//      setErro("Erro ao atualizar dados do endereço:", error);
+//      throw error;
+//   } finally {
+//    setLoading(false);
+//  }
+// };
 
    
  useEffect(() => {
@@ -121,16 +122,19 @@ const atualizarDadosMock = (novosDadosMock) => {
 };
 
 
- const deletarCliente = async (userId) => {
+ const deletarEntidade = async (userId, entidade) => {
    try {
-     const response = await DELETE_USER(userId);
-     window.alert("Sua conta foi excluida com sucesso!");
-
-     setLogin(null);
-     navigate("/");
+     const response = await DELETE_ENTIDADE(userId, entidade);
+     if (response.status === 201) {
+       window.alert("Excluido com sucesso!");
+       if (entidade === 'clientes') {
+        setLogin(null);
+        navigate("/");
+      }
+     }
      return response; 
    } catch (error) {
-     console.error("Erro ao deletar cliente:", error);
+     console.error("Erro ao deletar a entidade:", error);
      throw error;
    }
  };
@@ -169,19 +173,6 @@ const atualizarDadosMock = (novosDadosMock) => {
   //   }
   // };
 
-  const atualizarLivro = async (id, novosDadosLivro) => {
-    try {
-      setLoading(true);
- 
-      const response = await UPDATE_ENTIDADE(id, novosDadosLivro, "livros");
-      if(response.status === 204) console.log("livro atualizado com sucesso")
-    } catch (error) {
-       setErro("Erro ao atualizar livro:", error);
-       throw error;
-    } finally {
-     setLoading(false);
-   }
-  };
 
   // const novoPedido = async (novoPedido) => {
   //   try {
@@ -246,19 +237,19 @@ const atualizarDadosMock = (novosDadosMock) => {
     userLogout,
     dadosCliente,
     setDadosCliente,
-    atualizarDadosCliente,
     criarEntidade,
+    atualizarEntidade,
     listarCliente,
-    deletarCliente,
+    deletarEntidade,
     listarLivrosByNome,
-    atualizarLivro,
     erro,
     userId,
     dadosMock,
     listarEntidades,
     atualizarDadosMock,
-    atualizarEndereco,
-    loading
+    loading,
+    pedidos,
+    setPedidos,
   };
 
   return (

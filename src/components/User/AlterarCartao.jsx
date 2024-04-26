@@ -5,8 +5,8 @@ import AppContext from '../../context/AppContext';
 
 function AlterarCartao({ isOpenAlterarCartao, setIsOpenAlterarCartao, cartao }) {
   const [nomeValue, setNomeValue] = useState('');
-  const [isPreferencial, setIsPreferencial] = useState(null);
-  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
+  const [isPreferencial, setIsPreferencial] = useState(true);
+  const { atualizarEntidade, deletarEntidade, setDadosCliente, dadosCliente } = useContext(AppContext);
 
   useEffect(() => {
     if (cartao) {
@@ -15,21 +15,30 @@ function AlterarCartao({ isOpenAlterarCartao, setIsOpenAlterarCartao, cartao }) 
     }
   }, [cartao]);
 
-  const handleSaveCartao = (event) => {
-    event.preventDefault();
+  const handleSaveCartao = async () => {
+    await atualizarEntidade(cartao.id, {
+      nome: nomeValue,
+      preferencial: isPreferencial
+    }, "cartao")
+
     const updatedCartao = { ...cartao, nome: nomeValue, preferencial: isPreferencial };
-    const updatedCartoes = dadosMock.cartoes.map(item => (item.id === updatedCartao.id ? updatedCartao : item));
-    atualizarDadosMock({ cartoes: updatedCartoes });
+    const updatedCartoes = dadosCliente.Cartaos.map(item => (item.id === updatedCartao.id ? updatedCartao : item));
+    setDadosCliente({ ...dadosCliente, Cartaos: updatedCartoes });
 
     setIsOpenAlterarCartao(false);
   };
 
   const handleRemoveCartao = (event) => {
-    event.preventDefault();
-    const removedCartoes = dadosMock.cartoes.filter(item => item.id !== cartao.id);
-    atualizarDadosMock({ cartoes: removedCartoes });
-
-    setIsOpenAlterarCartao(false);
+    const confirmacao = window.confirm("Você realmente deseja excluir esse endereco?");
+    if (confirmacao) {
+      deletarEntidade(cartao.id, "cartao");
+      
+      const removedCartoes = dadosCliente.Cartaos.filter(item => item.id !== cartao.id);
+      setDadosCliente({ ...dadosCliente, Cartaos: removedCartoes });
+      setIsOpenAlterarCartao(false);
+    } else {
+      event.preventDefault();
+    }
   };
 
   if (isOpenAlterarCartao) {
