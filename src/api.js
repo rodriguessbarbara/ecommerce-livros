@@ -39,8 +39,8 @@ async function UPDATE_ENTIDADE(id, newData, entidade) {
 	return response;
 }
 
-async function DELETE_USER(userId) {
-	const response = await API.delete(`/clientes/${userId}`);
+async function DELETE_ENTIDADE(userId, entidade) {
+	const response = await API.delete(`/${entidade}/${userId}`);
 	return response;
 }
 
@@ -75,7 +75,7 @@ export {
 	GET_USER,
 	POST_ENTIDADE,
 	UPDATE_ENTIDADE,
-	DELETE_USER,
+	DELETE_ENTIDADE,
 	CHECK_USER,
 	GETBYNOME_LIVRO,
 	CHECK_CUPOM,

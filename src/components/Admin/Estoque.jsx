@@ -5,7 +5,7 @@ import EntradaEstoque from "./EntradaEstoque";
 import Loading from "../Loading";
 
 function Estoque() {
-  const { books, setBooks, listarEntidades, atualizarLivro, loading } = useContext(AppContext);
+  const { books, setBooks, listarEntidades, atualizarEntidade, loading } = useContext(AppContext);
   const [isEntradaEstoque, setIsEntradaEstoque] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ function Estoque() {
     if (hasBookInativo) {
       const updatedBooks = books.map(book => {
         if (book.quantidade === 0) {
-          atualizarLivro(book.id, {ativo: false});
+          atualizarEntidade(book.id, {ativo: false}, "livros");
 
           return { ...book, ativo: false };
         }
@@ -34,7 +34,7 @@ function Estoque() {
   function handleMudaStatus(id, status) {
     const novoStatus = books.map(b => {
       if (b.id === id) {
-        atualizarLivro(id, {ativo: status});
+        atualizarEntidade(id, {ativo: status}, "livros");
 
         return {...b, ativo: status}
       }

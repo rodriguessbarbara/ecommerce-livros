@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect } from "react"
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
 
 function Clientes() {
-  const { dadosMock, dadosCliente, setDadosCliente, atualizarDadosCliente, loading, listarEntidades } = useContext(AppContext);
-  const [dadosEnderecos, setDadosEnderecos] = useState([]);
+  const { dadosCliente, setDadosCliente, atualizarEntidade, loading, listarEntidades } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,12 +12,6 @@ function Clientes() {
     }
     fetchData();
    }, [setDadosCliente])
-  
-   useEffect(() => {
-    if (dadosMock && dadosMock.endereco) {
-      setDadosEnderecos(dadosMock.endereco);
-    }
-   }, [dadosMock]);
    
   function handleMudaStatus(id, status) {
     const confirmacao = window.confirm("Deseja realmente alterar o status dessa conta?");
@@ -25,7 +19,7 @@ function Clientes() {
     const novoStatus = dadosCliente.map(c => {
       if (c.id === id) {
         if (confirmacao) {
-          atualizarDadosCliente(id, {ativo: status});
+          atualizarEntidade(id, {ativo: status}, "clientes");
         }
         return {...c, ativo: status}
       }
@@ -57,7 +51,7 @@ function Clientes() {
           </tr>
         </thead>
         <tbody>
-          {dadosCliente.map((cliente) => (
+          {dadosCliente && dadosCliente.map((cliente) => (
             <tr key={cliente.id}>
               <td className="border p-4">{cliente.id}</td>
               <td className="border p-4">{cliente.nome}</td>
@@ -70,15 +64,13 @@ function Clientes() {
                 {cliente.ativo ? <span className="text-green-600 font-medium">ativo</span> : <span className="text-red-600 font-medium">inativo</span>}
               </td>
               <td className="border p-4">
-                {dadosEnderecos.map((end) => (
-                    (end.id === cliente.id && (
-                    <div key={end.id}>
-                      <p>{end.lagradouro} {end.enderecoResidencial} {end.num} - {end.tipoResidencia}</p>
-                      <p>CEP: {end.CEP} </p>
-                      <p>Bairro: {end.bairro} - {end.cidade}</p>
-                      <p>{end.estado}, {end.pais}</p>
-                    </div>
-                  )) 
+                {cliente.Enderecos.map((end) => (
+                  <div key={end.id}>
+                    <p>{end.lagradouro} {end.enderecoResidencial} {end.num} - {end.tipoResidencia}</p>
+                    <p>CEP: {end.CEP} </p>
+                    <p>Bairro: {end.bairro} - {end.cidade}</p>
+                    <p className="mb-4">{end.estado}, {end.pais}</p>
+                  </div>
                 ))}
               </td>
               <td className="border px-4 py-2">

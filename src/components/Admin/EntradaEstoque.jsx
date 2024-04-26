@@ -5,7 +5,7 @@ import Input from "../Input";
 import useForm from "../../hooks/useForm";
 
 function EntradaEstoque({ setIsEntradaEstoque }) {
-  const { books, setBooks, atualizarLivro } = useContext(AppContext);
+  const { books, setBooks, atualizarEntidade } = useContext(AppContext);
   const [selectedBook, setSelectedBook] = useState(books[0].id);
   const quantidadeEstoque = useForm();
 
@@ -15,7 +15,7 @@ function EntradaEstoque({ setIsEntradaEstoque }) {
     
     const updatedBooks = books.map(book => {
       if (book.id === parseInt(selectedBook)) {
-        atualizarLivro(book.id, {quantidade: parseInt(novaQuantidade.value)})
+        atualizarEntidade(book.id, {quantidade: parseInt(novaQuantidade.value)}, "livros")
         return { ...book, quantidade: parseInt(novaQuantidade.value) };
       }
       return book;
