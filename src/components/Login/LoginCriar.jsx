@@ -14,13 +14,22 @@ function LoginCriar() {
   const telefone = useForm();
   const [genero, setGenero] = useState("FEMININO");
   const dataNascimento = useForm();
+  const lagradouro = useForm();
+  const enderecoResidencial = useForm();
+  const tipoResidencia = useForm();
+  const num = useForm();
+  const CEP = useForm();
+  const bairro = useForm();
+  const cidade = useForm();
+  const estado = useForm();
+  const pais = useForm();
 
-  const { criarUsuario, erro, loading } = useContext(AppContext);
+  const { criarEntidade, erro, loading } = useContext(AppContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    criarUsuario({
+    const novoClienteResponse = await criarEntidade({
       nome: nome.value,
       cpf: cpf.value,
       email: email.value,
@@ -30,7 +39,26 @@ function LoginCriar() {
       dataNascimento: dataNascimento.value,
       ativo: true,
       role: 'user'
-    });
+    }, "clientes");
+
+    handleSubmitEndereco(novoClienteResponse);
+  }
+
+  async function handleSubmitEndereco(novoClienteResponse) {    
+    const id = novoClienteResponse.id;
+
+    await criarEntidade({
+      lagradouro: lagradouro.value,
+      enderecoResidencial: enderecoResidencial.value,
+      tipoResidencia: tipoResidencia.value,
+      num: num.value,
+      CEP: CEP.value,
+      bairro: bairro.value,
+      cidade: cidade.value,
+      estado: estado.value,
+      pais: pais.value,
+      cliente_id: id
+    }, "endereco");
   }
 
   if (loading) return <Loading/>
@@ -66,15 +94,15 @@ function LoginCriar() {
             <Input label="Senha" type="password" name="senha" span="2" minLength="8" required {...senha}/>
             <Input label="Repetir senha" type="password" name="repetir-senha" span="2" minLength="8" required/>
 
-            <Input label="Lagradouro" type="text" name="lagradouro" placeholder="Rua, Av, etc" required/>
-            <Input label="Endereço Residencial" type="text" name="endereco" span="2" required/>
-            <Input label="Tipo residência" type="text" name="tipo-residencia" placeholder="Casa, Apt, etc" required/>              
-            <Input label="Num." type="text" name="num-endereco" required/>              
-            <Input label="CEP" type="text" name="cep" maxLength="9" required/>              
-            <Input label="Bairro" type="text" name="bairro" required/>              
-            <Input label="Cidade" type="text" name="cidade" required/>              
-            <Input label="Estado" type="text" name="estado" span="2" required/>    
-            <Input label="País" type="text" name="pais" span="2" placeholder="Brasil" required/>              
+            <Input label="Lagradouro" type="text" name="lagradouro" placeholder="Rua, Av, etc" required {...lagradouro}/>
+            <Input label="Endereço Residencial" type="text" name="endereco" span="2" required {...enderecoResidencial}/>
+            <Input label="Tipo residência" type="text" name="tipo-residencia" placeholder="Casa, Apt, etc" required {...tipoResidencia}/>              
+            <Input label="Num." type="text" name="num-endereco" required {...num}/>              
+            <Input label="CEP" type="text" name="cep" maxLength="9" required {...CEP}/>              
+            <Input label="Bairro" type="text" name="bairro" required {...bairro}/>              
+            <Input label="Cidade" type="text" name="cidade" required {...cidade}/>              
+            <Input label="Estado" type="text" name="estado" span="2" required {...estado}/>    
+            <Input label="País" type="text" name="pais" span="2" placeholder="Brasil" required {...pais}/>              
 
           </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
