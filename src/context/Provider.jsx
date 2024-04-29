@@ -3,8 +3,7 @@ import AppContext from "./AppContext";
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchClients } from '../fetchData';
-import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO } from '../api'
+import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO, CHECK_CUPOM } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -17,8 +16,8 @@ function Provider({ children }) {
   const [erro, setErro] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false)
-  const [dadosMock, setDadosMock] = useState([]);
   const [pedidos, setPedidos] = useState([]);
+  const [cupomValidado, setCupomValidado] = useState(null);
 
   const navigate = useNavigate();
 
@@ -95,33 +94,6 @@ function Provider({ children }) {
   }
 };
 
-//  const atualizarEndereco = async (id, novosDadosEndereco, entidade) => {
-//   try {
-//     setLoading(true);
-//     const response = await UPDATE_ENTIDADE(id, novosDadosEndereco, "endereco");
-//     if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
-//   } catch (error) {
-//      setErro("Erro ao atualizar dados do endereço:", error);
-//      throw error;
-//   } finally {
-//    setLoading(false);
-//  }
-// };
-
-   
- useEffect(() => {
-  fetchClients().then((response) => {
-    setDadosMock(response);
-  });
-}, []);
-
-const atualizarDadosMock = (novosDadosMock) => {
-  setDadosMock((dadosAntigos) => {
-    return { ...dadosAntigos, ...novosDadosMock };
-  });
-};
-
-
  const deletarEntidade = async (userId, entidade) => {
    try {
      const response = await DELETE_ENTIDADE(userId, entidade);
@@ -155,25 +127,6 @@ const atualizarDadosMock = (novosDadosMock) => {
     }
   };
 
-  // const novoLivro = async (novoLivro) => {
-  //   try {
-  //     setErro(null);
-  //     setLoading(true);
-
-  //     const response = await POST_ENTIDADE(novoLivro, "livros");
-  //     if (response.status === 201) {
-  //       return setBooks(prevBooks => [...prevBooks, response.data]);
-  //    }
-  //     return;
-  //   } catch (error) {
-  //     setErro(error.response.data);
-  //     throw error; 
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
   // const novoPedido = async (novoPedido) => {
   //   try {
   //     setErro(null);
@@ -191,6 +144,22 @@ const atualizarDadosMock = (novosDadosMock) => {
   //     setLoading(false);
   //   }
   // };
+
+  const verificaCupom = async(nome) => {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      const response = await CHECK_CUPOM(nome);
+      if (response.status === 201) setCupomValidado(response.data);
+    } catch(error) {
+      setErro(error.response.data);
+      setCupomValidado(null)
+      throw error; 
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const userLogin = async (usuario, userType) => {
     try {
@@ -243,13 +212,16 @@ const atualizarDadosMock = (novosDadosMock) => {
     deletarEntidade,
     listarLivrosByNome,
     erro,
+    setErro,
     userId,
-    dadosMock,
     listarEntidades,
-    atualizarDadosMock,
     loading,
+    setLoading,
     pedidos,
     setPedidos,
+    verificaCupom,
+    cupomValidado,
+    setCupomValidado,
   };
 
   return (

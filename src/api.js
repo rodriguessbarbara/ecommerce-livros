@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const API = axios.create({ baseURL: "http://localhost:8000" });
 
 async function POST_ENTIDADE(body, entidade) {
@@ -60,15 +59,70 @@ async function CHECK_CUPOM(body) {
 	return response;
 }
 
-//Pedidos
-// async function CREATE_PEDIDO(id, newData, entidade) {
-// 	const response = await API.patch(`/${entidade}/${id}/pedido`, newData, {
-// 		headers: {
-// 			"Content-Type": "application/json",
-// 		},
-// 	});
-// 	return response;
-// }
+//Pedidos - STATUS
+async function confirmarPedidoBackend(vendaId, statusAtual) {
+	try {
+		const response = await API.patch(
+			`/pedidos/confirmar/${vendaId}`,
+			statusAtual,
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao confirmar pedido:", error);
+	}
+}
+
+async function despacharProdutosBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/despachar/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao despachar produtos:", error);
+	}
+}
+
+async function confirmarEntregaBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/confirmar-entrega/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao confirmar entrega:", error);
+	}
+}
+
+async function autorizarTrocaBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/autorizar-troca/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao autorizar troca:", error);
+	}
+}
+
+async function solicitarTrocaBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/solicitar-troca/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao solicitar troca:", error);
+	}
+}
+
+async function confirmarRecebimentoBackend(vendaId) {
+	try {
+		const response = await API.patch(
+			`/pedidos/confirmar-recebimento/${vendaId}`
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao solicitar troca:", error);
+	}
+}
 
 export {
 	GETALL_ENTIDADE,
@@ -79,4 +133,10 @@ export {
 	CHECK_USER,
 	GETBYNOME_LIVRO,
 	CHECK_CUPOM,
+	confirmarPedidoBackend,
+	despacharProdutosBackend,
+	confirmarEntregaBackend,
+	autorizarTrocaBackend,
+	solicitarTrocaBackend,
+	confirmarRecebimentoBackend,
 };

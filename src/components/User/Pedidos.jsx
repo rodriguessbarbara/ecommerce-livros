@@ -2,9 +2,11 @@
 import { useContext, useEffect } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
+import { solicitarTrocaBackend } from '../../api';
+import Erro from '../Erro';
 
 function Pedidos() {
-  const { dadosMock,listarCliente, userId, setDadosCliente, dadosCliente, loading, atualizarEntidade } = useContext(AppContext);
+  const { listarCliente, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,15 +15,18 @@ function Pedidos() {
     fetchData();
    }, [setDadosCliente])
 
-  function handleSolicitarTroca(pedidoId) {
-    const novosDadosPedidos = dadosMock.pedidos.map(pedido => {
-      if (pedido.id === pedidoId) {
-        atualizarEntidade(pedidoId, { status: 'EM TROCA'}, "pedidos");
-      }
-      return pedido;
-    });
+  async function handleSolicitarTroca(vendaId) {
+      setErro(null);
+      setLoading(true);
 
-    // atualizarDadosMock({ ...dadosMock, pedidos: novosDadosPedidos });
+      await solicitarTrocaBackend(vendaId);
+      const updatedPedidos = dadosCliente.Pedidos.map(pedido => {
+        if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'ENTREGUE') {
+          return { ...pedido, status: 'EM TROCA' };
+        }
+        return pedido;
+      });
+    setDadosCliente({ ...dadosCliente, Pedidos: updatedPedidos });
   }
 
   if (loading) return <Loading/>
@@ -66,6 +71,7 @@ function Pedidos() {
           )}
         </div>
       ))}
+      <Erro erro={erro}/>
     </div>
   )
 }
