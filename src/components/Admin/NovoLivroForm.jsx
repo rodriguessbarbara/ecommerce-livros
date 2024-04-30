@@ -1,16 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Input from "../Input";
 
 function NovoLivroForm({ setModalOpen }) {
-  const { criarEntidade } = useContext(AppContext);
+  const { criarEntidade, listarEntidades } = useContext(AppContext);
+  const [todasCategorias, setTodasCategorias] = useState(null);
   const [data, setData] = useState({
     imageSrc: "",
     capaAlternativa: "",
     titulo: "",
     autor: "",
-    categoria: [],
+    categorias: [],
     editora: "",
     ano: "",
     edicao: "",
@@ -23,6 +25,18 @@ function NovoLivroForm({ setModalOpen }) {
     ativo: true,
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const categorias = await listarEntidades("categorias");
+
+      const categoriasMap = categorias.reduce((acc, categoria) => {
+        acc[categoria.nome] = categoria.id;
+        return acc;
+      }, {});
+      setTodasCategorias(categoriasMap);      }
+    fetchData();
+  }, []);
+  
   const handleInput = (event) => {
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
@@ -38,6 +52,8 @@ function NovoLivroForm({ setModalOpen }) {
   };
 
   const handleNovoLivro = async (event) => {
+    const categoriasSelecionadas = data.categorias.map(nomeCategoria => todasCategorias[nomeCategoria]);
+
     event.preventDefault();
     const isFormValid = Object.values(data).every(val => {
       if (typeof val !== 'number') {
@@ -46,14 +62,30 @@ function NovoLivroForm({ setModalOpen }) {
     });
 
     if (isFormValid) {
-      await criarEntidade(data, "livros")
+      await criarEntidade({
+        imageSrc: data.imageSrc,
+        capaAlternativa: data.capaAlternativa,
+        titulo: data.titulo,
+        autor: data.autor,
+        categorias: categoriasSelecionadas,
+        editora: data.editora,
+        ano: data.ano,
+        edicao: data.edicao,
+        ISBN: data.ISBN,
+        numeroPaginas: data.numeroPaginas,
+        sinopse: data.sinopse,
+        dimensoes: data.dimensoes,
+        precificacao: data.precificacao,
+        quantidade: data.quantidade,
+        ativo: data.ativo,
+    }, "livros")
 
       setData({
         imageSrc: "",
         capaAlternativa: "",
         titulo: "",
         autor: "",
-        categoria: [],
+        categorias: [],
         editora: "",
         ano: "",
         edicao: "",
@@ -62,7 +94,8 @@ function NovoLivroForm({ setModalOpen }) {
         sinopse: "",
         dimensoes: "",
         precificacao: 0,
-        quantidade: 0
+        quantidade: 0,
+        ativo: true,
       });
     }
 
@@ -76,19 +109,22 @@ function NovoLivroForm({ setModalOpen }) {
         <Input label="Capa alternativa" type="text" name="capaAlternativa" span="2" required value={data.capaAlternativa} onChange={handleInput}/>
         <Input label="Título do livro" type="text" name="titulo" span="2" required value={data.titulo.toLowerCase()} onChange={handleInput}/>
         <Input label="Autor" type="text" name="autor" span="2" required value={data.autor} onChange={handleInput}/>
-        {/* <Input label="Categoria" type="text" name="categoria" span="2" required value={data.categoria} onChange={handleInput}/> */}
-        
+
         <div>
           <label className="text-sm font-medium text-gray-900">Categoria(s)</label>
-          <select className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-            name="categoria"
-            id="categoria"
-            value={data.categoria}
+          <select 
+            className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+            name="categorias"
+            id="categorias" 
+            value={data.categorias}
             onChange={handleInputSelect}
-            >
+            multiple
+          >
             <option value="Romance">Romance</option>
             <option value="Suspense">Suspense</option>
-            <option value="Ficcao">Ficção</option>
+            <option value="Ficcao Cientifica">Ficção Cientifica</option>
+            <option value="Ficcao">Ficcao</option>
+            <option value="Terror">Terror</option>
             <option value="Aventura">Aventura</option>
           </select>
         </div>

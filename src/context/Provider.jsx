@@ -85,7 +85,9 @@ function Provider({ children }) {
     const response = await GETALL_ENTIDADE(entidade);
     if (entidade === 'livros') return setBooks(response.data || []);
     if (entidade === 'pedidos') return setPedidos(response.data || []);
-    return setDadosCliente(response.data || []);
+    if (entidade === 'clientes') return setDadosCliente(response.data || []);
+
+    return response.data;
   } catch (error) {
     setErro(error.response.data);
     throw error;
@@ -126,24 +128,6 @@ function Provider({ children }) {
       setLoading(false);
     }
   };
-
-  // const novoPedido = async (novoPedido) => {
-  //   try {
-  //     setErro(null);
-  //     setLoading(true);
-
-  //     const response = await POST_ENTIDADE(novoPedido, "pedidos");
-  //     if (response.status === 201) {
-  //       return setDadosVendas(prevPedidos => [...prevPedidos, response.data]);
-  //    }
-  //     return;
-  //   } catch (error) {
-  //     setErro(error.response.data);
-  //     throw error; 
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const verificaCupom = async(nome) => {
     try {

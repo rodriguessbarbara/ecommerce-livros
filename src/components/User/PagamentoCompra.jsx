@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import MsgCompraEfetuada from "./MsgCompraEfetuada";
@@ -18,6 +19,7 @@ function PagamentoCompra() {
   const [precoFinal, setPrecoFinal] = useState(0);
   const [precoInput1, setPrecoInput1] = useState(10);
   const [precoInput2, setPrecoInput2] = useState(10);
+  const [idPedido, setIdPedido] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,8 +106,8 @@ function PagamentoCompra() {
         <AdicionarCartao openAdicionarCartao={openAdicionarCartao} setOpenAdicionarCartao={() => setOpenAdicionarCartao(!openAdicionarCartao)}/>
       </div>
 
-      <ResumoCompra cartaoSelecionado={cartaoSelecionado} endSelecionado={endSelecionado} setModalOpen={() => setOpenModal(!openModal)} precoFinal={precoFinal} setPrecoFinal={setPrecoFinal} valorInputs={precoInput1 + precoInput2}/>
-      <MsgCompraEfetuada isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)}/>
+      <ResumoCompra cartaoSelecionado={cartaoSelecionado} endSelecionado={endSelecionado} setModalOpen={() => setOpenModal(!openModal)} precoFinal={precoFinal} setPrecoFinal={setPrecoFinal} valorInputs={precoInput1 + precoInput2} setIdPedido={setIdPedido}/>
+      <MsgCompraEfetuada isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} idPedido={idPedido}/>
     </div>
   )
 }

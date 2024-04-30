@@ -1,20 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useContext, useEffect, useState } from 'react'
 import AppContext from '../../context/AppContext';
 import Input from '../Input';
+import Erro from '../Erro';
 
-const cupons = 
-  {
-    nome: 'LIVRO5',
-    valor: 5,
-  }
-
-function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs } ) {
-  const { carrinhoItens, precoTotal, setCarrinhoItens, dadosMock, atualizarDadosMock } = useContext(AppContext);
+function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs, setIdPedido } ) {
+  const { carrinhoItens, precoTotal, setCarrinhoItens, criarEntidade, userId, verificaCupom, cupomValidado, erro, atualizarEntidade } = useContext(AppContext);
 
   const [isCupom, setIsCupom] = useState(false);
   const [cupomValue, setCupomValue] = useState("");
   const [frete, setFrete] = useState(0);
+
+   const checkCupom = async (event, valorCupom) => {
+    event.preventDefault();
+    setIsCupom(false)
+    await verificaCupom({nome: valorCupom});
+  }
 
   function calculaFrete(precoTotal) {
     let valorFrete = 5.50;
@@ -31,33 +33,35 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   }, [precoTotal]);
 
   useEffect(() => {
-    cupons.nome === cupomValue ? setPrecoFinal((precoTotal + frete) - cupons.valor) : setPrecoFinal(precoTotal + frete)
-  }, [precoTotal, frete, cupomValue]);
+    cupomValidado ? setPrecoFinal((precoTotal + frete) - cupomValidado.valor) : setPrecoFinal(precoTotal + frete)
+  }, [precoTotal, frete, cupomValidado]);
 
-  const handleConfirm = (event) => {
+  const handleConfirm = async (event) => {
     event.preventDefault();
     if (!cartaoSelecionado.length) {
       return alert("Por favor, selecione ao menos um cartão para continuar."); 
     }
-
-    if (valorInputs < precoFinal || valorInputs > precoFinal) {
+    if (cartaoSelecionado.length > 1 && (valorInputs < precoFinal || valorInputs > precoFinal)) {
       return alert("O valor nos cartões não corresponde com o valor total da compra. Por favor verifique!"); 
     }
 
-    const dataCompra = new Date().toLocaleDateString("pt-BR");
-    const novoPedido = {
-      id: 3,
-      livro: carrinhoItens.map((item) => (item.titulo)),
+    const titulos = carrinhoItens.map((item) => item.titulo).join(', ');
+    const novoPedido = await criarEntidade({
+      tituloLivro: titulos,
       formaPagamento: "cartao",
-      numeroCartao: cartaoSelecionado.map((c) => (c.numeroCartao)),
-      bandeira: cartaoSelecionado.map((c) => (c.bandeira)),
-      valor: precoFinal.toFixed(2),
+      valor: precoFinal,
       quantidade: carrinhoItens.reduce((total, item) => total + item.quantidadeCarrinho, 0),
-      dataCompra: dataCompra,
-      status: "em processamento"
-    };
+      status: "EM PROCESSAMENTO",
+      cliente_id: userId,
+      cartao_id: cartaoSelecionado ? cartaoSelecionado.map((c) => c.id) : null,
+      cupom_id: cupomValidado ? cupomValidado.id : null
+    }, "pedidos");
 
-    atualizarDadosMock({ pedidos: [...dadosMock.pedidos, novoPedido] });
+    setIdPedido(novoPedido.id)
+    carrinhoItens.forEach(async item => {
+      await atualizarEntidade(item.id, {quantidade: item.quantidade - item.quantidadeCarrinho}, "livros");
+    });
+    
     setCarrinhoItens([]);
     setModalOpen(true);
   };
@@ -82,18 +86,19 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       {!isCupom ? (
         <>
           <button className="self-start text-blue-800 font-medium" onClick={() => setIsCupom(true)}>
-            {cupomValue ? `Cupom aplicado: ${cupomValue} ` : 'Inserir cupom ou vale'}
+            {cupomValidado  ? `Cupom aplicado: ${cupomValidado.nome} ` : 'Inserir cupom ou vale'}
           </button>
-          {cupons.nome === cupomValue && (
+          {cupomValidado && (
             <span className="text-gray-800 mb-2 font-bold">
-              - R$ {cupons.valor}.00
+              - R$ {cupomValidado.valor}.00
             </span>
           )}
+          
         </>
       ) : (
         <>
         <Input placeholder="Inserir código do cupom" type="text" name="cupom" value={cupomValue} onChange={() => setCupomValue(event.target.value)}/>
-        <button className="text-end text-blue-800 font-medium" onClick={() => setIsCupom(false)}>OK</button>
+        <button className="text-end text-blue-800 font-medium" onClick={(event) => checkCupom(event, cupomValue)}>OK</button>
         </>
       )}
 
@@ -109,6 +114,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       </button>
     </div>
 
+      <Erro erro={erro}/>
   </div>
   )
 }

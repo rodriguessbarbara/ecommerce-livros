@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
 
-function MsgCompraEfetuada({ isOpen, setModalOpen }) {
+function MsgCompraEfetuada({ isOpen, setModalOpen, idPedido }) {
 
   if (isOpen) {
     return (
@@ -12,13 +12,14 @@ function MsgCompraEfetuada({ isOpen, setModalOpen }) {
           <h2 className="text-2xl font-medium text-lime-600 text-center pt-16">
             Compra efetuada com sucesso!
           </h2>
+          <p className="text-blue-900 font-medium text-sm">{`Pedido no. ${idPedido}`}</p>
 
-          <div className="flex gap-4 mt-2">
+          <div className="flex gap-4 mt-4 text-blue-600 hover:text-blue-800">
             <Link to="/conta" onClick={setModalOpen}>
-              <p className="text-blue-700 hover:text-blue-800">Ver pedido </p>
+              <p>Ver perfil </p>
             </Link> |
             <Link to="/" onClick={setModalOpen}>
-              <p className="text-blue-700 hover:text-blue-800">Ir ao menu inicial</p>
+              <p>Ir ao menu inicial</p>
             </Link>
           </div>
         </div>
