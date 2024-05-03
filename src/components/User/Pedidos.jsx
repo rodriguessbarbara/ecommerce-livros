@@ -51,16 +51,10 @@ function Pedidos() {
               </div>
             ))}          
 
-            {/* {pedido.numeroCartao.length ? (
-              pedido.numeroCartao.map((c, index) => (
-                <p key={c.numeroCartao}>{pedido.formaPagamento}<span> número: {c} - {pedido.bandeira[index]} </span></p>
-              ))
-
-            ) : (
-              <p>{pedido.formaPagamento}<span> número: {pedido.numeroCartao}</span></p>
-            )} */}
-
             <p>Forma pagamento: {pedido.formaPagamento}</p>
+            {pedido.Cartao_Pedidos.map((c) => (
+                <p key={c.Cartao.numeroCartao}>Cartão <span> número: {c.Cartao.numeroCartao} - {c.Cartao.bandeira} </span></p>
+            ))}
             <p className="text-blue-600 font-medium uppercase">{pedido.status}</p>
           </div>
 

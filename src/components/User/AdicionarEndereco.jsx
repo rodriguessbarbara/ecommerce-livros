@@ -5,12 +5,11 @@ import AppContext from '../../context/AppContext';
 
 function AdicionarEndereco({ openAdicionarEndereco, setOpenAdicionarEndereco }) {
   const [formData, setFormData] = useState([]);
-  const { dadosMock, atualizarDadosMock } = useContext(AppContext);
+  const { criarEntidade, userId } = useContext(AppContext);
 
   async function handleAdicionarEndereco(event) {
     event.preventDefault();
-      const novoEndereco = {
-        id: 3,
+      await criarEntidade({
         lagradouro: formData.lagradouro,
         enderecoResidencial: formData.enderecoResidencial,
         tipoResidencia: formData.tipoResidencia,
@@ -18,15 +17,15 @@ function AdicionarEndereco({ openAdicionarEndereco, setOpenAdicionarEndereco }) 
         CEP: formData.CEP,
         bairro: formData.bairro,
         cidade: formData.cidade,
-        estado: formData.CEP,
+        estado: formData.estado,
         pais: formData.pais,
-      };
+        cliente_id: userId
+      }, "endereco");
   
-      atualizarDadosMock({ endereco: [...dadosMock.endereco, novoEndereco] });
       setFormData([]);
       setOpenAdicionarEndereco(false);
     }
-
+    
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });

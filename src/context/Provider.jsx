@@ -129,12 +129,12 @@ function Provider({ children }) {
     }
   };
 
-  const verificaCupom = async(nome) => {
+  const verificaCupom = async(cupomData) => {
     try {
       setErro(null);
       setLoading(true);
 
-      const response = await CHECK_CUPOM(nome);
+      const response = await CHECK_CUPOM(cupomData);
       if (response.status === 201) setCupomValidado(response.data);
     } catch(error) {
       setErro(error.response.data);
@@ -170,6 +170,8 @@ function Provider({ children }) {
 
   const userLogout = () => {
     setLogin(null);
+    setCarrinhoItens([]);
+    setCupomValidado(null);
     navigate('/login');
   };
 
