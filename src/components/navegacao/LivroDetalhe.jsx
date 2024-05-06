@@ -6,7 +6,7 @@ import Carrinho from '../Carrinho/Carrinho';
 function LivroDetalhe() {
   const location = useLocation();
   const { data } = location.state || {};
-  const { carrinhoItens, setCarrinhoItens } = useContext(AppContext);
+  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa, setIsCapaAlternativa } = useContext(AppContext);
 
   const handleAddCarrinho = () => {
     const itemExistente = carrinhoItens.find(item => item.id === data.id);
@@ -22,16 +22,43 @@ function LivroDetalhe() {
     }
    }
 
+   const handleCapaAlternativa = () => {
+    setIsCapaAlternativa([ ...isCapaAlternativa, data.id ]);
+  }
+
+  const handleCapaOriginal = () => {
+    if (isCapaAlternativa.includes(data.id)) {
+      setIsCapaAlternativa(isCapaAlternativa.filter(item => item !== data.id));
+    }
+  };
+
   return (
     <div className="text-gray-600 p-6 mt-24 mx-16 pb-12">
-      <div className="w-full h-full overflow-hidden rounded-md lg:aspect-none flex gap-10">
-        <img
-            src={data.imageSrc}
+      <div className="overflow-hidden rounded-md flex gap-12">
+        <div className='w-1/3 h-2/3'>
+          <img
+            src={isCapaAlternativa.includes(data.id) ? `${data.capaAlternativa}` : `${data.imageSrc}`}
             alt={data.imageAlt}
-            className="lg:w-1/4 lg:h-1/2 md:h-1/3 bg-gray-500 group-hover:opacity-75 cursor-pointer"
-          />
+            className="group-hover:opacity-75 cursor-pointer"
 
-        <div className="flex flex-col md:max-w-2xl">
+          />
+          <div className='flex justify-around'>
+            <button
+              className="text-red-600 font-medium cursor-pointer hover:text-red-800"
+              onClick={handleCapaOriginal}
+            >
+              original
+            </button>
+            <button
+              className="text-red-600 font-medium cursor-pointer hover:text-red-800"
+              onClick={handleCapaAlternativa}
+            >
+              alternativa
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col max-w-4xl">
           <div className="items-end gap-10 flex">
             <h2 className='text-gray-700 font-bold text-4xl'>
               {data.titulo}
@@ -75,9 +102,8 @@ function LivroDetalhe() {
               </tr>
             </tbody>
           </table>
-        </div>
-        
-        <div className="text-end self-center">
+
+        <div className='text-end mt-8'>
           <p className="font-bold text-lg text-gray-800">
             Comprar por R${data.precificacao}
           </p>
@@ -92,6 +118,7 @@ function LivroDetalhe() {
             Adicionar ao carrinho
           </button>
           {(!data.ativo) && <p className="text-red-500 font-medium">Indisponível</p>}
+        </div>
 
         </div>
       </div>

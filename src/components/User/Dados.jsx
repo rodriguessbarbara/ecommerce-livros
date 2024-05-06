@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Input from "../Input";
@@ -5,13 +6,13 @@ import Loading from "../Loading";
 import AdicionarEndereco from "./AdicionarEndereco";
 
 function Dados() {
- const { dadosCliente, listarCliente, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade } = useContext(AppContext);
+ const { dadosCliente, listarEntidadeById, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade } = useContext(AppContext);
  const [editar, setEditar] = useState("");
  const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
 
  useEffect(() => {
   const fetchData = async () => {
-    await listarCliente(userId);
+    await listarEntidadeById(userId, "clientes");
   }
   fetchData();
  }, [setDadosCliente])

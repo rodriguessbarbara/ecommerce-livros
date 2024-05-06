@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -5,7 +6,7 @@ import AdicionarEndereco from "./AdicionarEndereco";
 import Loading from "../Loading";
 
 function SelecionarEnderecoCompra() {
-  const { precoTotal, listarCliente, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
+  const { precoTotal, listarEntidadeById, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
 
   const navigate = useNavigate();
   const [endSelecionado, setEndSelecionado] = useState(null);
@@ -13,7 +14,7 @@ function SelecionarEnderecoCompra() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarCliente(userId);
+      await listarEntidadeById(userId, "clientes");
     }
     fetchData();
    }, [setDadosCliente])

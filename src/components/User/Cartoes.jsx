@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import AlterarCartao from "./AlterarCartao";
@@ -8,11 +9,11 @@ function Cartoes() {
   const [openAlterarCartao, setOpenAlterarCartao] = useState(false);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
   const [cartao, setCartao] = useState([]);
-  const { dadosCliente, listarCliente, userId, setDadosCliente, loading } = useContext(AppContext);
+  const { dadosCliente, listarEntidadeById, userId, setDadosCliente, loading } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarCliente(userId);
+      await listarEntidadeById(userId, "clientes");
     }
     fetchData();
    }, [setDadosCliente])
