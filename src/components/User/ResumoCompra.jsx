@@ -15,7 +15,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
    const checkCupom = async (event, valorCupom) => {
     event.preventDefault();
     setIsCupom(false)
-    await verificaCupom({nome: valorCupom});
+    await verificaCupom({nome: valorCupom, cliente_id: userId});
   }
 
   function calculaFrete(precoTotal) {
@@ -35,7 +35,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   useEffect(() => {
     cupomValidado ? setPrecoFinal((precoTotal + frete) - cupomValidado.valor) : setPrecoFinal(precoTotal + frete)
   }, [precoTotal, frete, cupomValidado]);
-
+  
   const handleConfirm = async (event) => {
     event.preventDefault();
     if (!cartaoSelecionado.length) {
@@ -48,12 +48,12 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
     const titulos = carrinhoItens.map((item) => item.titulo).join(', ');
     const novoPedido = await criarEntidade({
       tituloLivro: titulos,
-      formaPagamento: "cartao",
+      formaPagamento: cartaoSelecionado ? "cartao" : 'cupom',
       valor: precoFinal,
       quantidade: carrinhoItens.reduce((total, item) => total + item.quantidadeCarrinho, 0),
       status: "EM PROCESSAMENTO",
       cliente_id: userId,
-      cartao_id: cartaoSelecionado ? cartaoSelecionado.map((c) => c.id) : null,
+      cartoes: cartaoSelecionado ? cartaoSelecionado.map((c) => c.id) : null,
       cupom_id: cupomValidado ? cupomValidado.id : null
     }, "pedidos");
 
@@ -61,6 +61,8 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
     carrinhoItens.forEach(async item => {
       await atualizarEntidade(item.id, {quantidade: item.quantidade - item.quantidadeCarrinho}, "livros");
     });
+
+    if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: false}, "cupom")
     
     setCarrinhoItens([]);
     setModalOpen(true);

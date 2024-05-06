@@ -24,8 +24,8 @@ async function GETALL_ENTIDADE(entidade) {
 	return response;
 }
 
-async function GET_USER(userId) {
-	const response = await API.get(`/clientes/${userId}`);
+async function GET_ENTIDADE(id, entidade) {
+	const response = await API.get(`/${entidade}/${id}`);
 	return response;
 }
 
@@ -113,10 +113,16 @@ async function solicitarTrocaBackend(vendaId) {
 	}
 }
 
-async function confirmarRecebimentoBackend(vendaId) {
+async function confirmarRecebimentoBackend(vendaId, cupomId) {
 	try {
 		const response = await API.patch(
-			`/pedidos/confirmar-recebimento/${vendaId}`
+			`/pedidos/confirmar-recebimento/${vendaId}`,
+			cupomId,
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
 		);
 		return response.data;
 	} catch (error) {
@@ -126,7 +132,7 @@ async function confirmarRecebimentoBackend(vendaId) {
 
 export {
 	GETALL_ENTIDADE,
-	GET_USER,
+	GET_ENTIDADE,
 	POST_ENTIDADE,
 	UPDATE_ENTIDADE,
 	DELETE_ENTIDADE,

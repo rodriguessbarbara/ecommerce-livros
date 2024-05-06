@@ -3,7 +3,7 @@ import AppContext from "./AppContext";
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { POST_ENTIDADE , GET_USER, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO, CHECK_CUPOM } from '../api'
+import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO, CHECK_CUPOM } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -27,13 +27,15 @@ function Provider({ children }) {
     }, 0));
   }, [carrinhoItens, setPrecoTotal]);
 
-  const listarCliente = async (userId) => {
+  const listarEntidadeById = async (id, entidade) => {
     try {
       setErro(null);
       setLoading(true);
 
-      const response = await GET_USER(userId, "clientes");
-      setDadosCliente(response.data || []);
+      const response = await GET_ENTIDADE(id, entidade);
+      if (entidade === 'clientes') return setDadosCliente(response.data || []);
+
+      return response.data || [];
     } catch (error) {
       setErro(error.response.data);
       throw error;
@@ -194,7 +196,7 @@ function Provider({ children }) {
     setDadosCliente,
     criarEntidade,
     atualizarEntidade,
-    listarCliente,
+    listarEntidadeById,
     deletarEntidade,
     listarLivrosByNome,
     erro,

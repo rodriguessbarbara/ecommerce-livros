@@ -1,16 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
 import { solicitarTrocaBackend } from '../../api';
 import Erro from '../Erro';
 
 function Pedidos() {
-  const { listarCliente, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);
+  const { listarEntidadeById, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);  
+  const [cupomTroca, setCupomTroca] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarCliente(userId);
+      await listarEntidadeById(userId, "clientes");
+
+      let allCupons = [];
+      if (dadosCliente && dadosCliente.Pedidos) {
+        dadosCliente.Pedidos.forEach(async (pedido) => {
+          const cupons = await listarEntidadeById(pedido.id, "cupom");
+          allCupons.push(...cupons);
+          setCupomTroca(allCupons);
+        });
+      }
     }
     fetchData();
    }, [setDadosCliente])
@@ -56,6 +66,17 @@ function Pedidos() {
                 <p key={c.Cartao.numeroCartao}>Cartão <span> número: {c.Cartao.numeroCartao} - {c.Cartao.bandeira} </span></p>
             ))}
             <p className="text-blue-600 font-medium uppercase">{pedido.status}</p>
+
+            {cupomTroca && cupomTroca.map((cupom) => cupom.pedido_id === pedido.id && (
+              <p className="mt-6 font-medium border-2 rounded-lg p-3 bg-white" key={cupom.id}>
+                  {cupom.ativo ? (
+                      `Cupom de ${cupom.tipo.toLowerCase()} disponível: `
+                  ) : (
+                      'Cupom de troca já foi utilizado '
+                  )}
+                  <span className={`font-bold ${cupom.ativo ? `text-green-700` : `text-red-700`} `}>{cupom.nome}</span>
+              </p>
+            ))}
           </div>
 
           {pedido.status.toLocaleUpperCase() == "ENTREGUE" && (

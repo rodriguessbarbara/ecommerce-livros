@@ -6,7 +6,7 @@ import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBacke
 import Erro from '../Erro';
 
 function Vendas() {
-  const { listarEntidades, pedidos, setPedidos, erro, setErro, loading, setLoading } = useContext(AppContext);
+  const { listarEntidades, pedidos, setPedidos, erro, setErro, loading, setLoading, criarEntidade, atualizarEntidade, cupomValidado } = useContext(AppContext);
   const [filtroStatus, setFiltroStatus] = useState("all");
   const [filteredPedidos, setFilteredPedidos] = useState([]);
 
@@ -31,11 +31,14 @@ function Vendas() {
 
   async function handleConfirmarPedido(vendaId, statusAtual) {
       await confirmarPedidoBackend(vendaId, {status: statusAtual});
-      const novosDadosPedidos = pedidos.map(pedido => {
+      const novosDadosPedidos = pedidos.map(async pedido => {
         if (pedido.id === vendaId) {
           if (statusAtual === 'confirmado') return { ...pedido, status: 'PAGAMENTO REALIZADO' };
           if (statusAtual === 'recusado') return { ...pedido, status: 'PAGAMENTO RECUSADO' };
-          if (statusAtual === 'cancelado') return { ...pedido, status: 'PEDIDO CANCELADO' };
+          if (statusAtual === 'cancelado') {
+            if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: true}, "cupom")
+            return { ...pedido, status: 'PEDIDO CANCELADO' };
+          }
         }
         return pedido;
       });
@@ -47,7 +50,7 @@ function Vendas() {
       await despacharProdutosBackend(vendaId);
       const novosDadosPedidos = pedidos.map(pedido => {
         if (pedido.id === vendaId) {
-          return { ...pedido, status: 'EM TRÂNSITO' };
+          return { ...pedido, status: 'EM TRANSPORTE' };
         }
         return pedido;
       });
@@ -92,19 +95,38 @@ function Vendas() {
     }
   }
 
-  async function handleConfirmarRecebimento(vendaId) {
+  async function handleConfirmarRecebimento(vendaId, valorVenda, vendaClienteId) {
     try {
       setErro(null);
       setLoading(true);
 
-      await confirmarRecebimentoBackend(vendaId);
-      const novosDadosPedidos = pedidos.map(pedido => {
-        if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'TROCA AUTORIZADA') {
-          return { ...pedido, status: 'TROCA FINALIZADA' };
+      const geraCupomTroca = await criarEntidade({
+        nome: `TROCA${vendaId}`,
+        valor: valorVenda,
+        tipo: "TROCA",
+        ativo: true,
+        cliente_id: vendaClienteId,
+        pedido_id: vendaId
+      }, "cupom")
+
+      if (geraCupomTroca) {
+        await confirmarRecebimentoBackend(vendaId, geraCupomTroca);
+        const novosDadosPedidos = pedidos.map(pedido => {
+          if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'TROCA AUTORIZADA') {
+            return { ...pedido, status: 'TROCA FINALIZADA' };
+          }
+          return pedido;
+        });
+        setPedidos(novosDadosPedidos);
+
+        const confirmacao = window.confirm("Deseja retornar os itens devolvidos ao estoque?");
+        if (confirmacao) {
+          console.log('adicionar requisição para atualizar a entidade Livros')
+          // atualizarEntidade(book.id, {quantidade: parseInt(novaQuantidade.value)}, "livros")
         }
-        return pedido;
-      });
-      setPedidos(novosDadosPedidos);
+      }
+
+
     } catch (error) {
       console.error('Erro ao confirmar recebimento do produto:', error);
     } finally {
@@ -131,7 +153,7 @@ function Vendas() {
         >
           <option value="all">Todos</option>
           <option value="EM PROCESSAMENTO">EM PROCESSAMENTO</option>
-          <option value="EM TRÂNSITO">EM TRÂNSITO</option>
+          <option value="EM TRANSPORTE">EM TRANSPORTE</option>
           <option value="ENTREGUE">ENTREGUE</option>
           <option value="EM TROCA">EM TROCA</option>
           <option value="TROCA AUTORIZADA">TROCA AUTORIZADA</option>
@@ -190,7 +212,7 @@ function Vendas() {
                     Enviar produto
                   </button>
                 )}
-                {venda.status.toLocaleUpperCase() === 'EM TRÂNSITO' || venda.status.toLocaleUpperCase() === 'EM TRANSPORTE' && (
+                {venda.status.toLocaleUpperCase() === 'EM TRANSPORTE' && (
                   <button className="text-blue-500 rounded" onClick={() => handleConfirmarEntrega(venda.id)}>
                     Confirmar entrega
                   </button>
@@ -201,7 +223,7 @@ function Vendas() {
                   </button>
                 )}
                 {venda.status.toLocaleUpperCase() === 'TROCA AUTORIZADA' && (
-                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarRecebimento(venda.id)}>
+                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarRecebimento(venda.id, venda.valor, venda.cliente_id)}>
                     Confirmar recebimento pedido
                   </button>
                 )}
