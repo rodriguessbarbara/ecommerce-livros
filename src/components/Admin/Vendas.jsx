@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
-import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend } from "../../api";
+import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend } from "../../api";
 import Erro from '../Erro';
 
 function Vendas() {
@@ -16,7 +16,7 @@ function Vendas() {
     }
     fetchData();
   }, [setPedidos]);
-  
+    
   useEffect(() => {
     if (pedidos) {
       const pedidosFiltrados = pedidos.filter((pedido) => {
@@ -27,26 +27,76 @@ function Vendas() {
       });  
       setFilteredPedidos(pedidosFiltrados);
     }
-  }, [listarEntidades, filtroStatus]);
+  }, [setPedidos, pedidos, filtroStatus]);
 
-  async function handleConfirmarPedido(vendaId, statusAtual) {
-      await confirmarPedidoBackend(vendaId, {status: statusAtual});
-      const novosDadosPedidos = pedidos.map(async pedido => {
+  
+  async function handleConfirmarPedido(vendaId) {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      await confirmarPedidoBackend(vendaId);
+      const novosDadosPedidos = pedidos.map(pedido => {
         if (pedido.id === vendaId) {
-          if (statusAtual === 'confirmado') return { ...pedido, status: 'PAGAMENTO REALIZADO' };
-          if (statusAtual === 'recusado') return { ...pedido, status: 'PAGAMENTO RECUSADO' };
-          if (statusAtual === 'cancelado') {
-            if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: true}, "cupom")
-            return { ...pedido, status: 'PEDIDO CANCELADO' };
-          }
+          return { ...pedido, status: 'PAGAMENTO REALIZADO' };
         }
         return pedido;
       });
       setPedidos(novosDadosPedidos);
+    } catch (error) {
+      console.error('Erro ao confirmar produtos:', error);
+    } finally {
+      setLoading(false);
+    } 
+  }
+
+  async function handleRecusarPedido(vendaId) {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      await recusarPedidoBackend(vendaId);
+      const novosDadosPedidos = pedidos.map(pedido => {
+        if (pedido.id === vendaId) {
+          return { ...pedido, status: 'PAGAMENTO RECUSADO' };
+        }
+        return pedido;
+      });
+      setPedidos(novosDadosPedidos);
+    } catch (error) {
+      console.error('Erro ao confirmar produtos:', error);
+    } finally {
+      setLoading(false);
+    } 
+  }
+
+  async function handleCancelarPedido(vendaId) {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      await cancelarPedidoBackend(vendaId);
+      const novosDadosPedidos = pedidos.map(pedido => {
+        if (pedido.id === vendaId) {
+          return { ...pedido, status: 'PEDIDO CANCELADO' };
+        }
+        return pedido;
+      })
+      if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: true}, "cupom");
+        
+      setPedidos(novosDadosPedidos);
+    } catch (error) {
+      console.error('Erro ao confirmar produtos:', error);
+    } finally {
+      setLoading(false);
+    } 
   }
 
   async function handleDespacharProdutos(vendaId) {
     try {
+      setErro(null);
+      setLoading(true);
+
       await despacharProdutosBackend(vendaId);
       const novosDadosPedidos = pedidos.map(pedido => {
         if (pedido.id === vendaId) {
@@ -57,11 +107,16 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao despachar produtos:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function handleConfirmarEntrega(vendaId) {
     try {
+      setErro(null);
+      setLoading(true);
+
       await confirmarEntregaBackend(vendaId);
       const novosDadosPedidos = pedidos.map(pedido => {
         if (pedido.id === vendaId) {
@@ -72,6 +127,8 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar entrega:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -84,6 +141,26 @@ function Vendas() {
       const novosDadosPedidos = pedidos.map(pedido => {
         if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'EM TROCA') {
           return { ...pedido, status: 'TROCA AUTORIZADA' };
+        }
+        return pedido;
+      });
+      setPedidos(novosDadosPedidos);
+    } catch (error) {
+      console.error('Erro ao autorizar troca:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleRecusarTroca(vendaId) {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      await recusarTrocaBackend(vendaId);
+      const novosDadosPedidos = pedidos.map(pedido => {
+        if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'EM TROCA') {
+          return { ...pedido, status: 'TROCA RECUSADA' };
         }
         return pedido;
       });
@@ -112,21 +189,19 @@ function Vendas() {
       if (geraCupomTroca) {
         await confirmarRecebimentoBackend(vendaId, geraCupomTroca);
         const novosDadosPedidos = pedidos.map(pedido => {
-          if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'TROCA AUTORIZADA') {
+          if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'ITENS ENVIADOS') {
             return { ...pedido, status: 'TROCA FINALIZADA' };
           }
           return pedido;
         });
-        setPedidos(novosDadosPedidos);
-
+        
         const confirmacao = window.confirm("Deseja retornar os itens devolvidos ao estoque?");
         if (confirmacao) {
-          console.log('adicionar requisição para atualizar a entidade Livros')
+          console.log('temque adicionar requisição para atualizar a entidade Livros')
           // atualizarEntidade(book.id, {quantidade: parseInt(novaQuantidade.value)}, "livros")
         }
+        setPedidos(novosDadosPedidos);
       }
-
-
     } catch (error) {
       console.error('Erro ao confirmar recebimento do produto:', error);
     } finally {
@@ -153,10 +228,17 @@ function Vendas() {
         >
           <option value="all">Todos</option>
           <option value="EM PROCESSAMENTO">EM PROCESSAMENTO</option>
+          <option value="PAGAMENTO REALIZADO">PAGAMENTO REALIZADO</option>
+          <option value="PAGAMENTO RECUSADO">PAGAMENTO RECUSADO</option>
+          <option value="PEDIDO CANCELADO">PEDIDO CANCELADO</option>
           <option value="EM TRANSPORTE">EM TRANSPORTE</option>
           <option value="ENTREGUE">ENTREGUE</option>
           <option value="EM TROCA">EM TROCA</option>
           <option value="TROCA AUTORIZADA">TROCA AUTORIZADA</option>
+          <option value="TROCA RECUSADA">TROCA RECUSADA</option>
+          <option value="TROCA FINALIZADA">TROCA FINALIZADA</option>
+          <option value="ITENS ENVIADOS">ITENS ENVIADOS PARA TROCA</option>
+
         </select>
       </div>
       </div>
@@ -181,12 +263,14 @@ function Vendas() {
               <td className="border px-4 py-2">{venda.dataCompra}</td>
               <td className="border px-4 py-2">R${venda.valor}</td>
               <td className="border px-4 py-2">
-              {venda.tituloLivro.split(',').map((item) => (
-                <div key={item} className="border-b-2 px-4 py-2 border-gray-400">
-                  <p>{item}</p>
-                  <span className="text-sm">Capa Original </span>
-                </div>
-               ))} 
+              {venda.tituloLivro && typeof venda.tituloLivro === 'string' && (
+                venda.tituloLivro.split(',').map((item) => (
+                  <div key={item} className="border-b-2 px-4 py-2 border-gray-400">
+                    <p>{item}</p>
+                    <span className="text-sm">Capa Original </span>
+                  </div>
+                ))
+              )}
               </td>
               <td className="border px-4 py-2">{venda.quantidade}</td>
               <td className="border px-4 py-2">{venda.formaPagamento} <span>Número: {venda.numeroCartao}</span></td>
@@ -195,17 +279,17 @@ function Vendas() {
               </td>
               <td className="border px-4 py-2">
                 {venda.status.toLocaleUpperCase() === 'EM PROCESSAMENTO' && (
-                  <>
-                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarPedido(venda.id, 'confirmado')}>
+                  <div className="flex flex-col gap-2">
+                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarPedido(venda.id)}>
                     Confirmar pagamento
                   </button>
-                   <button className="text-blue-500 rounded" onClick={() => handleConfirmarPedido(venda.id, 'recusado')}>
+                   <button className="text-blue-500 rounded" onClick={() => handleRecusarPedido(venda.id)}>
                     Recusar pagamento
                   </button>
-                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarPedido(venda.id, 'cancelado')}>
+                  <button className="text-blue-500 rounded" onClick={() => handleCancelarPedido(venda.id)}>
                     Cancelar pedido
                   </button>
-                  </>
+                  </div>
                 )}
                 {venda.status.toLocaleUpperCase() === 'PAGAMENTO REALIZADO' && (
                   <button className="text-blue-500 rounded" onClick={() => handleDespacharProdutos(venda.id)}>
@@ -222,7 +306,12 @@ function Vendas() {
                     Autorizar troca
                   </button>
                 )}
-                {venda.status.toLocaleUpperCase() === 'TROCA AUTORIZADA' && (
+                {venda.status.toLocaleUpperCase() === 'EM TROCA' && (
+                  <button className="text-blue-500 rounded" onClick={() => handleRecusarTroca(venda.id)}>
+                    Recusar troca
+                  </button>
+                )}
+                {venda.status.toLocaleUpperCase() === 'ITENS ENVIADOS' && (
                   <button className="text-blue-500 rounded" onClick={() => handleConfirmarRecebimento(venda.id, venda.valor, venda.cliente_id)}>
                     Confirmar recebimento pedido
                   </button>

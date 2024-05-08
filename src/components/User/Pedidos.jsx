@@ -2,8 +2,9 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
-import { solicitarTrocaBackend } from '../../api';
+import { solicitarTrocaBackend, enviarItensBackend } from '../../api';
 import Erro from '../Erro';
+import { format } from 'date-fns';
 
 function Pedidos() {
   const { listarEntidadeById, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);  
@@ -26,6 +27,7 @@ function Pedidos() {
    }, [setDadosCliente])
 
   async function handleSolicitarTroca(vendaId) {
+    try {
       setErro(null);
       setLoading(true);
 
@@ -36,7 +38,32 @@ function Pedidos() {
         }
         return pedido;
       });
-    setDadosCliente({ ...dadosCliente, Pedidos: updatedPedidos });
+      setDadosCliente({ ...dadosCliente, Pedidos: updatedPedidos });
+    } catch (error) {
+      console.error('Erro ao solicitar troca:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleEnviarItens(vendaId) {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      await enviarItensBackend(vendaId);
+      const updatedPedidos = dadosCliente.Pedidos.map(pedido => {
+        if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'TROCA AUTORIZADA') {
+          return { ...pedido, status: 'ITENS ENVIADOS' };
+        }
+        return pedido;
+      });
+      setDadosCliente({ ...dadosCliente, Pedidos: updatedPedidos });
+    } catch (error) {
+      console.error('Erro ao atualizar status para enviar itens:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <Loading/>
@@ -48,7 +75,7 @@ function Pedidos() {
       {dadosCliente && dadosCliente.Pedidos && dadosCliente.Pedidos.map((pedido) => (
         <div key={pedido.id} className="rounded-md border-2 border-gray-300 mb-6">
           <div className="border-b-2 border-gray-400 bg-gray-300 p-4 font-light flex gap-8">
-            <p>Pedido realizado em <span className="font-normal">{pedido.dataCompra}</span></p>
+            <p>Pedido realizado em <span className="font-normal">{format(new Date(pedido.createdAt), 'dd/MM/yyyy')}</span></p>
             <p>Total: <span className="font-normal">R${pedido.valor}</span> </p>
             <p>pedido n.: <span className="font-normal">{pedido.id}</span></p>
           </div>
@@ -82,6 +109,11 @@ function Pedidos() {
           {pedido.status.toLocaleUpperCase() == "ENTREGUE" && (
             <button className="mx-4 mb-4 text-blue-500 rounded" onClick={() => handleSolicitarTroca(pedido.id)}>
               solicitar troca
+            </button>
+          )}
+          {pedido.status.toLocaleUpperCase() == "TROCA AUTORIZADA" && (
+            <button className="mx-4 mb-4 text-blue-500 rounded" onClick={() => handleEnviarItens(pedido.id)}>
+              Enviar item(ns) para troca
             </button>
           )}
         </div>

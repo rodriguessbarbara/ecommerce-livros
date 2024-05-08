@@ -60,20 +60,30 @@ async function CHECK_CUPOM(body) {
 }
 
 //Pedidos - STATUS
-async function confirmarPedidoBackend(vendaId, statusAtual) {
+async function confirmarPedidoBackend(vendaId) {
 	try {
-		const response = await API.patch(
-			`/pedidos/confirmar/${vendaId}`,
-			statusAtual,
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
+		const response = await API.patch(`/pedidos/confirmar/${vendaId}`);
 		return response.data;
 	} catch (error) {
 		console.error("Erro ao confirmar pedido:", error);
+	}
+}
+
+async function recusarPedidoBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/recusar/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao recusar pagamento:", error);
+	}
+}
+
+async function cancelarPedidoBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/cancelar/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao cancelar pedido:", error);
 	}
 }
 
@@ -104,12 +114,30 @@ async function autorizarTrocaBackend(vendaId) {
 	}
 }
 
+async function recusarTrocaBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/recusar-troca/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao recusar troca:", error);
+	}
+}
+
 async function solicitarTrocaBackend(vendaId) {
 	try {
 		const response = await API.patch(`/pedidos/solicitar-troca/${vendaId}`);
 		return response.data;
 	} catch (error) {
 		console.error("Erro ao solicitar troca:", error);
+	}
+}
+
+async function enviarItensBackend(vendaId) {
+	try {
+		const response = await API.patch(`/pedidos/enviar-itens/${vendaId}`);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao alterar status - Enviar itens:", error);
 	}
 }
 
@@ -126,7 +154,7 @@ async function confirmarRecebimentoBackend(vendaId, cupomId) {
 		);
 		return response.data;
 	} catch (error) {
-		console.error("Erro ao solicitar troca:", error);
+		console.error("Erro ao confirmar recebimento do produto:", error);
 	}
 }
 
@@ -140,9 +168,13 @@ export {
 	GETBYNOME_LIVRO,
 	CHECK_CUPOM,
 	confirmarPedidoBackend,
+	recusarPedidoBackend,
+	cancelarPedidoBackend,
 	despacharProdutosBackend,
 	confirmarEntregaBackend,
 	autorizarTrocaBackend,
+	recusarTrocaBackend,
 	solicitarTrocaBackend,
+	enviarItensBackend,
 	confirmarRecebimentoBackend,
 };
