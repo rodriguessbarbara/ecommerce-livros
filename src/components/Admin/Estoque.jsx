@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Search from "../Header/Search";
@@ -16,10 +17,10 @@ function Estoque() {
   }, []);
 
   useEffect(() => {
-    const hasBookInativo = books.some(book => book.quantidade === 0);
+    const hasBookInativo = books.some(book => book.quantidade <= 0);
     if (hasBookInativo) {
       const updatedBooks = books.map(book => {
-        if (book.quantidade === 0) {
+        if (book.quantidade <= 0) {
           atualizarEntidade(book.id, {ativo: false}, "livros");
 
           return { ...book, ativo: false };
@@ -84,11 +85,11 @@ function Estoque() {
               </td>
               <td className="border p-4">
                 <button 
-                  className={`rounded font-medium statusCliente ${book.quantidade === 0 ? 'text-gray-400' : book.ativo ? `text-red-600 hover:text-red-700` : `text-green-600 hover:text-green-700`}`}
+                  className={`rounded font-medium statusCliente ${book.quantidade <= 0 ? 'text-gray-400' : book.ativo ? `text-red-600 hover:text-red-700` : `text-green-600 hover:text-green-700`}`}
                   onClick={() => handleMudaStatus(book.id, !book.ativo)}
-                  disabled={book.quantidade === 0}
+                  disabled={book.quantidade <= 0}
                 >
-                  {book.quantidade === 0 ? (
+                  {book.quantidade <= 0 ? (
                     "Sem estoque"
                   ) : (
                     book.ativo ? "Inativar cadastro" : "Ativar cadastro"

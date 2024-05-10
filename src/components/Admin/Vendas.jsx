@@ -4,6 +4,7 @@ import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
 import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend } from "../../api";
 import Erro from '../Erro';
+import { format } from 'date-fns';
 
 function Vendas() {
   const { listarEntidades, pedidos, setPedidos, erro, setErro, loading, setLoading, criarEntidade, atualizarEntidade, cupomValidado } = useContext(AppContext);
@@ -197,8 +198,7 @@ function Vendas() {
         
         const confirmacao = window.confirm("Deseja retornar os itens devolvidos ao estoque?");
         if (confirmacao) {
-          console.log('temque adicionar requisição para atualizar a entidade Livros')
-          // atualizarEntidade(book.id, {quantidade: parseInt(novaQuantidade.value)}, "livros")
+          retornaEstoque(vendaId)
         }
         setPedidos(novosDadosPedidos);
       }
@@ -207,6 +207,16 @@ function Vendas() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function retornaEstoque(vendaId) {
+    pedidos.map((venda) => {
+      if (venda.id === vendaId) {
+        venda.LivroPedidos.map(async (item, index) => {
+          await atualizarEntidade(item.Livro.id, {quantidade: Number(item.Livro.quantidade) + Number(venda.quantidade.split(',')[index])}, "livros");
+      })
+    }
+    })
   }
 
   if (loading) return <Loading/>
@@ -250,7 +260,7 @@ function Vendas() {
             <th className="px-4 py-2">Data da compra</th>
             <th className="px-4 py-2">Total</th>
             <th className="px-4 py-2">Produtos</th>
-            <th className="px-4 py-2">Quantidade</th>
+            {/* <th className="px-4 py-2">Quantidade</th> */}
             <th className="px-4 py-2">Forma de pagamento</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Ações</th>
@@ -260,20 +270,27 @@ function Vendas() {
           {pedidos && filteredPedidos && filteredPedidos.map((venda) => (
             <tr key={venda.id} className="border-2 rounded-md p-4 m-2">
               <td className="border px-4 py-2">{venda.id}</td>
-              <td className="border px-4 py-2">{venda.dataCompra}</td>
+              <td className="border px-4 py-2">{format(new Date(venda.createdAt), 'dd/MM/yyyy')}</td>
               <td className="border px-4 py-2">R${venda.valor}</td>
               <td className="border px-4 py-2">
-              {venda.tituloLivro && typeof venda.tituloLivro === 'string' && (
-                venda.tituloLivro.split(',').map((item) => (
-                  <div key={item} className="border-b-2 px-4 py-2 border-gray-400">
-                    <p>{item}</p>
+              {venda.LivroPedidos.map((item, index) => (
+                  <div key={item.Livro.id} className="border-b-2 px-4 py-2 border-gray-400">
+                    <p>{item.Livro.titulo}</p>
+                    <p>Qtd: {venda.quantidade.split(',')[index]}</p>
                     <span className="text-sm">Capa Original </span>
                   </div>
                 ))
-              )}
+              }
+
               </td>
-              <td className="border px-4 py-2">{venda.quantidade}</td>
-              <td className="border px-4 py-2">{venda.formaPagamento} <span>Número: {venda.numeroCartao}</span></td>
+              {/* <td className="border px-4 py-2">{venda.quantidade}</td>  */}
+              <td className="border px-4 py-2">
+                {venda.Cartao_Pedidos.map((c) => (
+                  <div key={c.Cartao.id} className="flex flex-col mb-4">
+                    <span>{venda.formaPagamento} número: {c.Cartao.numeroCartao} - {c.Cartao.bandeira} </span>
+                  </div>
+                ))}
+              </td>
               <td className="border px-4 py-2 text-blue-600 font-medium uppercase">
                 {venda.status}
               </td>

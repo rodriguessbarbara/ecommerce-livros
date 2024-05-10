@@ -81,12 +81,15 @@ function Pedidos() {
           </div>
 
           <div className="px-4 py-4">
-            {pedido.tituloLivro.split(',').map((item) => (
-              <div key={item} className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300">
-                <p>{item}</p>
+            {pedido.LivroPedidos.map((item, index) => (
+              <div key={item.Livro.id} className="mb-4 border-2 rounded-md p-4 bg-gray-200 border-gray-300">
+                <div className="flex justify-between">
+                  <p>{item.Livro.titulo}</p>
+                  <p>Qtd: {pedido.quantidade.split(',')[index]}</p>
+                </div>
                 <span className="text-sm">Capa Original </span>
               </div>
-            ))}          
+            ))}                       
 
             <p>Forma pagamento: {pedido.formaPagamento}</p>
             {pedido.Cartao_Pedidos.map((c) => (

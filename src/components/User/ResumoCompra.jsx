@@ -6,7 +6,7 @@ import Input from '../Input';
 import Erro from '../Erro';
 
 function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs, setIdPedido } ) {
-  const { carrinhoItens, precoTotal, setCarrinhoItens, criarEntidade, userId, verificaCupom, cupomValidado, erro, atualizarEntidade } = useContext(AppContext);
+  const { carrinhoItens, precoTotal, setCarrinhoItens, criarEntidade, userId, verificaCupom, cupomValidado, erro, atualizarEntidade, setErro } = useContext(AppContext);
 
   const [isCupom, setIsCupom] = useState(false);
   const [cupomValue, setCupomValue] = useState("");
@@ -33,28 +33,38 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   }, [precoTotal]);
 
   useEffect(() => {
-    cupomValidado ? setPrecoFinal((precoTotal + frete) - cupomValidado.valor) : setPrecoFinal(precoTotal + frete)
+    if (cupomValidado) {
+      if (cupomValidado.valor < (precoTotal + frete)) {
+        setPrecoFinal((precoTotal + frete) - cupomValidado.valor)
+      } else {
+        setPrecoFinal(precoTotal + frete)
+        setErro("valor do cupom maior do que o valor da compra"); 
+      }
+    } else {
+      setPrecoFinal(precoTotal + frete);
+    }
   }, [precoTotal, frete, cupomValidado]);
-  
+
   const handleConfirm = async (event) => {
     event.preventDefault();
-    if (!cartaoSelecionado.length) {
+    if (precoFinal > 0 && !cartaoSelecionado.length) {
       return alert("Por favor, selecione ao menos um cartão para continuar."); 
     }
     if (cartaoSelecionado.length > 1 && (valorInputs < precoFinal || valorInputs > precoFinal)) {
       return alert("O valor nos cartões não corresponde com o valor total da compra. Por favor verifique!"); 
     }
 
-    const titulos = carrinhoItens.map((item) => item.titulo).join(', ');
+    const titulos = carrinhoItens.map((item) => item.id);
+    const quantidadeItens = carrinhoItens.map((item) => item.quantidadeCarrinho).join(', ');
     const novoPedido = await criarEntidade({
-      tituloLivro: titulos,
-      formaPagamento: cartaoSelecionado ? "cartao" : 'cupom',
+      tituloLivros: titulos,
+      formaPagamento: cartaoSelecionado.length ? "cartao" : 'cupom',
       valor: precoFinal,
-      quantidade: carrinhoItens.reduce((total, item) => total + item.quantidadeCarrinho, 0),
+      quantidade: quantidadeItens,
       status: "EM PROCESSAMENTO",
       cliente_id: userId,
-      cartoes: cartaoSelecionado ? cartaoSelecionado.map((c) => c.id) : null,
-      cupom_id: cupomValidado ? cupomValidado.id : null
+      cartoes: cartaoSelecionado.length ? cartaoSelecionado.map((c) => c.id) : null,
+      cupom_id: cupomValidado ? cupomValidado.id : null,
     }, "pedidos");
 
     setIdPedido(novoPedido.id)
@@ -62,7 +72,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       await atualizarEntidade(item.id, {quantidade: item.quantidade - item.quantidadeCarrinho}, "livros");
     });
 
-    if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: false}, "cupom")
+    if (cupomValidado && (cupomValidado.tipo === 'DEVOLUÇÃO' || cupomValidado.tipo === 'TROCA')) await atualizarEntidade(cupomValidado.id, {ativo: false}, "cupom")
     
     setCarrinhoItens([]);
     setModalOpen(true);
@@ -88,14 +98,13 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       {!isCupom ? (
         <>
           <button className="self-start text-blue-800 font-medium" onClick={() => setIsCupom(true)}>
-            {cupomValidado  ? `Cupom aplicado: ${cupomValidado.nome} ` : 'Inserir cupom ou vale'}
+            {cupomValidado && cupomValidado.valor < (precoTotal + frete) ? `Cupom aplicado: ${cupomValidado.nome} ` : 'Inserir cupom ou vale'}
           </button>
-          {cupomValidado && (
+          {cupomValidado && cupomValidado.valor < (precoTotal + frete) && (
             <span className="text-gray-800 mb-2 font-bold">
-              - R$ {cupomValidado.valor}.00
+              - R${cupomValidado.valor}
             </span>
           )}
-          
         </>
       ) : (
         <>

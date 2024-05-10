@@ -17,7 +17,7 @@ function Provider({ children }) {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false)
   const [pedidos, setPedidos] = useState([]);
-  const [cupomValidado, setCupomValidado] = useState(null);
+  const [cupomValidado, setCupomValidado] = useState([]);
 
   const navigate = useNavigate();
 
