@@ -34,7 +34,6 @@ function Provider({ children }) {
 
       const response = await GET_ENTIDADE(id, entidade);
       if (entidade === 'clientes') return setDadosCliente(response.data || []);
-
       return response.data || [];
     } catch (error) {
       setErro(error.response.data);
@@ -140,7 +139,7 @@ function Provider({ children }) {
       if (response.status === 201) setCupomValidado(response.data);
     } catch(error) {
       setErro(error.response.data);
-      setCupomValidado(null)
+      setCupomValidado([])
       throw error; 
     } finally {
       setLoading(false);
@@ -173,7 +172,7 @@ function Provider({ children }) {
   const userLogout = () => {
     setLogin(null);
     setCarrinhoItens([]);
-    setCupomValidado(null);
+    setCupomValidado([]);
     navigate('/login');
   };
 

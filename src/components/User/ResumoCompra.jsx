@@ -33,7 +33,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   }, [precoTotal]);
 
   useEffect(() => {
-    if (cupomValidado) {
+    if (cupomValidado.length) {
       if (cupomValidado.valor < (precoTotal + frete)) {
         setPrecoFinal((precoTotal + frete) - cupomValidado.valor)
       } else {

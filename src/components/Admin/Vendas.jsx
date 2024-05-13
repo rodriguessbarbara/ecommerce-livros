@@ -7,7 +7,7 @@ import Erro from '../Erro';
 import { format } from 'date-fns';
 
 function Vendas() {
-  const { listarEntidades, pedidos, setPedidos, erro, setErro, loading, setLoading, criarEntidade, atualizarEntidade, cupomValidado } = useContext(AppContext);
+  const { listarEntidades, pedidos, setPedidos, erro, setErro, loading, setLoading, atualizarEntidade, cupomValidado } = useContext(AppContext);
   const [filtroStatus, setFiltroStatus] = useState("all");
   const [filteredPedidos, setFilteredPedidos] = useState([]);
 
@@ -46,6 +46,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar produtos:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     } 
@@ -66,6 +67,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar produtos:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     } 
@@ -88,6 +90,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar produtos:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     } 
@@ -108,6 +111,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao despachar produtos:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     }
@@ -128,6 +132,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar entrega:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     }
@@ -148,6 +153,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao autorizar troca:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     }
@@ -168,6 +174,7 @@ function Vendas() {
       setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao autorizar troca:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     }
@@ -178,17 +185,14 @@ function Vendas() {
       setErro(null);
       setLoading(true);
 
-      const geraCupomTroca = await criarEntidade({
-        nome: `TROCA${vendaId}`,
-        valor: valorVenda,
-        tipo: "TROCA",
-        ativo: true,
-        cliente_id: vendaClienteId,
-        pedido_id: vendaId
-      }, "cupom")
-
-      if (geraCupomTroca) {
-        await confirmarRecebimentoBackend(vendaId, geraCupomTroca);
+        await confirmarRecebimentoBackend(vendaId, {
+          nome: `TROCA${vendaId}`,
+          valor: valorVenda,
+          tipo: "TROCA",
+          ativo: true,
+          cliente_id: vendaClienteId,
+          pedido_id: vendaId
+        });
         const novosDadosPedidos = pedidos.map(pedido => {
           if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'ITENS ENVIADOS') {
             return { ...pedido, status: 'TROCA FINALIZADA' };
@@ -201,9 +205,9 @@ function Vendas() {
           retornaEstoque(vendaId)
         }
         setPedidos(novosDadosPedidos);
-      }
     } catch (error) {
       console.error('Erro ao confirmar recebimento do produto:', error);
+      setErro(error);
     } finally {
       setLoading(false);
     }
@@ -241,6 +245,7 @@ function Vendas() {
           <option value="PAGAMENTO REALIZADO">PAGAMENTO REALIZADO</option>
           <option value="PAGAMENTO RECUSADO">PAGAMENTO RECUSADO</option>
           <option value="PEDIDO CANCELADO">PEDIDO CANCELADO</option>
+          <option value="AGUARDANDO CANCELAMENTO">AGUARDANDO CANCELAMENTO</option>
           <option value="EM TRANSPORTE">EM TRANSPORTE</option>
           <option value="ENTREGUE">ENTREGUE</option>
           <option value="EM TROCA">EM TROCA</option>
