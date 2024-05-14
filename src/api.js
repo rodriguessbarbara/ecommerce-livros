@@ -132,20 +132,48 @@ async function solicitarTrocaBackend(vendaId) {
 	}
 }
 
+async function solicitarTrocaItemBackend(vendaId, data) {
+	try {
+		const response = await API.patch(
+			`/pedidos/solicitar-troca-item/${vendaId}`,
+			data,
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao solicitar troca do item:", error);
+	}
+}
+
 async function enviarItensBackend(vendaId) {
 	try {
 		const response = await API.patch(`/pedidos/enviar-itens/${vendaId}`);
 		return response.data;
 	} catch (error) {
-		console.error("Erro ao alterar status - Enviar itens:", error);
+		console.error("Erro ao alterar status:", error);
 	}
 }
 
-async function confirmarRecebimentoBackend(vendaId, cupomId) {
+async function solicitarCancelamentoBackend(vendaId) {
+	try {
+		const response = await API.patch(
+			`/pedidos/solicitar-cancelamento/${vendaId}`
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Erro ao solicitar o cancelamento:", error);
+	}
+}
+
+async function confirmarRecebimentoBackend(vendaId, dataCupom) {
 	try {
 		const response = await API.patch(
 			`/pedidos/confirmar-recebimento/${vendaId}`,
-			cupomId,
+			dataCupom,
 			{
 				headers: {
 					"Content-Type": "application/json",
@@ -175,6 +203,8 @@ export {
 	autorizarTrocaBackend,
 	recusarTrocaBackend,
 	solicitarTrocaBackend,
+	solicitarTrocaItemBackend,
 	enviarItensBackend,
+	solicitarCancelamentoBackend,
 	confirmarRecebimentoBackend,
 };
