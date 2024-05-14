@@ -12,7 +12,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   const [cupomValue, setCupomValue] = useState("");
   const [frete, setFrete] = useState(0);
 
-   const checkCupom = async (event, valorCupom) => {
+    const checkCupom = async (event, valorCupom) => {
     event.preventDefault();
     setIsCupom(false)
     await verificaCupom({nome: valorCupom, cliente_id: userId});

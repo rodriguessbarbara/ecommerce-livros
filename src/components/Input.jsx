@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-function Input({ label, type, name, value, span, placeholder, onChange, required, minLength, maxLength, min, max }) {
+function Input({ label, type, name, value, span, placeholder, onChange, required, minLength, maxLength, min, max, step }) {
   return (
     <div className={`sm:col-span-${span}`}>
       
@@ -19,7 +19,7 @@ function Input({ label, type, name, value, span, placeholder, onChange, required
         maxLength={maxLength}
         min={min}
         max={max}
-
+        step={step}
       />
     </div>
   )

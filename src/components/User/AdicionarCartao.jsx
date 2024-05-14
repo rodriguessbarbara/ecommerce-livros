@@ -17,7 +17,7 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
 
     if (numeroCartao.validate() && nome.validate() && codSeguranca.validate()) {
       criarEntidade({
-        bandeira: bandeira.value,
+        bandeira: bandeira.value ? bandeira.value : 'Visa',
         numeroCartao: numeroCartao.value,
         nome: nome.value,
         final: (numeroCartao.value).slice(-4),
@@ -52,7 +52,7 @@ function AdicionarCartao({ openAdicionarCartao, setOpenAdicionarCartao }) {
                 </label>
                 <select name="bandeira" {...bandeira} required
                 className="w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6">
-                  <option value="Visa" className="text-gray-800">Visa</option>
+                  <option value="Visa" className="text-gray-800" defaultChecked defaultValue="Visa">Visa</option>
                   <option value="Mastercard" className="text-gray-800">Mastercard</option>
                   <option value="elo" className="text-gray-800">elo</option>
                 </select>
