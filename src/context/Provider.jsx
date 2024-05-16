@@ -130,13 +130,21 @@ function Provider({ children }) {
     }
   };
 
-  const verificaCupom = async(cupomData) => {
+  const verificaCupom = async(cupomData, tipoCupom) => {
     try {
       setErro(null);
       setLoading(true);
 
       const response = await CHECK_CUPOM(cupomData);
-      if (response.status === 201) setCupomValidado(response.data);
+      if (response.status === 201) {
+        if (cupomValidado.some(cupom => cupom.tipo === tipoCupom)) {
+          setErro("Você já aplicou um cupom desse tipo.");
+        } else if (response.data.tipo === tipoCupom) {
+            setCupomValidado([...cupomValidado, response.data]);
+          } else {
+            setErro("O cupom inserido não é do tipo adequado.");
+          }
+      }
     } catch(error) {
       setErro(error.response.data);
       setCupomValidado([])

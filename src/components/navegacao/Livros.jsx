@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useContext, useEffect } from "react";
 import LivrosCard from "./LivrosCard";
 import AppContext from "../../context/AppContext";
@@ -6,12 +7,13 @@ import AddLivroButton from "../Admin/AddLivroButton";
 import Carrinho from "../Carrinho/Carrinho";
 
 function Livros() {
-  const { books, setBooks, login, listarEntidades } = useContext(AppContext);
+  const { books, setBooks, login, listarEntidades, setCupomValidado } = useContext(AppContext);
   const [appliedFilters, setAppliedFilters] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
         await listarEntidades("livros");
+        setCupomValidado([]);
       }
     fetchData();
   }, [setBooks]);

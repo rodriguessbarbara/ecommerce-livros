@@ -7,15 +7,15 @@ import Erro from '../Erro';
 
 function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs, setIdPedido } ) {
   const { carrinhoItens, precoTotal, setCarrinhoItens, criarEntidade, userId, verificaCupom, cupomValidado, erro, atualizarEntidade, setErro } = useContext(AppContext);
-
   const [isCupom, setIsCupom] = useState(false);
-  const [cupomValue, setCupomValue] = useState("");
   const [frete, setFrete] = useState(0);
-
-    const checkCupom = async (event, valorCupom) => {
+  const [cupomTrocaValue, setCupomTrocaValue] = useState("");
+  const [cupomPromocionalValue, setCupomPromocionalValue] = useState("");
+  
+    const checkCupom = async (event, valorCupom, tipoCupom) => {
     event.preventDefault();
     setIsCupom(false)
-    await verificaCupom({nome: valorCupom, cliente_id: userId});
+    await verificaCupom({nome: valorCupom, cliente_id: userId}, tipoCupom);
   }
 
   function calculaFrete(precoTotal) {
@@ -33,16 +33,15 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
   }, [precoTotal]);
 
   useEffect(() => {
-    if (cupomValidado.length) {
-      if (cupomValidado.valor < (precoTotal + frete)) {
-        setPrecoFinal((precoTotal + frete) - cupomValidado.valor)
+    let precoComFrete = precoTotal + frete;
+    cupomValidado.map(cupom => {
+      if (cupom.valor < precoComFrete) {
+        precoComFrete -= cupom.valor;
       } else {
-        setPrecoFinal(precoTotal + frete)
-        setErro("valor do cupom maior do que o valor da compra"); 
+        setErro("O valor do cupom é maior do que o valor da compra."); 
       }
-    } else {
-      setPrecoFinal(precoTotal + frete);
-    }
+    });
+    setPrecoFinal(precoComFrete);
   }, [precoTotal, frete, cupomValidado]);
 
   const handleConfirm = async (event) => {
@@ -64,7 +63,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       status: "EM PROCESSAMENTO",
       cliente_id: userId,
       cartoes: cartaoSelecionado.length ? cartaoSelecionado.map((c) => c.id) : null,
-      cupom_id: cupomValidado ? cupomValidado.id : null,
+      cupom_id: cupomValidado.length ? cupomValidado.map(cupom => cupom.id).join(',') : null,
     }, "pedidos");
 
     setIdPedido(novoPedido.id)
@@ -72,7 +71,13 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       await atualizarEntidade(item.id, {quantidade: item.quantidade - item.quantidadeCarrinho}, "livros");
     });
 
-    if (cupomValidado && (cupomValidado.tipo === 'DEVOLUÇÃO' || cupomValidado.tipo === 'TROCA')) await atualizarEntidade(cupomValidado.id, {ativo: false}, "cupom")
+    if (cupomValidado.length && cupomValidado.some(c => c.tipo === 'TROCA')) {
+      cupomValidado.forEach(async c => {
+          if (c.tipo === 'TROCA') {
+              await atualizarEntidade(c.id, { ativo: false }, "cupom");
+          }
+      });
+    }
     
     setCarrinhoItens([]);
     setModalOpen(true);
@@ -98,18 +103,21 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       {!isCupom ? (
         <>
           <button className="self-start text-blue-800 font-medium" onClick={() => setIsCupom(true)}>
-            {cupomValidado && cupomValidado.valor < (precoTotal + frete) ? `Cupom aplicado: ${cupomValidado.nome} ` : 'Inserir cupom ou vale'}
+            {cupomValidado.length && cupomValidado.some((c) => c.valor < (precoTotal + frete)) ? `Cupom aplicado: ${cupomValidado.map((c) => c.nome)} ` : 'Inserir cupom ou vale'}
           </button>
-          {cupomValidado && cupomValidado.valor < (precoTotal + frete) && (
-            <span className="text-gray-800 mb-2 font-bold">
-              - R${cupomValidado.valor}
+          {cupomValidado && cupomValidado.map((c) => c.valor < (precoTotal + frete) && (
+            <span className="text-gray-800 font-bold" key={c.id}>
+              - R${c.valor}
             </span>
-          )}
+          ))}
         </>
       ) : (
-        <>
-        <Input placeholder="Inserir código do cupom" type="text" name="cupom" value={cupomValue} onChange={() => setCupomValue(event.target.value)}/>
-        <button className="text-end text-blue-800 font-medium" onClick={(event) => checkCupom(event, cupomValue)}>OK</button>
+        <>        
+        <Input placeholder="Inserir código do cupom de troca" type="text" name="cupomTroca" value={cupomTrocaValue} onChange={(event) => setCupomTrocaValue(event.target.value)}/>
+        <button className="text-end text-blue-800 font-medium" onClick={(event) => checkCupom(event, cupomTrocaValue, 'TROCA')}>OK</button>
+
+        <Input placeholder="Inserir código do cupom promocional" type="text" name="cupomPromocional" value={cupomPromocionalValue} onChange={(event) => setCupomPromocionalValue(event.target.value)}/>
+        <button className="text-end text-blue-800 font-medium" onClick={(event) => checkCupom(event, cupomPromocionalValue, 'PROMOCIONAL')}>OK</button>
         </>
       )}
 
