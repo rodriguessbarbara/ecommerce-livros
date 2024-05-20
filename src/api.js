@@ -186,6 +186,19 @@ async function confirmarRecebimentoBackend(vendaId, dataCupom) {
 	}
 }
 
+async function retornarEstoque(vendaId, dataVenda) {
+	const response = await API.patch(
+		`/pedidos/retornar-estoque/${vendaId}`,
+		dataVenda,
+		{
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}
+	);
+	return response;
+}
+
 export {
 	GETALL_ENTIDADE,
 	GET_ENTIDADE,
@@ -207,4 +220,5 @@ export {
 	enviarItensBackend,
 	solicitarCancelamentoBackend,
 	confirmarRecebimentoBackend,
+	retornarEstoque,
 };

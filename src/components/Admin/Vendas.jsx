@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
-import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend } from "../../api";
+import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend, retornarEstoque } from "../../api";
 import Erro from '../Erro';
 import { format } from 'date-fns';
 
@@ -85,11 +85,17 @@ function Vendas() {
         }
         return pedido;
       })
-      if (cupomValidado) await atualizarEntidade(cupomValidado.id, {ativo: true}, "cupom");
-        
+
+      cupomValidado.length &&
+        cupomValidado.forEach(async cupom => {
+          if (cupom.tipo === 'TROCA') {
+              await atualizarEntidade(cupom.id, { ativo: false }, "cupom");
+          }
+      });
+      
       setPedidos(novosDadosPedidos);
     } catch (error) {
-      console.error('Erro ao confirmar produtos:', error);
+      console.error('Erro ao cancelar pedido:', error);
       setErro(error);
     } finally {
       setLoading(false);
@@ -180,47 +186,46 @@ function Vendas() {
     }
   }
 
-  async function handleConfirmarRecebimento(vendaId, valorVenda, vendaClienteId) {
+  async function handleConfirmarRecebimento(venda, vendaId, valorVenda, vendaClienteId) {
     try {
       setErro(null);
       setLoading(true);
 
-        await confirmarRecebimentoBackend(vendaId, {
-          nome: `TROCA${vendaId}`,
-          valor: valorVenda,
-          tipo: "TROCA",
-          ativo: true,
-          cliente_id: vendaClienteId,
-          pedido_id: vendaId
-        });
-        const novosDadosPedidos = pedidos.map(pedido => {
-          if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'ITENS ENVIADOS') {
-            return { ...pedido, status: 'TROCA FINALIZADA' };
-          }
-          return pedido;
-        });
-        
-        const confirmacao = window.confirm("Deseja retornar os itens devolvidos ao estoque?");
-        if (confirmacao) {
-          retornaEstoque(vendaId)
+      await confirmarRecebimentoBackend(vendaId, {
+        nome: `TROCA${vendaId}`,
+        valor: valorVenda,
+        tipo: "TROCA",
+        ativo: true,
+        cliente_id: vendaClienteId,
+        pedido_id: vendaId
+      });
+      const novosDadosPedidos = pedidos.map(pedido => {
+        if (pedido.id === vendaId && pedido.status.toLocaleUpperCase() === 'ITENS ENVIADOS') {
+          return { ...pedido, status: 'FINALIZADO' };
         }
-        setPedidos(novosDadosPedidos);
+        return pedido;
+      });
+        
+      const confirmacao = window.confirm("Deseja retornar os itens devolvidos ao estoque?");
+      if (confirmacao) {
+        await retornarEstoque(vendaId, {
+          livroEstoque: venda.LivroPedidos.map((item) => item.Livro.quantidade),
+          livroId: venda.LivroPedidos.map((item) => item.Livro.id),
+          livroPrecificacao: venda.LivroPedidos.map((item) => item.Livro.precificacao),
+          quantidade: venda.quantidade,
+          cliente_id: venda.cliente_id,
+          formaPagamento: venda.formaPagamento,                                                               
+          id: vendaId,
+          valor: venda.valor,          
+        })
+      }
+      setPedidos(novosDadosPedidos);
     } catch (error) {
       console.error('Erro ao confirmar recebimento do produto:', error);
       setErro(error);
     } finally {
       setLoading(false);
     }
-  }
-
-  function retornaEstoque(vendaId) {
-    pedidos.map((venda) => {
-      if (venda.id === vendaId) {
-        venda.LivroPedidos.map(async (item, index) => {
-          await atualizarEntidade(item.Livro.id, {quantidade: Number(item.Livro.quantidade) + Number(venda.quantidade.split(',')[index])}, "livros");
-      })
-    }
-    })
   }
 
   if (loading) return <Loading/>
@@ -252,7 +257,7 @@ function Vendas() {
           <option value="TROCA AUTORIZADA">TROCA AUTORIZADA</option>
           <option value="TROCA RECUSADA">TROCA RECUSADA</option>
           <option value="TROCA FINALIZADA">TROCA FINALIZADA</option>
-          <option value="ITENS ENVIADOS">ITENS ENVIADOS PARA TROCA</option>
+          <option value="ITENS ENVIADOS">ITENS ENVIADOS</option>
 
         </select>
       </div>
@@ -334,7 +339,7 @@ function Vendas() {
                   </button>
                 )}
                 {venda.status.toLocaleUpperCase() === 'ITENS ENVIADOS' && (
-                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarRecebimento(venda.id, venda.valor, venda.cliente_id)}>
+                  <button className="text-blue-500 rounded" onClick={() => handleConfirmarRecebimento(venda, venda.id, venda.valor, venda.cliente_id)}>
                     Confirmar recebimento pedido
                   </button>
                 )}

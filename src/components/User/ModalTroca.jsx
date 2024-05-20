@@ -81,14 +81,14 @@ function AdicionarCartao({ openModalTroca, setOpenModalTroca, pedido, setTipoTro
     }
   }
 
-  const handleInputChange = (index, event, livroPreco) => {
+  const handleInputChange = (index, event) => {
     const valor = parseFloat(event.target.value);
     const novosValores = [...inputValores];
     novosValores[index] = valor;
     setInputValores(novosValores);
 
     const precoTotal = novosValores.reduce((total, quantidade, i) => {
-      return total + (quantidade * livroPreco * (i === index ? 1 : 0));
+      return total + (quantidade * pedido.LivroPedidos[i].Livro.precificacao);
     }, 0);
     
     setPrecoValores(precoTotal);
@@ -128,17 +128,15 @@ function AdicionarCartao({ openModalTroca, setOpenModalTroca, pedido, setTipoTro
                     max={Number(pedido.quantidade.split(',')[index])}
                     label={`${item.Livro.titulo} | Quantidade para trocar:`}
                     value={inputValores[index]}
-                    onChange={(event) => handleInputChange(index, event, item.Livro.precificacao)}
+                    onChange={(event) => handleInputChange(index, event)}
                     />
                     <p className="text-sm">Qtd comprada: {pedido.quantidade.split(',')[index]} - R${item.Livro.precificacao} cada</p>
                 </div>
                 ))} 
                 <button className="text-start text-indigo-600 hover:text-indigo-800">Confirmar</button>
+                <Erro erro={erro}/>
               </form>
               }
-
-            <Erro erro={erro}/>
-          
           </div>
       </div>
     </div>  
