@@ -98,7 +98,7 @@ function PagamentoCompra() {
                   name="valor"
                   placeholder="Valor"
                   min="10"
-                  max={precoFinal - Object.values(precosInputs).reduce((acc, curr) => acc + curr, 0) + precosInputs[cartao.id]}
+                  max={Number(precoFinal - Object.values(precosInputs).reduce((acc, curr) => acc + curr, 0) + precosInputs[cartao.id])}
                   value={(cartaoSelecionado.some(item => item.id === cartao.id)) ? precosInputs[cartao.id] : 0}
                   onChange={(event) => handleInputChange(event, cartao.id)}
                   required
@@ -116,7 +116,7 @@ function PagamentoCompra() {
         <AdicionarCartao openAdicionarCartao={openAdicionarCartao} setOpenAdicionarCartao={() => setOpenAdicionarCartao(!openAdicionarCartao)}/>
       </div>
 
-      <ResumoCompra cartaoSelecionado={cartaoSelecionado} endSelecionado={endSelecionado} setModalOpen={() => setOpenModal(!openModal)} precoFinal={precoFinal} setPrecoFinal={setPrecoFinal} valorInputs={cartaoSelecionado.length > 1 ? Object.values(precosInputs).reduce((acc, curr) => acc + curr, 0) : precosInputs} setIdPedido={setIdPedido}/>
+      <ResumoCompra cartaoSelecionado={cartaoSelecionado} endSelecionado={endSelecionado} setModalOpen={() => setOpenModal(!openModal)} precoFinal={precoFinal} setPrecoFinal={setPrecoFinal} valorInputs={cartaoSelecionado.length > 1 ? Object.values(precosInputs).reduce((acc, curr) => acc + curr, 0) : precosInputs} setIdPedido={setIdPedido} precoPorInput={precosInputs}/>
       <MsgCompraEfetuada isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} idPedido={idPedido}/>
     </div>
   )

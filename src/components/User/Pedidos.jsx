@@ -22,8 +22,7 @@ function Pedidos() {
     }
     fetchData();
    }, [setDadosCliente])
-
-
+  
   async function handleEnviarItens(vendaId) {
     try {
       setErro(null);
@@ -63,7 +62,7 @@ function Pedidos() {
       setLoading(false);
     }
   }
-
+  
   if (loading) return <Loading/>
   return (
 
@@ -117,7 +116,7 @@ function Pedidos() {
                   ) : (
                       'Cupom de troca já foi utilizado '
                   )}
-                  <span className={`font-bold ${cupom.ativo ? `text-green-700` : `text-red-700`} `}>{cupom.nome}</span>
+                  <span className={`font-bold ${cupom.ativo ? `text-green-700` : `text-red-700`} `}>{cupom.nome}<span className="text-gray-800 font-normal"> (R${cupom.valor})</span></span>
               </p>
             ))}
           </div>

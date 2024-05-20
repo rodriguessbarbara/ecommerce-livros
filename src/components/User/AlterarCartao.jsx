@@ -29,7 +29,7 @@ function AlterarCartao({ isOpenAlterarCartao, setIsOpenAlterarCartao, cartao }) 
   };
 
   const handleRemoveCartao = (event) => {
-    const confirmacao = window.confirm("Você realmente deseja excluir esse endereco?");
+    const confirmacao = window.confirm("Deseja realmente excluir esse cartão?");
     if (confirmacao) {
       deletarEntidade(cartao.id, "cartao");
       

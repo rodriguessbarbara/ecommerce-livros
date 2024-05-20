@@ -14,29 +14,12 @@ function Estoque() {
         await listarEntidades("livros");
       }
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    const hasBookInativo = books.some(book => book.quantidade <= 0);
-    if (hasBookInativo) {
-      const updatedBooks = books.map(book => {
-        if (book.quantidade <= 0) {
-          atualizarEntidade(book.id, {ativo: false}, "livros");
-
-          return { ...book, ativo: false };
-        }
-        return book;
-      });
-
-      setBooks(updatedBooks);
-    }
   }, [setBooks]);
 
   function handleMudaStatus(id, status) {
     const novoStatus = books.map(b => {
       if (b.id === id) {
         atualizarEntidade(id, {ativo: status}, "livros");
-
         return {...b, ativo: status}
       }
       return b

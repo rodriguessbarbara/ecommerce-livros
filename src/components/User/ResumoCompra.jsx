@@ -5,7 +5,7 @@ import AppContext from '../../context/AppContext';
 import Input from '../Input';
 import Erro from '../Erro';
 
-function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs, setIdPedido } ) {
+function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoFinal, setPrecoFinal, valorInputs, setIdPedido, precoPorInput } ) {
   const { carrinhoItens, precoTotal, setCarrinhoItens, criarEntidade, userId, verificaCupom, cupomValidado, erro, atualizarEntidade, setErro } = useContext(AppContext);
   const [isCupom, setIsCupom] = useState(false);
   const [frete, setFrete] = useState(0);
@@ -64,6 +64,7 @@ function ResumoCompra( { cartaoSelecionado, endSelecionado, setModalOpen, precoF
       cliente_id: userId,
       cartoes: cartaoSelecionado.length ? cartaoSelecionado.map((c) => c.id) : null,
       cupom_id: cupomValidado.length ? cupomValidado.map(cupom => cupom.id).join(',') : null,
+      valorCartao: Object.values(precoPorInput).length ? Object.values(precoPorInput) : precoFinal
     }, "pedidos");
 
     setIdPedido(novoPedido.id)
