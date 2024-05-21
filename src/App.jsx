@@ -8,6 +8,7 @@ import LivroDetalhe from "./components/navegacao/LivroDetalhe";
 import Usuario from "./components/User/Usuario";
 import ProtectedRoute from "./ProtectedRoute";
 import Admin from "./components/Admin/Admin";
+import Page404 from "./components/Page404";
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
                     <Admin />
                   </ProtectedRoute> }
                 />
-
+            <Route path="/*" element={<Page404/>}/>
             </Routes>
 
           </Provider>

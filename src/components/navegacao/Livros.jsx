@@ -5,6 +5,7 @@ import AppContext from "../../context/AppContext";
 import Filtros from "./Filtros";
 import AddLivroButton from "../Admin/AddLivroButton";
 import Carrinho from "../Carrinho/Carrinho";
+import AvisoIA from './AvisoIA';
 
 function Livros() {
   const { books, setBooks, login, listarEntidades, setCupomValidado } = useContext(AppContext);
@@ -60,7 +61,7 @@ function Livros() {
           {(login && login === 'admin') && <AddLivroButton />}
         </div>
       </div>
-
+      <AvisoIA/>
       <Carrinho/>
     </>
   );

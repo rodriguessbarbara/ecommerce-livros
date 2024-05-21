@@ -4,6 +4,7 @@ import CarrinhoButton from './CarrinhoButton';
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { useLocation } from 'react-router-dom';
+import { BookOpenIcon } from '@heroicons/react/24/outline'
 
 function Header() {
   const { login, listarEntidades } = useContext(AppContext);
@@ -16,15 +17,11 @@ return (
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-shrink-0 items-center">
             <Link to="/" onClick={() => {listarEntidades("livros")}}> 
-              <img
-                className="h-8 w-auto cursor-pointer"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                alt="Livros"
-              />
+              <BookOpenIcon className="h-8 w-8 text-indigo-700" aria-hidden="true" />
             </Link>
           </div>
         
-        {localizacao.pathname === "/" && <Search/>}
+          {localizacao.pathname === "/" && <Search/>}
 
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex around space-x-4">
