@@ -9,6 +9,7 @@ import Loading from "../Loading.jsx"
 function LoginCriar() {
   const email = useForm("email");
   const senha = useForm();
+  const repetirSenha = useForm();
   const nome = useForm();
   const cpf = useForm();
   const telefone = useForm();
@@ -24,24 +25,27 @@ function LoginCriar() {
   const estado = useForm();
   const pais = useForm();
 
-  const { criarEntidade, erro, loading } = useContext(AppContext);
+  const { criarEntidade, erro, setErro, loading } = useContext(AppContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setErro(null);
 
-    const novoClienteResponse = await criarEntidade({
-      nome: nome.value,
-      cpf: cpf.value,
-      email: email.value,
-      senha: senha.value,
-      genero: genero,
-      telefone: telefone.value,
-      dataNascimento: dataNascimento.value,
-      ativo: true,
-      role: 'user'
-    }, "clientes");
-
-    if (novoClienteResponse) handleSubmitEndereco(novoClienteResponse);
+    if (senha.value === repetirSenha.value) { 
+      const novoClienteResponse = await criarEntidade({
+        nome: nome.value,
+        cpf: cpf.value,
+        email: email.value,
+        senha: senha.value,
+        genero: genero,
+        telefone: telefone.value,
+        dataNascimento: dataNascimento.value,
+        ativo: true,
+        role: 'user'
+      }, "clientes");
+    
+      if (novoClienteResponse) handleSubmitEndereco(novoClienteResponse);
+    } else setErro("Erro ao criar conta: As senhas não conferem");
   }
 
   async function handleSubmitEndereco(novoClienteResponse) {    
@@ -92,7 +96,7 @@ function LoginCriar() {
 
             <Input label="Data Nascimento" type="date" name="data-nascimento" required {...dataNascimento}/>
             <Input label="Senha" type="password" name="senha" span="2" minLength="8" required {...senha}/>
-            <Input label="Repetir senha" type="password" name="repetir-senha" span="2" minLength="8" required/>
+            <Input label="Repetir senha" type="password" name="repetir-senha" span="2" minLength="8" required {...repetirSenha}/>
 
             <Input label="Lagradouro" type="text" name="lagradouro" placeholder="Rua, Av, etc" required {...lagradouro}/>
             <Input label="Endereço Residencial" type="text" name="endereco" span="2" required {...enderecoResidencial}/>

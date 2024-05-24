@@ -5,11 +5,14 @@ import Input from "../Input";
 import Loading from "../Loading";
 import AdicionarEndereco from "./AdicionarEndereco";
 import Erro from '../Erro';
+import useForm from "../../hooks/useForm";
 
 function Dados() {
  const { dadosCliente, listarUser, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade, erro, setErro, atualizarSenha } = useContext(AppContext);
  const [editar, setEditar] = useState("");
  const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
+ const senha = useForm();
+ const repetirSenha = useForm();
 
  useEffect(() => {
   const fetchData = async () => {
@@ -36,7 +39,7 @@ function Dados() {
         nome: dadosCliente.nome,
         cpf: dadosCliente.cpf,
         email: dadosCliente.email,
-        senha: dadosCliente.senha,
+        senha: senha.value,
         genero: dadosCliente.genero,
         telefone: dadosCliente.telefone,
         dataNascimento: dadosCliente.dataNascimento
@@ -46,10 +49,13 @@ function Dados() {
 
  const handleSalvarSenha = async (event) => {
   event.preventDefault();
-  await atualizarSenha(userId, {
-      senha: dadosCliente.senha,
-    });
-  setEditar(""); 
+
+  if (senha.value === repetirSenha.value) { 
+    await atualizarSenha(userId, {
+        senha: senha.value,
+      });
+    setEditar("");
+  } else setErro("Erro: As senhas não conferem")
 };
 
  const handleSalvarEnd = (event, endId, data) => {
@@ -174,8 +180,8 @@ function Dados() {
 
         {editar == "senha" && (
           <form onSubmit={handleSalvarSenha} className="flex flex-col gap-2">
-            <Input label="Nova senha" type="password" name="senha" value={dadosCliente.senha || ''} onChange={handleInputChange} required/>
-            {/* <Input label="Repetir nova senha" type="password" name="repetirSenha" value={dadosCliente.repetirSenha || ''} onChange={handleInputChange} required/> */}
+            <Input label="Nova senha" type="password" name="senha" {...senha} required/>
+            <Input label="Repetir nova senha" type="password" name="repetirSenha" {...repetirSenha} required/>
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
           </form>
         )}
