@@ -10,6 +10,15 @@ async function LOGIN_USER(body) {
 	return response;
 }
 
+async function VALIDATE_TOKEN(token) {
+	const response = await API.get("/validate-token", {
+		headers: {
+			Authorization: token,
+		},
+	});
+	return response;
+}
+
 async function GET_USER(token) {
 	const response = await API.get("/cliente", {
 		headers: {
@@ -117,6 +126,7 @@ export {
 	UPDATE_SENHA_USER,
 	DELETE_ENTIDADE,
 	LOGIN_USER,
+	VALIDATE_TOKEN,
 	GETBYNOME_LIVRO,
 	CHECK_CUPOM,
 };

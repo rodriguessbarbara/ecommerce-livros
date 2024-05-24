@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import propTypes from 'prop-types';
 import AppContext from "./AppContext";
 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, LOGIN_USER, GETBYNOME_LIVRO, CHECK_CUPOM, 
-  GET_USER, GET_USERBYID, UPDATE_USER, DELETE_USER, UPDATE_SENHA_USER } from '../api'
+  GET_USER, GET_USERBYID, UPDATE_USER, DELETE_USER, UPDATE_SENHA_USER, VALIDATE_TOKEN } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -92,7 +93,7 @@ function Provider({ children }) {
       }
 
    } catch (error) {
-      setErro(`Erro ao atualizar dados: ${error.response.data}`);
+      setErro(error.response.data);
       throw error;
    } finally {
     setLoading(false);
@@ -107,7 +108,7 @@ function Provider({ children }) {
       if(response.status === 204) console.log("senha atualizado com sucesso")
 
   } catch (error) {
-     setErro(`Erro ao atualizar dados: ${error.response.data}`);
+     setErro(error.response.data);
      throw error;
   } finally {
    setLoading(false);
@@ -242,10 +243,17 @@ function Provider({ children }) {
           setErro(null);
           setLoading(true);
 
-          // const { url, options } = TOKEN_VALIDATE_POST(token);
-          // await GET_USER(token);
-          // setUserId()
-          // setLogin('user');
+          const tokenValidado = VALIDATE_TOKEN(token);
+          if (tokenValidado) {
+            const userResponse = await GET_USER(token);
+            setUserId(userResponse.data.id)
+
+            if (userResponse.data.email === 'admin@admin.com') {
+              setLogin('admin');
+            } else {
+              setLogin('user');
+            } 
+          }
         } catch (err) {
           userLogout();
         } finally {
@@ -254,7 +262,7 @@ function Provider({ children }) {
       }
     }
     autoLogin();
-  }, [userLogout]);
+  }, []);
 
   const value = {
     books,
