@@ -9,7 +9,7 @@ import Input from "../Input";
 import Loading from "../Loading";
 
 function PagamentoCompra() {
-  const { listarEntidadeById, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
+  const { listarUser, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
 
   const location = useLocation();
   const { endSelecionado } = location.state || {};
@@ -22,7 +22,7 @@ function PagamentoCompra() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarEntidadeById(userId, "clientes");
+      await listarUser(userId);
     }
     fetchData();
   }, [setDadosCliente])

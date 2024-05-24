@@ -2,13 +2,13 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
-import { enviarItensBackend, solicitarCancelamentoBackend } from '../../api';
+import { enviarItensBackend, solicitarCancelamentoBackend } from '../../api-status';
 import Erro from '../Erro';
 import { format } from 'date-fns';
 import ModalTroca from './ModalTroca'
 
 function Pedidos() {
-  const { listarEntidadeById, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);  
+  const { listarEntidadeById, listarUser, userId, setDadosCliente, dadosCliente, erro, setErro, loading, setLoading } = useContext(AppContext);  
   const [cupomTroca, setCupomTroca] = useState([]);
   const [openModalTroca, setOpenModalTroca] = useState(false);
   const [pedidoSelecionado, setPedidoSelecionado] = useState(false);
@@ -16,7 +16,7 @@ function Pedidos() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarEntidadeById(userId, "clientes");
+      await listarUser(userId);
       const cupons = await listarEntidadeById(userId, "cupom");
       setCupomTroca(cupons);
     }

@@ -1,9 +1,10 @@
 import propTypes from 'prop-types';
 import AppContext from "./AppContext";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, CHECK_USER, GETBYNOME_LIVRO, CHECK_CUPOM } from '../api'
+import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, LOGIN_USER, GETBYNOME_LIVRO, CHECK_CUPOM, 
+  GET_USER, GET_USERBYID, UPDATE_USER, DELETE_USER, UPDATE_SENHA_USER } from '../api'
 
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
@@ -33,8 +34,22 @@ function Provider({ children }) {
       setLoading(true);
 
       const response = await GET_ENTIDADE(id, entidade);
-      if (entidade === 'clientes') return setDadosCliente(response.data || []);
       return response.data || [];
+    } catch (error) {
+      setErro(error.response.data);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const listarUser = async (id) => {
+    try {
+      setErro(null);
+      setLoading(true);
+
+      const response = await GET_USERBYID(id);
+      return setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
       throw error;
@@ -67,16 +82,37 @@ function Provider({ children }) {
  const atualizarEntidade = async (id, novosDados, entidade) => {
    try {
      setLoading(true);
+      setErro(null);
+      if (entidade === 'clientes') {
+        const response = await UPDATE_USER(id, novosDados);
+        if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
+      } else {
+        const response = await UPDATE_ENTIDADE(id, novosDados, entidade);
+        if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
+      }
 
-     const response = await UPDATE_ENTIDADE(id, novosDados, entidade);
-     if(response.status === 204) console.log(`${entidade} atualizado com sucesso`)
    } catch (error) {
-      setErro(`Erro ao atualizar dados do ${entidade}:`, error);
+      setErro(`Erro ao atualizar dados: ${error.response.data}`);
       throw error;
    } finally {
     setLoading(false);
   }
  };
+
+ const atualizarSenha = async (id, novaSenha) => {
+  try {
+    setLoading(true);
+     setErro(null);
+      const response = await UPDATE_SENHA_USER(id, novaSenha);
+      if(response.status === 204) console.log("senha atualizado com sucesso")
+
+  } catch (error) {
+     setErro(`Erro ao atualizar dados: ${error.response.data}`);
+     throw error;
+  } finally {
+   setLoading(false);
+ }
+};
 
  const listarEntidades = async (entidade) => {
   try {
@@ -99,15 +135,24 @@ function Provider({ children }) {
 
  const deletarEntidade = async (userId, entidade) => {
    try {
-     const response = await DELETE_ENTIDADE(userId, entidade);
-     if (response.status === 201) {
-       window.alert("Excluido com sucesso!");
-       if (entidade === 'clientes') {
-        setLogin(null);
-        navigate("/");
+
+    if (entidade === 'clientes') {
+      const response = await DELETE_USER(userId);
+      if (response.status === 201) {
+        window.alert("Excluido com sucesso!");
+         setLogin(null);
+         navigate("/");
       }
-     }
-     return response; 
+
+      return response; 
+    } else {
+      const response = await DELETE_ENTIDADE(userId, entidade);
+      if (response.status === 201) {
+        window.alert("Excluido com sucesso!");
+      }
+
+      return response; 
+    }
    } catch (error) {
      console.error("Erro ao deletar a entidade:", error);
      throw error;
@@ -159,8 +204,11 @@ function Provider({ children }) {
       setErro(null);
       setLoading(true);
 
-      const response = await CHECK_USER(usuario);
-      setUserId(response.data)
+      const tokenResponse = await LOGIN_USER(usuario);
+      window.localStorage.setItem("token", tokenResponse.data);
+      const userResponse = await GET_USER(tokenResponse.data);
+
+      setUserId(userResponse.data.id)
         if (userType === 'admin') {
           setLogin('admin');
           navigate('/admin');
@@ -168,7 +216,6 @@ function Provider({ children }) {
           setLogin('user');
           navigate('/conta');
         } 
-      return response.data;
     } catch (error) {
       setErro(error.response.data);
       throw error; 
@@ -177,12 +224,37 @@ function Provider({ children }) {
     }
   };
 
-  const userLogout = () => {
+  const userLogout = useCallback(async () => {
     setLogin(null);
     setCarrinhoItens([]);
     setCupomValidado([]);
+
+    window.localStorage.removeItem("token");
     navigate('/login');
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    const autoLogin = async () => {
+      const token = window.localStorage.getItem("token");
+
+      if (token) {
+        try {
+          setErro(null);
+          setLoading(true);
+
+          // const { url, options } = TOKEN_VALIDATE_POST(token);
+          // await GET_USER(token);
+          // setUserId()
+          // setLogin('user');
+        } catch (err) {
+          userLogout();
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+    autoLogin();
+  }, [userLogout]);
 
   const value = {
     books,
@@ -203,6 +275,7 @@ function Provider({ children }) {
     setDadosCliente,
     criarEntidade,
     atualizarEntidade,
+    atualizarSenha,
     listarEntidadeById,
     deletarEntidade,
     listarLivrosByNome,
@@ -210,6 +283,7 @@ function Provider({ children }) {
     setErro,
     userId,
     listarEntidades,
+    listarUser,
     loading,
     setLoading,
     pedidos,

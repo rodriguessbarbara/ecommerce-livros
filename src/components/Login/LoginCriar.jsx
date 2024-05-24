@@ -41,7 +41,7 @@ function LoginCriar() {
       role: 'user'
     }, "clientes");
 
-    handleSubmitEndereco(novoClienteResponse);
+    if (novoClienteResponse) handleSubmitEndereco(novoClienteResponse);
   }
 
   async function handleSubmitEndereco(novoClienteResponse) {    

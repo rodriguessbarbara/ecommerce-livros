@@ -9,11 +9,11 @@ function Cartoes() {
   const [openAlterarCartao, setOpenAlterarCartao] = useState(false);
   const [openAdicionarCartao, setOpenAdicionarCartao] = useState(false);
   const [cartao, setCartao] = useState([]);
-  const { dadosCliente, listarEntidadeById, userId, setDadosCliente, loading } = useContext(AppContext);
+  const { dadosCliente, listarUser, userId, setDadosCliente, loading } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarEntidadeById(userId, "clientes");
+      await listarUser(userId);
     }
     fetchData();
    }, [setDadosCliente])
