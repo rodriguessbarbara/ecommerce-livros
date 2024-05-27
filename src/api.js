@@ -1,8 +1,8 @@
 import axios from "axios";
 const API = axios.create({ baseURL: "http://localhost:8000" });
 
-async function POST_ENTIDADE(body, entidade) {
-	const response = await API.post(`/${entidade}`, body, {
+async function LOGIN_USER(body) {
+	const response = await API.post("/clientes/auth/login", body, {
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -10,8 +10,63 @@ async function POST_ENTIDADE(body, entidade) {
 	return response;
 }
 
-async function CHECK_USER(body) {
-	const response = await API.post("/clientes/login", body, {
+async function VALIDATE_TOKEN(token) {
+	const response = await API.get("/validate-token", {
+		headers: {
+			Authorization: token,
+		},
+	});
+	return response;
+}
+
+async function GET_USER(token) {
+	const response = await API.get("/cliente", {
+		headers: {
+			Authorization: "Bearer " + token,
+		},
+	});
+	return response;
+}
+
+async function GET_USERBYID(id) {
+	const response = await API.get(`/clientes/${id}`, {
+		headers: {
+			Authorization: "Bearer " + window.localStorage.getItem("token"),
+		},
+	});
+	return response;
+}
+
+async function DELETE_USER(userId) {
+	const response = await API.delete(`/$clientes/${userId}`, {
+		headers: {
+			Authorization: "Bearer " + window.localStorage.getItem("token"),
+		},
+	});
+	return response;
+}
+
+async function UPDATE_USER(id, newData) {
+	const response = await API.patch(`/clientes/${id}`, newData, {
+		headers: {
+			// "Content-Type": "application/json",
+			Authorization: "Bearer " + window.localStorage.getItem("token"),
+		},
+	});
+	return response;
+}
+
+async function UPDATE_SENHA_USER(id, newSenha) {
+	const response = await API.patch(`/clientes/senha/${id}`, newSenha, {
+		headers: {
+			Authorization: "Bearer " + window.localStorage.getItem("token"),
+		},
+	});
+	return response;
+}
+
+async function POST_ENTIDADE(body, entidade) {
+	const response = await API.post(`/${entidade}`, body, {
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -59,166 +114,19 @@ async function CHECK_CUPOM(body) {
 	return response;
 }
 
-//Pedidos - STATUS
-async function confirmarPedidoBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/confirmar/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao confirmar pedido:", error);
-	}
-}
-
-async function recusarPedidoBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/recusar/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao recusar pagamento:", error);
-	}
-}
-
-async function cancelarPedidoBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/cancelar/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao cancelar pedido:", error);
-	}
-}
-
-async function despacharProdutosBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/despachar/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao despachar produtos:", error);
-	}
-}
-
-async function confirmarEntregaBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/confirmar-entrega/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao confirmar entrega:", error);
-	}
-}
-
-async function autorizarTrocaBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/autorizar-troca/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao autorizar troca:", error);
-	}
-}
-
-async function recusarTrocaBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/recusar-troca/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao recusar troca:", error);
-	}
-}
-
-async function solicitarTrocaBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/solicitar-troca/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao solicitar troca:", error);
-	}
-}
-
-async function solicitarTrocaItemBackend(vendaId, data) {
-	try {
-		const response = await API.patch(
-			`/pedidos/solicitar-troca-item/${vendaId}`,
-			data,
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao solicitar troca do item:", error);
-	}
-}
-
-async function enviarItensBackend(vendaId) {
-	try {
-		const response = await API.patch(`/pedidos/enviar-itens/${vendaId}`);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao alterar status:", error);
-	}
-}
-
-async function solicitarCancelamentoBackend(vendaId) {
-	try {
-		const response = await API.patch(
-			`/pedidos/solicitar-cancelamento/${vendaId}`
-		);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao solicitar o cancelamento:", error);
-	}
-}
-
-async function confirmarRecebimentoBackend(vendaId, dataCupom) {
-	try {
-		const response = await API.patch(
-			`/pedidos/confirmar-recebimento/${vendaId}`,
-			dataCupom,
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
-		return response.data;
-	} catch (error) {
-		console.error("Erro ao confirmar recebimento do produto:", error);
-	}
-}
-
-async function retornarEstoque(vendaId, dataVenda) {
-	const response = await API.patch(
-		`/pedidos/retornar-estoque/${vendaId}`,
-		dataVenda,
-		{
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}
-	);
-	return response;
-}
-
 export {
 	GETALL_ENTIDADE,
 	GET_ENTIDADE,
+	GET_USER,
+	GET_USERBYID,
+	DELETE_USER,
 	POST_ENTIDADE,
 	UPDATE_ENTIDADE,
+	UPDATE_USER,
+	UPDATE_SENHA_USER,
 	DELETE_ENTIDADE,
-	CHECK_USER,
+	LOGIN_USER,
+	VALIDATE_TOKEN,
 	GETBYNOME_LIVRO,
 	CHECK_CUPOM,
-	confirmarPedidoBackend,
-	recusarPedidoBackend,
-	cancelarPedidoBackend,
-	despacharProdutosBackend,
-	confirmarEntregaBackend,
-	autorizarTrocaBackend,
-	recusarTrocaBackend,
-	solicitarTrocaBackend,
-	solicitarTrocaItemBackend,
-	enviarItensBackend,
-	solicitarCancelamentoBackend,
-	confirmarRecebimentoBackend,
-	retornarEstoque,
 };

@@ -6,7 +6,7 @@ import AdicionarEndereco from "./AdicionarEndereco";
 import Loading from "../Loading";
 
 function SelecionarEnderecoCompra() {
-  const { precoTotal, listarEntidadeById, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
+  const { precoTotal, listarUser, userId, setDadosCliente, dadosCliente, loading } = useContext(AppContext);
 
   const navigate = useNavigate();
   const [endSelecionado, setEndSelecionado] = useState(null);
@@ -14,7 +14,7 @@ function SelecionarEnderecoCompra() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await listarEntidadeById(userId, "clientes");
+      await listarUser(userId);
     }
     fetchData();
    }, [setDadosCliente])

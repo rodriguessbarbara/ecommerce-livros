@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
-import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend, retornarEstoque } from "../../api";
+import { confirmarPedidoBackend, despacharProdutosBackend, confirmarEntregaBackend, autorizarTrocaBackend, confirmarRecebimentoBackend, recusarTrocaBackend, cancelarPedidoBackend, recusarPedidoBackend, retornarEstoque } from "../../api-status";
 import Erro from '../Erro';
 import { format } from 'date-fns';
 

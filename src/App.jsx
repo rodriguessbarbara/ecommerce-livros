@@ -7,6 +7,7 @@ import CompraOverview from "./components/User/CompraOverview";
 import LivroDetalhe from "./components/navegacao/LivroDetalhe";
 import Usuario from "./components/User/Usuario";
 import ProtectedRoute from "./ProtectedRoute";
+import RedirectIfLoggedIn from './RedirectIfLoggedIn';
 import Admin from "./components/Admin/Admin";
 import Page404 from "./components/Page404";
 
@@ -22,6 +23,11 @@ function App() {
             <Routes>
               <Route path="/" element={<Livros/>}/>
               <Route path="/livro" element={<LivroDetalhe/>}/>
+              <Route path="/login/*" element={
+                <RedirectIfLoggedIn>
+                  <Login />
+                </RedirectIfLoggedIn>
+              } />
               <Route path="/login/*" element={<Login />} />
               <Route path="/compra" element={<CompraOverview />} />
               <Route

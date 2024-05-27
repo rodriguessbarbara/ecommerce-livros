@@ -4,15 +4,19 @@ import AppContext from "../../context/AppContext";
 import Input from "../Input";
 import Loading from "../Loading";
 import AdicionarEndereco from "./AdicionarEndereco";
+import Erro from '../Erro';
+import useForm from "../../hooks/useForm";
 
 function Dados() {
- const { dadosCliente, listarEntidadeById, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade } = useContext(AppContext);
+ const { dadosCliente, listarUser, userId, setDadosCliente, deletarEntidade, loading, atualizarEntidade, erro, setErro, atualizarSenha } = useContext(AppContext);
  const [editar, setEditar] = useState("");
  const [openAdicionarEndereco, setOpenAdicionarEndereco] = useState(false);
+ const senha = useForm();
+ const repetirSenha = useForm();
 
  useEffect(() => {
   const fetchData = async () => {
-    await listarEntidadeById(userId, "clientes");
+    await listarUser(userId);
   }
   fetchData();
  }, [setDadosCliente])
@@ -29,19 +33,30 @@ function Dados() {
   setDadosCliente({ ...dadosCliente, Enderecos: updatedEnderecos });
 };
 
- const handleSalvar = (event) => {
+ const handleSalvar = async (event) => {
     event.preventDefault();
-    atualizarEntidade(userId, {
+    await atualizarEntidade(userId, {
         nome: dadosCliente.nome,
         cpf: dadosCliente.cpf,
         email: dadosCliente.email,
-        senha: dadosCliente.senha,
+        senha: senha.value,
         genero: dadosCliente.genero,
         telefone: dadosCliente.telefone,
         dataNascimento: dadosCliente.dataNascimento
       }, "clientes");
     setEditar(""); 
  };
+
+ const handleSalvarSenha = async (event) => {
+  event.preventDefault();
+
+  if (senha.value === repetirSenha.value) { 
+    await atualizarSenha(userId, {
+        senha: senha.value,
+      });
+    setEditar("");
+  } else setErro("Erro: As senhas não conferem")
+};
 
  const handleSalvarEnd = (event, endId, data) => {
   event.preventDefault();
@@ -164,20 +179,25 @@ function Dados() {
         ))}
 
         {editar == "senha" && (
-          <form onSubmit={handleSalvar} className="flex flex-col gap-2">
-            <Input label="Nova senha" type="password" name="senha" value={dadosCliente.senha || ''} onChange={handleInputChange} required/>
-            {/* <Input label="Repetir nova senha" type="password" name="repetirSenha" value={dadosCliente.repetirSenha || ''} onChange={handleInputChange} required/> */}
+          <form onSubmit={handleSalvarSenha} className="flex flex-col gap-2">
+            <Input label="Nova senha" type="password" name="senha" {...senha} required/>
+            <Input label="Repetir nova senha" type="password" name="repetirSenha" {...repetirSenha} required/>
             <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mt-2">Salvar</button>
           </form>
         )}
 
         {editar &&
-          <p className="font-medium text-red-600 mt-4 cursor-pointer" onClick={() => setEditar("")}>{`← Voltar`}</p>
+          <p className="font-medium text-red-600 mt-4 cursor-pointer" onClick={() => {
+            setErro(null);
+            setEditar("")}
+          }
+          >{`← Voltar`}</p>
         }
       </div>
 
       <AdicionarEndereco openAdicionarEndereco={openAdicionarEndereco} setOpenAdicionarEndereco={() => setOpenAdicionarEndereco(!openAdicionarEndereco)}/>
 
+        <Erro erro={erro}/>
     </div>
  );
 }

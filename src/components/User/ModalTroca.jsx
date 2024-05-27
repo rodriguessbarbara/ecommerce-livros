@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
-import { solicitarTrocaBackend, solicitarTrocaItemBackend } from '../../api';
+import { solicitarTrocaBackend, solicitarTrocaItemBackend } from '../../api-status';
 import Input from '../Input';
 import Erro from "../Erro";
 
