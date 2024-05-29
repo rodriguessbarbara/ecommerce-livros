@@ -267,10 +267,10 @@ function Vendas() {
         <thead>
           <tr>
             <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">ID Cliente</th>
             <th className="px-4 py-2">Data da compra</th>
-            <th className="px-4 py-2">Total</th>
+            <th className="px-4 py-2">Valor</th>
             <th className="px-4 py-2">Produtos</th>
-            {/* <th className="px-4 py-2">Quantidade</th> */}
             <th className="px-4 py-2">Forma de pagamento</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Ações</th>
@@ -280,6 +280,7 @@ function Vendas() {
           {pedidos && filteredPedidos && filteredPedidos.map((venda) => (
             <tr key={venda.id} className="border-2 rounded-md p-4 m-2">
               <td className="border px-4 py-2">{venda.id}</td>
+              <td className="border px-4 py-2">{venda.cliente_id}</td>
               <td className="border px-4 py-2">{format(new Date(venda.createdAt), 'dd/MM/yyyy')}</td>
               <td className="border px-4 py-2">R${venda.valor}</td>
               <td className="border px-4 py-2">

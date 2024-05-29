@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import AppContext from "../../context/AppContext";
 import Loading from "../Loading";
+import Erro from '../Erro';
 
 function Clientes() {
-  const { dadosCliente, setDadosCliente, atualizarEntidade, loading, listarEntidades } = useContext(AppContext);
+  const { dadosCliente, setDadosCliente, atualizarEntidade, loading, listarEntidades, listarByNome, erro } = useContext(AppContext);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,12 +31,35 @@ function Clientes() {
     if (confirmacao) setDadosCliente(novoStatus)
   }
 
+  const handleSearch = async (event) => {
+    event.preventDefault();
+
+    if (searchValue === '') {
+        listarEntidades("clientes");
+    } else {
+        listarByNome(searchValue, "clientes");
+    }
+    setSearchValue("");
+}
+
   if (loading || !dadosCliente.length) return <Loading/>
   return (
     <div className="py-4 text-gray-600">
-      <h3 className="text-2xl font-medium tracking-tight">Consulta de Clientes</h3>
-      <h4 className="text-lg font-medium mb-8">Dados cadastrais</h4>
-      
+      <div className="justify-between items-center mr-4 flex gap-2">
+        <div>
+          <h3 className="text-2xl font-medium tracking-tight">Consulta de Clientes</h3>
+          <h4 className="text-lg font-medium mb-8">Dados cadastrais</h4>
+        </div>
+
+        <div className="flex gap-2">
+          <input required type="text" placeholder="Digitar cliente" className="text-gray-800 w-80 rounded-md border-1 shadow-md shadow-slate-200 border-zinc-400" onChange={(event) => setSearchValue(event.target.value)} value={searchValue}/>
+          <button className="text-gray-100 bg-indigo-600 p-2 pl-4 pr-4 rounded-lg" onClick={handleSearch}>
+            Buscar
+          </button>
+        </div>
+      </div>
+      <Erro erro={erro}/>
+
       <table className="w-full table-auto mb-6 text-center">
         <thead>
           <tr>

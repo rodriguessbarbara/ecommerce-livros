@@ -5,7 +5,7 @@ import Erro from '../Erro';
 function Search() {
 
     const [searchValue, setSearchValue] = useState("");
-    const { listarEntidades, listarLivrosByNome, erro } = useContext(AppContext);
+    const { listarEntidades, listarByNome, erro } = useContext(AppContext);
 
     const handleSearch = async (event) => {
         event.preventDefault();
@@ -13,7 +13,7 @@ function Search() {
         if (searchValue === '') {
             listarEntidades("livros");
         } else {
-            listarLivrosByNome(searchValue);
+            listarByNome(searchValue, "livros");
         }
         setSearchValue("");
     }

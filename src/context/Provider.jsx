@@ -4,7 +4,7 @@ import AppContext from "./AppContext";
 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, LOGIN_USER, GETBYNOME_LIVRO, CHECK_CUPOM, 
+import { POST_ENTIDADE , GET_ENTIDADE, GETALL_ENTIDADE, UPDATE_ENTIDADE, DELETE_ENTIDADE, LOGIN_USER, GETBYNOME, CHECK_CUPOM, 
   GET_USER, GET_USERBYID, UPDATE_USER, DELETE_USER, UPDATE_SENHA_USER, VALIDATE_TOKEN } from '../api'
 
 function Provider({ children }) {
@@ -160,13 +160,14 @@ function Provider({ children }) {
    }
  };
 
-  const listarLivrosByNome = async (searchValue) => {
+  const listarByNome = async (searchValue, entidade) => {
     try {
       setErro(null);
       setLoading(true);
 
-      const response = await GETBYNOME_LIVRO(searchValue);
-      return setBooks(response.data || []);
+      const response = await GETBYNOME(searchValue, entidade);
+      if (entidade === 'livros') return setBooks(response.data || []);
+      if (entidade === 'clientes') return setDadosCliente(response.data || []);
     } catch (error) {
       setErro(error.response.data);
       throw error;
@@ -286,7 +287,7 @@ function Provider({ children }) {
     atualizarSenha,
     listarEntidadeById,
     deletarEntidade,
-    listarLivrosByNome,
+    listarByNome,
     erro,
     setErro,
     userId,

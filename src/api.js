@@ -99,8 +99,8 @@ async function DELETE_ENTIDADE(userId, entidade) {
 }
 
 //Livros
-async function GETBYNOME_LIVRO(nome) {
-	const response = await API.get(`/livros/nome/${nome}`);
+async function GETBYNOME(nome, entidade) {
+	const response = await API.get(`/${entidade}/nome/${nome}`);
 	return response;
 }
 
@@ -127,6 +127,6 @@ export {
 	DELETE_ENTIDADE,
 	LOGIN_USER,
 	VALIDATE_TOKEN,
-	GETBYNOME_LIVRO,
+	GETBYNOME,
 	CHECK_CUPOM,
 };
