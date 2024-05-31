@@ -7,8 +7,9 @@ function Input({ label, type, name, value, span, placeholder, onChange, required
         {label}
       </label>
       <input
-        className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
-        type={type}
+      className={`w-full rounded-md py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6 ${
+        type === 'date' ? 'bg-gray-300 border-gray-400' : ''
+      }`}        type={type}
         name={name}
         id={name}
         value={value}

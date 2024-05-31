@@ -8,6 +8,7 @@ import AppContext from "../../context/AppContext";
 import Vendas from "../Admin/Vendas";
 import Clientes from "../Admin/Clientes";
 import Estoque from "../Admin/Estoque";
+import Grafico from '../Admin/Grafico';
 
 const navigationPerfil = [
   { name: 'Seus pedidos', href: 'Pedidos', current: false },
@@ -20,6 +21,7 @@ const navigationAdmin = [
   { name: 'Vendas realizadas', href: 'Vendas', current: false },
   { name: 'Clientes cadastrados', href: 'Clientes', current: false },
   { name: 'Livros - Estoque', href: 'Estoque', current: false },
+  { name: 'Gráfico', href: 'Grafico', current: false },
   { name: 'Sair', href: 'Sair', current: false },
 ]
 
@@ -30,6 +32,7 @@ const componenteMapping = {
   'Vendas': Vendas,
   'Clientes': Clientes,
   'Estoque': Estoque,
+  'Grafico': Grafico,
 };
 
 function Conta() {

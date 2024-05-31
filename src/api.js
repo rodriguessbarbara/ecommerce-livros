@@ -114,6 +114,16 @@ async function CHECK_CUPOM(body) {
 	return response;
 }
 
+//Gráfico
+async function filtrarPedidosDatas(data) {
+	const response = await API.post(`/grafico/buscar-pedidos`, data, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return response.data;
+}
+
 export {
 	GETALL_ENTIDADE,
 	GET_ENTIDADE,
@@ -129,4 +139,5 @@ export {
 	VALIDATE_TOKEN,
 	GETBYNOME,
 	CHECK_CUPOM,
+	filtrarPedidosDatas,
 };
