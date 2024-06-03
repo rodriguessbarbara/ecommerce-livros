@@ -24,26 +24,17 @@ const options = {
     },
     y: {
       min: 0,
-      max: 10000,
-      // ticks: {
-      //   stepSize: 5000,
-      // }
+      max: 30,
+      ticks: {
+        stepSize: 2,
+      }
     }
   },
 };
 
 const colors = [
-  '#ca002cb2', '#ff6384', '#36a2eb', '#cc65fe', '#ffce56', 
-  '#ff9f40', '#4bc0c0', '#9966ff', '#ff6384b2', '#36a2ebb2'
-];
-
-const UserData = [
-  {    id: 1,    year: 2016,    userGain: 8000,    userLost: 823,  },
-  {    id: 2,    year: 2017,    userGain: 4577,    userLost: 345,  },
-  {    id: 3,    year: 2018,    userGain: 7888,    userLost: 555,  },
-  {    id: 4,    year: 2019,    userGain: 9000,    userLost: 4555,  },
-  {    id: 5,    year: 2020,    userGain: 4300,    userLost: 234,  },
-  {    id: 6,    year: 2020,    userGain: 7300,    userLost: 531,  },
+  '#ca002cb2', '#ff6384', '#36a2eb', '#cc65fe', '#13a200af', 
+  '#ff8000', '#68ffff', '#3f188d', '#64073cb1', '#37ffc6af'
 ];
 
 function Grafico() {  
@@ -51,7 +42,6 @@ function Grafico() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [pedidosFiltrados, setPedidosFiltrados] = useState(null);
-
   const today = new Date().toISOString().split('T')[0];
   const minDate = "2020-01-01";
 
@@ -84,12 +74,53 @@ function Grafico() {
     }
   }
 
-  // console.log(pedidosFiltrados)
+  const gerarDatasLabels = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dates = [];
+    const mesesSelecionados = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
+    // console.log(mesesSelecionados)
+    if (mesesSelecionados > 1) {
+      while (start <= end) {
+        dates.push(new Date(start).toISOString().substring(0, 7));
+        start.setMonth(start.getMonth() + 1);
+        start.setDate(1);
+      }
+    } else {
+      while (start <= end) {
+        dates.push(new Date(start).toISOString().split('T')[0]);
+        start.setDate(start.getDate() + 1);
+      }
+    }
+    return dates;
+  };
+  const datasLabels = startDate && endDate ? gerarDatasLabels(startDate, endDate) : [];
+  
+  const mapearQuantidades = (pedidos, books, datasLabels) => {
+    const quantidadesPorLivro = {};
+    books.forEach((livro) => {
+      quantidadesPorLivro[livro.id] = Array(datasLabels.length).fill(0);
+    });
+
+    pedidos.forEach((pedido) => {
+      const quantidades = pedido.quantidade.split(',').map(Number);
+      const pedidoDate = new Date(pedido.createdAt);
+      const label = (datasLabels[0] && datasLabels[0].length) > 7 ? pedidoDate.toISOString().split('T')[0] : pedidoDate.toISOString().substring(0, 7);
+      const dateIndex = datasLabels.indexOf(label);
+
+      pedido.LivroPedidos.forEach((livroPedido, index) => {
+        if (quantidadesPorLivro[livroPedido.livro_id] !== undefined && dateIndex !== -1) {
+          quantidadesPorLivro[livroPedido.livro_id][dateIndex] += quantidades[index];
+        }
+      });
+    });
+    return quantidadesPorLivro;
+  };
+  const quantidadesPorLivro = pedidosFiltrados != null ? mapearQuantidades(pedidosFiltrados, books, datasLabels) : {};
 
   const datasets = books.map((livro, index) => ({
     label: livro.titulo,
-    data: UserData[index].userGain, // aqui vai os pedidos retornados pela outra requisicao entre as datas selecionadas
-    // fazer um livro.id === pedidosFiltrados[index].LivroPedidos.map((livro) => livro.id)
+    data: quantidadesPorLivro[livro.id],
     backgroundColor: colors[index % colors.length],
     borderColor: colors[index % colors.length],
     borderWidth: 2,
@@ -98,14 +129,12 @@ function Grafico() {
   }));
 
   const data = {
-    labels: UserData.map((data) => data.year),
+    labels: datasLabels,
     type: 'line',
     datasets: datasets
-};
-  
-  //requisição retornar: vendas por livro em cada dia entre as datas selecionadas
+  };
 
-  if (loading) return <Loading/>
+  if (loading) return <Loading />;
   return (
     <div className="border-b border-gray-200 py-4 text-gray-600 flex flex-col flex-grow">
       <div>
