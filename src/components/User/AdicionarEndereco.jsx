@@ -12,7 +12,7 @@ function AdicionarEndereco({ openAdicionarEndereco, setOpenAdicionarEndereco }) 
       await criarEntidade({
         lagradouro: formData.lagradouro,
         enderecoResidencial: formData.enderecoResidencial,
-        tipoResidencia: formData.tipoResidencia,
+        tipoResidencia: formData.tipoResidencia.toLocaleUpperCase(),
         num: formData.num,
         CEP: formData.CEP,
         bairro: formData.bairro,

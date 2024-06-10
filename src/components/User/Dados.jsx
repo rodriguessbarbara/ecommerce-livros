@@ -63,7 +63,7 @@ function Dados() {
   atualizarEntidade(endId, {
     lagradouro: data.lagradouro,
     enderecoResidencial: data.enderecoResidencial,
-    tipoResidencia: data.tipoResidencia,
+    tipoResidencia: data.tipoResidencia.toLocaleUpperCase(),
     num: data.num,
     CEP: data.CEP,
     bairro: data.bairro,

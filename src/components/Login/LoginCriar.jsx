@@ -54,7 +54,7 @@ function LoginCriar() {
     await criarEntidade({
       lagradouro: lagradouro.value,
       enderecoResidencial: enderecoResidencial.value,
-      tipoResidencia: tipoResidencia.value,
+      tipoResidencia: tipoResidencia.value.toLocaleUpperCase(),
       num: num.value,
       CEP: CEP.value,
       bairro: bairro.value,

@@ -40,9 +40,9 @@ function LoginForm() {
             
             <Input label="Senha" type="password" name="password" placeholder="*************" {...senha} required/>
             <div className="text-sm">
-              <Link to="/login/esqueceuSenha"className="font-semibold text-indigo-600 hover:text-indigo-500">
+              {/* <Link to="/login/esqueceuSenha"className="font-semibold text-indigo-600 hover:text-indigo-500">
                 Esqueceu a senha?
-              </Link>
+              </Link> */}
             </div>
 
             <div>
