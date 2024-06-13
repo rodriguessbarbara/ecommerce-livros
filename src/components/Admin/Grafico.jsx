@@ -75,12 +75,12 @@ function Grafico() {
   }
 
   const gerarDatasLabels = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date((`${startDate}T00:00:00.000`));
+    const end = new Date((`${endDate}T00:00:00.000`));
     const dates = [];
-    const mesesSelecionados = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
-    // console.log(mesesSelecionados)
-    if (mesesSelecionados > 1) {
+    const diasSelecionados = Math.abs(end - start) / (1000 * 60 * 60 * 24);
+
+    if (diasSelecionados > 30) {
       while (start <= end) {
         dates.push(new Date(start).toISOString().substring(0, 7));
         start.setMonth(start.getMonth() + 1);
