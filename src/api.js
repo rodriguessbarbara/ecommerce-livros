@@ -1,5 +1,6 @@
 import axios from "axios";
 const API = axios.create({ baseURL: "http://localhost:8000" });
+const API_URL = "http://localhost:8000";
 
 async function LOGIN_USER(body) {
 	const response = await API.post("/clientes/auth/login", body, {
@@ -125,6 +126,7 @@ async function filtrarPedidosDatas(data) {
 }
 
 export {
+	API_URL,
 	GETALL_ENTIDADE,
 	GET_ENTIDADE,
 	GET_USER,

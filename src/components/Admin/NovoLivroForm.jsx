@@ -3,10 +3,13 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import Input from "../Input";
+import Erro from '../Erro'
+import Loading from "../Loading";
 
 function NovoLivroForm({ setModalOpen }) {
-  const { criarEntidade, listarEntidades } = useContext(AppContext);
+  const { criarEntidade, listarEntidades, erro, loading } = useContext(AppContext);
   const [todasCategorias, setTodasCategorias] = useState(null);
+
   const [data, setData] = useState({
     imageSrc: "",
     capaAlternativa: "",
@@ -23,6 +26,7 @@ function NovoLivroForm({ setModalOpen }) {
     precificacao: 0,
     quantidade: 0,
     ativo: true,
+    palavraChave: "",
   });
 
   useEffect(() => {
@@ -55,58 +59,51 @@ function NovoLivroForm({ setModalOpen }) {
     const categoriasSelecionadas = data.categorias.map(nomeCategoria => todasCategorias[nomeCategoria]);
 
     event.preventDefault();
-    const isFormValid = Object.values(data).every(val => {
-      if (typeof val !== 'number') {
-        return val !== "";
-      }
+    await criarEntidade({
+      imageSrc: data.imageSrc,
+      capaAlternativa: "",
+      titulo: data.titulo,
+      autor: data.autor,
+      categorias: categoriasSelecionadas,
+      editora: data.editora,
+      ano: data.ano,
+      edicao: data.edicao,
+      ISBN: data.ISBN,
+      numeroPaginas: data.numeroPaginas,
+      sinopse: data.sinopse,
+      dimensoes: data.dimensoes,
+      precificacao: data.precificacao,
+      quantidade: data.quantidade,
+      ativo: data.ativo,
+      palavraChave: data.palavraChave,
+  }, "livros")
+
+    setData({
+      imageSrc: "",
+      capaAlternativa: "",
+      titulo: "",
+      autor: "",
+      categorias: [],
+      editora: "",
+      ano: "",
+      edicao: "",
+      ISBN: "",
+      numeroPaginas: 0,
+      sinopse: "",
+      dimensoes: "",
+      precificacao: 0,
+      quantidade: 0,
+      ativo: true,
+      palavraChave: "",
     });
-
-    if (isFormValid) {
-      await criarEntidade({
-        imageSrc: data.imageSrc,
-        capaAlternativa: data.capaAlternativa,
-        titulo: data.titulo,
-        autor: data.autor,
-        categorias: categoriasSelecionadas,
-        editora: data.editora,
-        ano: data.ano,
-        edicao: data.edicao,
-        ISBN: data.ISBN,
-        numeroPaginas: data.numeroPaginas,
-        sinopse: data.sinopse,
-        dimensoes: data.dimensoes,
-        precificacao: data.precificacao,
-        quantidade: data.quantidade,
-        ativo: data.ativo,
-    }, "livros")
-
-      setData({
-        imageSrc: "",
-        capaAlternativa: "",
-        titulo: "",
-        autor: "",
-        categorias: [],
-        editora: "",
-        ano: "",
-        edicao: "",
-        ISBN: "",
-        numeroPaginas: 0,
-        sinopse: "",
-        dimensoes: "",
-        precificacao: 0,
-        quantidade: 0,
-        ativo: true,
-      });
-    }
-
     setModalOpen();
   };
 
+  if (loading) return <Loading/>
   return (
     <form onSubmit={handleNovoLivro}>
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-4 py-4">
         <Input label="Capa Original" type="text" name="imageSrc" span="2" required value={data.imageSrc} onChange={handleInput}/>
-        <Input label="Capa alternativa" type="text" name="capaAlternativa" span="2" required value={data.capaAlternativa} onChange={handleInput}/>
         <Input label="Título do livro" type="text" name="titulo" span="2" required value={data.titulo.toLowerCase()} onChange={handleInput}/>
         <Input label="Autor" type="text" name="autor" span="2" required value={data.autor} onChange={handleInput}/>
 
@@ -119,6 +116,7 @@ function NovoLivroForm({ setModalOpen }) {
             value={data.categorias}
             onChange={handleInputSelect}
             multiple
+            required
           >
             <option value="Romance">Romance</option>
             <option value="Suspense">Suspense</option>
@@ -168,6 +166,8 @@ function NovoLivroForm({ setModalOpen }) {
                 </option>
             </select>
           </div>
+
+        <Input label="Palavras-chave" type="text" name="palavraChave" span="4" required value={data.palavraChave} onChange={handleInput}/>
     </div>
 
       <button
@@ -175,6 +175,8 @@ function NovoLivroForm({ setModalOpen }) {
       >
         Salvar
       </button>
+
+      <Erro erro={erro}/>
     </form>
   )
 }

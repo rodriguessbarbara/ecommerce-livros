@@ -3,8 +3,8 @@ import AppContext from "../../context/AppContext";
 
 /* eslint-disable react/prop-types */
 function CarrinhoItem({ data }) {
-  const { id, imageSrc, capaAlternativa, titulo, precificacao } = data;
-  const { carrinhoItens, setCarrinhoItens, isCapaAlternativa } = useContext(AppContext);
+  const { id, imagemCapa, titulo, precificacao } = data;
+  const { carrinhoItens, setCarrinhoItens } = useContext(AppContext);
 
   const itemCarrinho = carrinhoItens.find(item => item.id === id);
   const quantidadeAtual = itemCarrinho ? itemCarrinho.quantidadeCarrinho : 0;
@@ -26,7 +26,7 @@ function CarrinhoItem({ data }) {
     <>
       <section className="flex flex-start border-b-2 border-gray-300 pb-5 mb-2 relative">
         <div className="border-2 border-gray-200 rounded-lg">
-          <img src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
+          <img src={`${imagemCapa}`}
           alt="Imagem do livro"
           className="p-2 max-w-16 w-full h-full"/>
           
