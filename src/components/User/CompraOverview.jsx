@@ -1,14 +1,41 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
 import CarrinhoItem from "../Carrinho/CarrinhoItem";
 
 function CompraOverview() { 
   const navigate = useNavigate();
-  const { carrinhoItens, precoTotal } = useContext(AppContext);
+  const { carrinhoItens, precoTotal, setCarrinhoItens } = useContext(AppContext);
+  const [mensagemRemovido, setMensagemRemovido] = useState("");
+  const [itemRemovido, setItemRemovido] = useState(null);
 
   const handleProxTela = () => {
     navigate("/conta/endereco-compra");
+  };
+
+  const handleSetMensagemRemovido = (mensagem, item) => {
+    setMensagemRemovido(mensagem);
+    setItemRemovido(item);
+
+    setTimeout(() => {
+      setMensagemRemovido("");
+      setItemRemovido(null);
+    }, 5000);
+  };
+  const handleRemoveItem = (id, titulo) => {
+    const itemRemovido = carrinhoItens.find(item => item.id === id);
+    const updatedItens = carrinhoItens.filter(item => item.id !== id);
+    setCarrinhoItens(updatedItens);
+
+    handleSetMensagemRemovido(titulo, itemRemovido);
+  };
+
+  const handleDesfazerRemoved = () => {
+    if (itemRemovido) {
+      setCarrinhoItens([...carrinhoItens, itemRemovido]);
+      setMensagemRemovido("");
+      setItemRemovido(null);
+    }
   };
 
   return (
@@ -19,13 +46,20 @@ function CompraOverview() {
 
       <div className="mb-6 flex flex-col px-6 py-12 gap-10 bg-gray-100 rounded-md">
         {carrinhoItens.map((item) =>
-          <CarrinhoItem key={item.id} data={item} />
+          <CarrinhoItem key={item.id} data={item} handleRemoveItem={handleRemoveItem}/>
         )}
       </div>
 
+      {mensagemRemovido && (
+        <div className="p-1">
+          <p className="text-gray-700">Livro <span className="font-medium">{mensagemRemovido}</span> foi removido do carrinho</p>
+          <button className="text-red-600 font-medium" onClick={() => handleDesfazerRemoved()}>desfazer</button>
+        </div>
+      )}
+
       <div className="self-end text-end">
         <p className="font-bold text-lg text-gray-800">
-              Subtotal: R$ {precoTotal}
+          Subtotal: R$ {precoTotal}
         </p>
 
         {!carrinhoItens.length ? (
@@ -37,7 +71,6 @@ function CompraOverview() {
           </button>
         )}
       </div>
-
     </div>
   )
 }

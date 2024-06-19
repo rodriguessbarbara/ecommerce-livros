@@ -2,17 +2,12 @@ import { useContext } from "react";
 import AppContext from "../../context/AppContext";
 
 /* eslint-disable react/prop-types */
-function CarrinhoItem({ data }) {
+function CarrinhoItem({ data, handleRemoveItem }) {
   const { id, imagemCapa, titulo, precificacao } = data;
   const { carrinhoItens, setCarrinhoItens } = useContext(AppContext);
 
   const itemCarrinho = carrinhoItens.find(item => item.id === id);
   const quantidadeAtual = itemCarrinho ? itemCarrinho.quantidadeCarrinho : 0;
-
-  function handleRemoveItem() {
-    const updatedItens = carrinhoItens.filter((item) => item.id != id);
-    setCarrinhoItens(updatedItens);
-  }
 
   function handleAlteraQuantidade(novaQuantidade) {
     if (novaQuantidade > 0 && novaQuantidade <= data.quantidade) {
@@ -20,7 +15,7 @@ function CarrinhoItem({ data }) {
         item.id === id ? { ...item, quantidadeCarrinho: novaQuantidade } : item
       ));
     }
- }
+  }
 
   return (
     <>
@@ -40,7 +35,7 @@ function CarrinhoItem({ data }) {
               </h3>
               <p className="ml-4">R${(precificacao * data.quantidadeCarrinho).toFixed(2)}</p>
             </div>
-            <p className="mb-2 text-sm text-gray-500">capa Original</p>
+            {/* <p className="mb-2 text-sm text-gray-500">capa Original</p> */}
           </div>
           
           <div className="flex flex-1 gap-8 text-sm">
@@ -55,18 +50,18 @@ function CarrinhoItem({ data }) {
               </button>
           </div>
           
-            <div className="flex justify-end text-sm">
-              <button
-                type="button"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-                onClick={handleRemoveItem}
-              >
-                Remover
-              </button>
-            </div>
+          <div className="flex justify-end text-sm">
+            <button
+              type="button"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+              onClick={() => handleRemoveItem(id, titulo)}
+            >
+              Remover
+            </button>
+          </div>
 
         </div>
-        </section>
+      </section>
     </>
   )
 }
