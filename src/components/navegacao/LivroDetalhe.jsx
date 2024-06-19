@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
 import Carrinho from '../Carrinho/Carrinho';
+import { API_URL } from '../../api';
 
 function LivroDetalhe() {
   const location = useLocation();
@@ -14,11 +15,11 @@ function LivroDetalhe() {
     if (itemExistente) {
       if (itemExistente.quantidadeCarrinho < data.quantidade) {
         setCarrinhoItens(carrinhoItens.map(item =>
-          item.id === data.id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1 } : item
+          item.id === data.id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1, imagemCapa: isCapaAlternativa.includes(data.id) ? `${API_URL}/${data.capaAlternativa}` : `${data.imageSrc}` } : item
         ));
       }
     } else {
-       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1 }]);
+       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1 , imagemCapa: isCapaAlternativa.includes(data.id) ? `${API_URL}/${data.capaAlternativa}` : `${data.imageSrc}`}]);
     }
    }
 
@@ -37,7 +38,7 @@ function LivroDetalhe() {
       <div className="overflow-hidden rounded-md flex gap-12">
         <div className='w-1/3 h-2/3'>
           <img
-            src={isCapaAlternativa.includes(data.id) ? `${data.capaAlternativa}` : `${data.imageSrc}`}
+            src={isCapaAlternativa.includes(data.id) ? `${API_URL}/${data.capaAlternativa}` : `${data.imageSrc}`}
             alt={data.imageAlt}
             className="group-hover:opacity-75 cursor-pointer"
 

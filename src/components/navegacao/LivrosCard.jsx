@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../../api';
 
 function LivrosCard({ data, filtros }) {
   const { id, imageSrc, imageAlt, capaAlternativa, titulo, autor, precificacao, ativo } = data;
@@ -15,11 +16,11 @@ function LivrosCard({ data, filtros }) {
     if (itemExistente) {
       if (itemExistente.quantidadeCarrinho < data.quantidade) {
         setCarrinhoItens(carrinhoItens.map(item =>
-          item.id === id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1 } : item
+          item.id === id ? { ...item, quantidadeCarrinho: item.quantidadeCarrinho + 1, imagemCapa: isCapaAlternativa.includes(id) ? `${API_URL}/${capaAlternativa}` : `${imageSrc}` } : item
         ));
       }
     } else {
-       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1 }]);
+       setCarrinhoItens([...carrinhoItens, { ...data, quantidadeCarrinho: 1, imagemCapa: isCapaAlternativa.includes(id) ? `${API_URL}/${capaAlternativa}` : `${imageSrc}` }]);
     }
    }
 
@@ -69,7 +70,7 @@ function LivrosCard({ data, filtros }) {
       <div key={id} className="group relative p-10 pb-2 pt-3 rounded-md border-2 shadow-md shadow-slate-200">
         <div className="w-full overflow-hidden rounded-md lg:aspect-none">
           <img
-            src={isCapaAlternativa.includes(id) ? `${capaAlternativa}` : `${imageSrc}`}
+            src={isCapaAlternativa.includes(id) ? `${API_URL}/${capaAlternativa}` : `${imageSrc}`}
             alt={imageAlt}
             className="h-full w-full object-cover object-center lg:h-full lg:w-full bg-gray-500 group-hover:opacity-75 cursor-pointer"
             onClick={handleClickLivro}
