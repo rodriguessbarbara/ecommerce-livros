@@ -52,7 +52,7 @@ export default function AvisoIA() {
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Nossa aplicação utiliza IA Generativa para a geração das capas alternativas dos livros afim de criar uma opção alternativa.
+                          Nossa aplicação utiliza IA Generativa para a geração das capas alternativas dos livros, não possuindo qualquer relação com o autor ou editora do mesmo.
                         </p>
                       </div>
                     </div>

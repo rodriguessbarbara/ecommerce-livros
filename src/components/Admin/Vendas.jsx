@@ -288,7 +288,7 @@ function Vendas() {
                   <div key={item.Livro.id} className="border-b-2 px-4 py-2 border-gray-400">
                     <p>{item.Livro.titulo}</p>
                     <p>Qtd: {venda.quantidade.split(',')[index]}</p>
-                    <span className="text-sm">Capa Original </span>
+                    {/* <span className="text-sm">Capa Original </span> */}
                   </div>
                 ))
               }

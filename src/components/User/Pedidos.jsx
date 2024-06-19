@@ -92,7 +92,7 @@ function Pedidos() {
                   )} */}
 
                 </div>
-                <span className="text-sm">Capa Original </span>
+                {/* <span className="text-sm">Capa Original </span> */}
               </div>
             ))}                       
 
